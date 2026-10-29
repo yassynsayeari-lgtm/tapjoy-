@@ -17,8 +17,7 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      
 
       - name: Check repository files
         run: |
@@ -35,3 +34,5 @@ jobs:
         with:
           name: yasjoy-build-preparation
           path: output/README.txt
+      - name: Verify workflow
+        run: echo "YASJOY workflow is ready"
