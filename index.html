@@ -170,7 +170,7 @@ onAuthStateChanged(auth, async (user) => {
       "Connection error — reload the page";
   }
 });
-</script>
+
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
@@ -179,4 +179,5 @@ const app=initializeApp(firebaseConfig);const db=getFirestore(app);
 async function loadSocialLinks(){const ids={telegram:"telegramLink",youtube:"youtubeLink",tiktok:"tiktokLink",instagram:"instagramLink"};const status=document.getElementById('socialStatus');try{const snap=await getDoc(doc(db,"socialLinks","main"));if(!snap.exists()){status.textContent="Social links are not configured in Firebase yet.";return}const links=snap.data();let count=0;for(const [key,id] of Object.entries(ids)){const el=document.getElementById(id);const url=links[key];if(el&&typeof url==="string"&&/^https:\/\/\S+$/i.test(url)){el.href=url;el.hidden=false;count++}else if(el){el.hidden=true}}status.textContent=count?"Social links loaded from Firebase.":"No valid HTTPS social links were found in Firebase."}catch(error){console.error("Firebase social links error:",error);status.textContent="Could not load social links. Check Firebase rules and the socialLinks/main document."}}
 loadSocialLinks();
 </script>
-</body></html>
+</body>
+</html>
