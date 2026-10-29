@@ -123,8 +123,53 @@ input,select{width:100%;padding:15px;border:1px solid #cfe7f7;border-radius:14px
   <button class="nav" id="navProfile" onclick="showPage('profile')"><span class="ico">👤</span>Profile</button>
 </nav>
 
-<script>
-let selectedCoins=0;
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",
+  authDomain: "yasjoy.firebaseapp.com",
+  projectId: "yasjoy",
+  storageBucket: "yasjoy.firebasestorage.app",
+  messagingSenderId: "967065409063",
+  appId: "1:967065409063:web:4f7b882cc38f17ec8a2002"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function loadSocialLinks() {
+  try {
+    const snapshot = await getDoc(doc(db, "socialLinks", "main"));
+    if (!snapshot.exists()) return;
+
+    const links = snapshot.data();
+    const ids = {
+      telegram: "telegramLink",
+      youtube: "youtubeLink",
+      tiktok: "tiktokLink",
+      instagram: "instagramLink"
+    };
+
+    for (const [key, id] of Object.entries(ids)) {
+      const element = document.getElementById(id);
+      const url = links[key];
+
+      if (element && typeof url === "string" &&
+          /^https:\/\/\S+$/i.test(url)) {
+        element.href = url;
+      } else if (element) {
+        element.hidden = true;
+      }
+    }
+  } catch (error) {
+    console.error("Could not load social links:", error);
+  }
+}
+
+loadSocialLinks();
+</script>
 let selectedUSD=0;
 let balance=Number(localStorage.getItem('yasjoy_demo_points')||0);
 let userId=localStorage.getItem('yasjoy_user_id');
