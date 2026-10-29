@@ -1,84 +1,160 @@
+
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YASJOY - اربح واستمتع</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      color: #222;
-    }
-    header {
-      background: #1976d2;
-      color: white;
-      padding: 22px;
-      text-align: center;
-    }
-    .logo { font-size: 30px; font-weight: bold; }
-    main {
-      max-width: 600px;
-      margin: 25px auto;
-      padding: 15px;
-    }
-    .card {
-      background: white;
-      padding: 22px;
-      margin-bottom: 18px;
-      border-radius: 14px;
-      box-shadow: 0 3px 12px #00000010;
-    }
-    h2 { color: #1976d2; }
-    button {
-      background: #1e88e5;
-      color: white;
-      border: 0;
-      padding: 13px 20px;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      width: 100%;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #666;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#dff4ff">
+<title>YASJOY - Earn Rewards</title>
+<style>
+*{box-sizing:border-box}
+:root{--blue:#078af5;--dark:#092c70;--pale:#e7f7ff;--muted:#829bc1}
+body{margin:0;background:linear-gradient(145deg,#cceeff,#f2fbff 55%,#d8f3ff);font-family:Arial,sans-serif;color:var(--dark);min-height:100vh;padding-bottom:90px}
+header{max-width:720px;margin:auto;padding:24px 20px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:8px;font-size:clamp(25px,6vw,39px);font-weight:900;color:#0878ed;letter-spacing:-1px}
+.star{font-size:39px;color:#ffc629;text-shadow:1px 3px #e99b00}
+.balance{background:#fff;border-radius:40px;padding:12px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 5px 18px #80c9f455;font-weight:bold;white-space:nowrap}
+.coin{font-size:25px}
+main{max-width:720px;margin:auto;padding:0 20px}
+.banner{width:100%;min-height:205px;border-radius:23px;background:linear-gradient(130deg,#04b9f0,#0784f5 60%,#1266e9);color:white;display:flex;align-items:center;justify-content:space-between;padding:22px;overflow:hidden;position:relative;box-shadow:0 8px 22px #168cf533}
+.wallet{font-size:95px;filter:drop-shadow(0 5px 3px #064e9c77)}
+.banner-text{font-size:clamp(23px,5vw,34px);font-weight:800;line-height:1.25;max-width:65%}
+.go{border:0;background:#ffffff38;color:white;border-radius:50%;width:52px;height:52px;font-size:29px;cursor:pointer;margin-top:14px}
+.section-title{display:flex;align-items:center;gap:10px;font-size:30px;font-weight:800;margin:24px 0 3px}
+.subtitle{color:var(--muted);font-size:17px;margin:0 0 16px}
+.offers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.offer{background:#ffffffed;border:1px solid #d5edff;border-radius:20px;padding:15px;box-shadow:0 5px 14px #74bce833;min-width:0}
+.offer-top{display:flex;align-items:center;gap:12px;min-height:86px}
+.provider-icon{width:68px;height:68px;flex-shrink:0;border-radius:17px;display:grid;place-items:center;font-size:23px;font-weight:900;color:white}
+.tap{background:#f3223a}.fyber{background:#04b87b}.torox{background:#17143e}.revu{background:#dff4ff;color:#0758a8}
+.offer h3{font-size:19px;margin:0 0 7px;overflow-wrap:anywhere}
+.offer p{font-size:14px;color:var(--muted);line-height:1.35;margin:0}
+.earn{margin-top:12px;width:100%;border:0;border-radius:30px;padding:12px 5px;background:#078af5;color:white;font-size:15px;font-weight:bold;cursor:pointer}
+.earn span{margin-right:6px}
+.page{display:none}.page.active{display:block}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(12px);border-radius:25px 25px 0 0;box-shadow:0 -5px 22px #8dcff333;display:flex;justify-content:center;gap:20%;padding:13px 10px 10px;z-index:5}
+.nav{border:0;background:transparent;color:#829bc1;font-size:16px;font-weight:bold;min-width:100px;cursor:pointer}
+.nav .ico{display:block;font-size:28px;margin-bottom:4px}
+.nav.active{color:#078af5}
+.nav.active:after{content:"";display:block;height:4px;width:85px;background:#078af5;border-radius:5px;margin:7px auto 0}
+.panel{background:white;border-radius:22px;padding:22px;margin:18px 0;box-shadow:0 5px 20px #80c9f433}
+.panel h2{margin-top:0}
+.primary{width:100%;border:0;border-radius:12px;padding:14px;background:var(--blue);color:white;font-size:16px;font-weight:bold;cursor:pointer}
+input,select{width:100%;padding:14px;border:1px solid #cde6f7;border-radius:12px;margin:7px 0 15px;font-size:16px;background:#fbfdff}
+.amounts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.amount{border:2px solid #d9efff;background:#f8fcff;color:#12366f;padding:15px;border-radius:14px;font-weight:bold;cursor:pointer}
+.amount.selected{border-color:#078af5;background:#e3f4ff}
+.small{font-size:13px;color:var(--muted);line-height:1.5}
+@media(max-width:390px){header{padding:18px 12px}.brand{font-size:25px}.star{font-size:30px}.balance{padding:9px 10px}.wallet{font-size:72px}.banner{padding:15px;min-height:175px}.offer{padding:10px}.provider-icon{width:52px;height:52px;font-size:18px}.offer h3{font-size:16px}.offer p{font-size:12px}.earn{font-size:13px}}
+</style>
 </head>
 <body>
-  <header>
-    <div class="logo">⭐ YASJOY</div>
-    <p>اربح النقاط واستمتع بالعروض</p>
-  </header>
+<header>
+  <div class="brand"><span class="star">⭐</span><span>YASJOY<sup style="font-size:13px">👑</sup></span></div>
+  <div class="balance"><span class="coin">🪙</span><span id="balance">0</span><button onclick="refreshBalance()" aria-label="Refresh balance" style="border:0;background:none;font-size:23px;color:#078af5">⟳</button></div>
+</header>
 
-  <main>
-    <section class="card">
-      <h2>مرحبًا بك في YASJOY</h2>
-      <p>منصتك لاستكشاف العروض وجمع النقاط.</p>
-      <button onclick="alert('سيتم تفعيل التسجيل لاحقًا')">
-        إنشاء حساب
-      </button>
-    </section>
+<main>
+<section id="home" class="page active">
+  <div class="banner">
+    <div class="wallet">👛</div>
+    <div style="flex:1">
+      <div class="banner-text">Withdraw your points</div>
+      <button class="go" onclick="showPage('withdraw')" aria-label="Withdraw">➜</button>
+    </div>
+  </div>
 
-    <section class="card">
-      <h2>🎁 جدار العروض</h2>
-      <p>سيتم ربط جدار العروض بعد إعداد حساب الناشر والموافقة عليه.</p>
-      <button onclick="alert('جدار العروض غير مفعّل بعد')">
-        استكشاف العروض
-      </button>
-    </section>
+  <div class="section-title"><span style="color:#078af5">♨</span> Offer Walls</div>
+  <p class="subtitle">Complete offers · Earn coins</p>
 
-    <section class="card">
-      <h2>💰 رصيد النقاط</h2>
-      <p>رصيدك: 0 نقطة</p>
-      <p>سيتم تفعيل نظام النقاط والسحب بعد إعداد الخادم وقاعدة البيانات.</p>
-    </section>
-  </main>
+  <div class="offers">
+    <article class="offer">
+      <div class="offer-top"><div class="provider-icon tap">Tapjoy</div><div><h3>Tapjoy</h3><p>Complete offers and get rewards</p></div></div>
+      <button class="earn" onclick="openOffer('Tapjoy')"><span>🪙</span> Earn coins ›</button>
+    </article>
+    <article class="offer">
+      <div class="offer-top"><div class="provider-icon fyber">F</div><div><h3>Fyber</h3><p>Play, install, and earn coins</p></div></div>
+      <button class="earn" onclick="openOffer('Fyber')"><span>🪙</span> Earn coins ›</button>
+    </article>
+    <article class="offer">
+      <div class="offer-top"><div class="provider-icon torox">T</div><div><h3>torox web</h3><p>Complete offers and get rewards</p></div></div>
+      <button class="earn" onclick="openOffer('Torox')"><span>🪙</span> Earn coins ›</button>
+    </article>
+    <article class="offer">
+      <div class="offer-top"><div class="provider-icon revu">Revu</div><div><h3>Revu</h3><p>Discover great offers and earn coins</p></div></div>
+      <button class="earn" onclick="openOffer('Revu')"><span>🪙</span> Earn coins ›</button>
+    </article>
+  </div>
+</section>
 
-  <footer>© 2026 YASJOY</footer>
+<section id="withdraw" class="page">
+  <div class="panel">
+    <h2>Withdraw your points</h2>
+    <p class="small">Available Balance</p>
+    <div style="text-align:center;background:#1268f5;color:white;border-radius:18px;padding:24px;font-size:28px;font-weight:bold"><span id="withdrawBalance">0</span><div style="font-size:15px;font-weight:normal">Coins</div></div>
+    <h3>Choose withdrawal amount</h3>
+    <div class="amounts">
+      <button class="amount" onclick="selectAmount(this,100,0.10)">$0.10<br><small>100 coins</small></button>
+      <button class="amount" onclick="selectAmount(this,250,0.25)">$0.25<br><small>250 coins</small></button>
+      <button class="amount" onclick="selectAmount(this,1000,1)">$1.00<br><small>1,000 coins</small></button>
+      <button class="amount" onclick="selectAmount(this,2000,2)">$2.00<br><small>2,000 coins</small></button>
+      <button class="amount" onclick="selectAmount(this,3000,3)">$3.00<br><small>3,000 coins</small></button>
+    </div>
+    <label for="method">Withdrawal method</label>
+    <select id="method"><option value="Binance">Binance</option></select>
+    <label for="account">Binance account identifier</label>
+    <input id="account" placeholder="Enter your Binance Pay ID or approved details">
+    <button class="primary" onclick="submitRequest()">Submit withdrawal request</button>
+    <p class="small">Demo interface only: requests and balances are not yet saved to a secure server, and no payment is sent.</p>
+    <button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('home')">Back to Home</button>
+  </div>
+</section>
+
+<section id="profile" class="page">
+  <div class="panel">
+    <h2>Profile</h2>
+    <p>Your YASJOY rewards profile</p>
+    <p>Current balance: <strong><span id="profileBalance">0</span> coins</strong></p>
+    <p class="small">No account sign-in is required in this demo. Clearing browser data may remove locally stored demo information.</p>
+    <button class="primary" onclick="showPage('home')">Back to Home</button>
+  </div>
+</section>
+</main>
+
+<nav class="bottom">
+  <button class="nav active" id="navHome" onclick="showPage('home')"><span class="ico">⌂</span>Home</button>
+  <button class="nav" id="navProfile" onclick="showPage('profile')"><span class="ico">👤</span>Profile</button>
+</nav>
+
+<script>
+let selectedCoins=0,selectedUSD=0;
+function showPage(id){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.getElementById('navHome').classList.toggle('active',id==='home');
+ document.getElementById('navProfile').classList.toggle('active',id==='profile');
+ window.scrollTo(0,0);
+ updateBalance();
+}
+function updateBalance(){
+ const points=Number(localStorage.getItem('yasjoy_demo_points')||0);
+ ['balance','withdrawBalance','profileBalance'].forEach(id=>document.getElementById(id).textContent=points.toLocaleString());
+}
+function refreshBalance(){updateBalance()}
+function selectAmount(button,coins,usd){
+ document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));
+ button.classList.add('selected');selectedCoins=coins;selectedUSD=usd;
+}
+function openOffer(name){
+ alert(name+' offer wall is not connected yet. Official provider approval and integration are required.');
+}
+function submitRequest(){
+ if(!selectedCoins){alert('Please choose a withdrawal amount first.');return;}
+ const account=document.getElementById('account').value.trim();
+ if(!account){alert('Please enter your Binance account details.');return;}
+ alert('Demo only: withdrawal requests are not sent or saved yet. A secure backend must be connected before real withdrawals.');
+}
+updateBalance();
+</script>
 </body>
 </html>
