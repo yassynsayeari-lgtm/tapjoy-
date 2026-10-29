@@ -3,29 +3,43 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>YASJOY Admin</title>
 <style>
-:root{--blue:#1976d2;--light:#e3f2fd;--bg:#f4f7fb}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#172b4d}
-header{background:var(--blue);color:white;padding:22px 16px}
-header h1{margin:0;font-size:24px}
-header p{margin:8px 0 0;font-size:14px}
-main{max-width:800px;margin:auto;padding:16px}
-.folder{background:white;border-radius:15px;padding:18px;margin:14px 0;box-shadow:0 3px 12px #0000000c}
-.folder h2{font-size:19px;margin:0 0 14px}
+body{margin:0;background:#f2f6fc;color:#183153;font-family:Arial,sans-serif}
+header{background:#1976d2;color:white;padding:22px 16px}
+header h1{margin:0 0 7px;font-size:25px}
+header p{margin:0}
+main{max-width:850px;margin:auto;padding:15px}
+.menu,.panel{background:white;border-radius:15px;padding:17px;margin-bottom:15px;box-shadow:0 3px 12px #17365d0d}
+.menu{display:flex;align-items:center;gap:12px;width:100%;text-align:right;border:1px solid #e0eafa;color:#183153;font-size:18px;font-weight:bold;cursor:pointer}
+.menu .ico{font-size:27px}
+.menu small{display:block;font-size:13px;font-weight:normal;color:#718096;margin-top:6px}
+.panel{display:none}
+.panel.show{display:block}
+h2{font-size:20px;margin:3px 0 15px}
 .tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
-button{border:0;border-radius:9px;padding:11px 13px;background:var(--light);color:#145a9e;font-weight:bold;cursor:pointer}
-button.active{background:var(--blue);color:white}
-.note{font-size:13px;color:#607080;line-height:1.7}
-.item{border:1px solid #e2eaf2;border-radius:11px;padding:13px;margin:10px 0;background:#fff}
-.item strong{display:block;margin-bottom:8px}
-.empty{text-align:center;color:#718096;padding:18px}
-.tag{display:inline-block;border-radius:20px;padding:5px 9px;background:#fff3cd;color:#765900;font-size:12px}
-.tag.green{background:#d9f7e8;color:#17683a}
-.tag.red{background:#ffe1e1;color:#9b2222}
-footer{text-align:center;color:#718096;font-size:12px;padding:22px}
+button{font-family:inherit}
+.tab,.action{border:0;border-radius:9px;padding:11px 12px;cursor:pointer;font-weight:bold}
+.tab{background:#e4f1ff;color:#175ca4}
+.tab.active{background:#1976d2;color:white}
+.list{display:grid;gap:12px}
+.user{border:1px solid #e0e8f0;border-radius:12px;padding:13px}
+.userhead{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.user h3{font-size:16px;margin:0 0 9px}
+.line{margin:7px 0;overflow-wrap:anywhere}
+.points{font-weight:bold;color:#1769aa}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.action{background:#e8f5e9;color:#176b37}
+.action.ban{background:#ffebee;color:#a51f2b}
+.action:disabled{opacity:.45;cursor:not-allowed}
+.badge{display:inline-block;border-radius:20px;padding:5px 9px;background:#e8f5e9;color:#176b37;font-size:12px}
+.note,.empty{color:#718096;font-size:14px;line-height:1.8}
+.empty{text-align:center;padding:22px}
+.back{border:0;background:transparent;color:#1769aa;font-weight:bold;padding:8px 0 15px;cursor:pointer}
+input{width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px}
+footer{text-align:center;color:#7b8999;padding:22px;font-size:12px}
 </style>
 </head>
 <body>
@@ -34,40 +48,101 @@ footer{text-align:center;color:#718096;font-size:12px;padding:22px}
 <p>لوحة إدارة المستخدمين والسحوبات</p>
 </header>
 <main>
-<section class="folder">
-<h2>📁 User withdrawal of funds</h2>
-<div class="tabs" id="withdrawTabs">
-<button class="active" data-status="pending">طلبات السحب</button>
-<button data-status="paid">تم الدفع</button>
-<button data-status="rejected">تم رفض الدفع</button>
+<div id="home">
+<button class="menu" onclick="openPanel('withdraw')">
+<span class="ico">📁</span><span>User withdrawal of funds<small>طلبات السحب، تم الدفع، تم رفض الدفع</small></span>
+</button>
+<button class="menu" onclick="openPanel('users')">
+<span class="ico">📁</span><span>User Information<small>المستخدمون مرتّبون حسب النقاط</small></span>
+</button>
+<button class="menu" onclick="openPanel('achievements')">
+<span class="ico">📁</span><span>إنجازات المستخدم<small>سجلات عدم النشاط لمدة 3 أيام</small></span>
+</button>
 </div>
-<div id="withdrawContent" class="empty">لا توجد طلبات معروضة حاليًا.</div>
-<p class="note">هذه واجهة أولية. لم يتم ربط طلبات السحب بقاعدة البيانات بعد.</p>
+
+<section id="withdraw" class="panel">
+<button class="back" onclick="goHome()">← القائمة الرئيسية</button>
+<h2>📁 User withdrawal of funds</h2>
+<div class="tabs">
+<button class="tab active" onclick="withdrawTab('pending',this)">طلبات السحب</button>
+<button class="tab" onclick="withdrawTab('paid',this)">تم الدفع</button>
+<button class="tab" onclick="withdrawTab('rejected',this)">تم رفض الدفع</button>
+</div>
+<div id="withdrawList" class="empty">لا توجد بيانات حقيقية بعد. يلزم ربط Firebase.</div>
+<p class="note">لن يتم اعتبار الطلب مدفوعًا أو مرفوضًا إلا بعد إضافة نظام الصلاحيات وربط قاعدة البيانات.</p>
 </section>
 
-<section class="folder">
+<section id="users" class="panel">
+<button class="back" onclick="goHome()">← القائمة الرئيسية</button>
 <h2>📁 User Information</h2>
-<p>ستظهر هنا معلومات كل مستخدم بعد ربط Firebase:</p>
-<div class="item">🆔 <strong>User ID</strong><span class="note">معرّف المستخدم الفريد</span></div>
-<div class="item">🌍 <strong>الدولة وعلمها</strong><span class="note">بحسب بيانات الدولة المتاحة للمستخدم</span></div>
-<div class="item">🎯 <strong>جدار العروض والعروض</strong><span class="note">العروض المكتملة والجارية، والنقاط المسجلة</span></div>
-<p class="note">لن تظهر بيانات حقيقية حتى يتم الربط الآمن بقاعدة البيانات.</p>
+<p class="note">القائمة التجريبية أدناه لتوضيح الشكل فقط. ستُرتب بيانات المستخدمين الحقيقية حسب النقاط من الأعلى إلى الأقل بعد الربط.</p>
+<label for="search">البحث بمعرّف المستخدم</label>
+<input id="search" placeholder="أدخل User ID" oninput="renderUsers()">
+<div id="userList" class="list"></div>
+</section>
+
+<section id="achievements" class="panel">
+<button class="back" onclick="goHome()">← القائمة الرئيسية</button>
+<h2>🏆 إنجازات المستخدم</h2>
+<p class="note">يُضاف السجل بعد 3 أيام متتالية من عدم نشاط المستخدم عقب طلب السحب، ويبقى 30 يومًا. يتطلب ذلك تسجيل النشاط وجدولة آمنة على الخادم.</p>
+<div class="empty">لا توجد سجلات حقيقية بعد. لم يتم ربط النظام بقاعدة البيانات.</div>
 </section>
 </main>
-<footer>YASJOY Admin • لوحة تجريبية أولية</footer>
+<footer>YASJOY Admin • واجهة أولية غير متصلة بقاعدة البيانات</footer>
 <script>
-document.querySelectorAll('#withdrawTabs button').forEach(button=>{
-  button.addEventListener('click',()=>{
-    document.querySelectorAll('#withdrawTabs button').forEach(b=>b.classList.remove('active'));
-    button.classList.add('active');
-    const labels={
-      pending:'لا توجد طلبات سحب معروضة حاليًا.',
-      paid:'لا توجد طلبات مدفوعة معروضة حاليًا.',
-      rejected:'لا توجد طلبات مرفوضة معروضة حاليًا.'
-    };
-    document.getElementById('withdrawContent').textContent=labels[button.dataset.status];
-  });
-});
+const sampleUsers = [
+ {id:"DEMO-001",wall:"Tapjoy",offer:"عرض مكتمل (تجريبي)",country:"اليمن",flag:"🇾🇪",points:12500,banned:false},
+ {id:"DEMO-002",wall:"Torox",offer:"عرض جارٍ (تجريبي)",country:"السعودية",flag:"🇸🇦",points:8200,banned:false},
+ {id:"DEMO-003",wall:"Revu",offer:"عرض مكتمل (تجريبي)",country:"مصر",flag:"🇪🇬",points:3400,banned:false}
+];
+function openPanel(id){
+ document.getElementById('home').style.display='none';
+ document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
+ document.getElementById(id).classList.add('show');
+ if(id==='users')renderUsers();
+}
+function goHome(){
+ document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
+ document.getElementById('home').style.display='block';
+}
+function withdrawTab(status,btn){
+ document.querySelectorAll('#withdraw .tab').forEach(b=>b.classList.remove('active'));
+ btn.classList.add('active');
+ const messages={
+  pending:'لا توجد طلبات سحب حقيقية معروضة. اربط Firebase لعرضها.',
+  paid:'لا توجد طلبات مدفوعة معروضة. اربط Firebase لعرضها.',
+  rejected:'لا توجد طلبات مرفوضة معروضة. اربط Firebase لعرضها.'
+ };
+ document.getElementById('withdrawList').textContent=messages[status];
+}
+function renderUsers(){
+ const q=document.getElementById('search').value.trim().toLowerCase();
+ const users=sampleUsers.filter(u=>u.id.toLowerCase().includes(q)).sort((a,b)=>b.points-a.points);
+ const list=document.getElementById('userList');
+ list.innerHTML='';
+ if(!users.length){list.innerHTML='<div class="empty">لا يوجد مستخدم بهذا المعرّف في البيانات التجريبية.</div>';return;}
+ users.forEach((u,index)=>{
+  const card=document.createElement('article');
+  card.className='user';
+  const title=document.createElement('h3');
+  title.textContent=(index+1)+'. المستخدم';
+  const id=document.createElement('div');id.className='line';id.textContent='User ID: '+u.id;
+  const wall=document.createElement('div');wall.className='line';wall.textContent='جدار العروض: '+u.wall;
+  const offer=document.createElement('div');offer.className='line';offer.textContent='العرض: '+u.offer;
+  const country=document.createElement('div');country.className='line';country.textContent='الدولة: '+u.country+' '+u.flag;
+  const pts=document.createElement('div');pts.className='line points';pts.textContent='النقاط: '+u.points.toLocaleString('en-US');
+  const status=document.createElement('span');status.className='badge';status.textContent=u.banned?'محظور':'نشط';
+  const actions=document.createElement('div');actions.className='actions';
+  const ban=document.createElement('button');ban.className='action ban';ban.textContent='حظر';
+  const unban=document.createElement('button');unban.className='action';unban.textContent='إلغاء الحظر';
+  ban.disabled=u.banned;unban.disabled=!u.banned;
+  ban.onclick=()=>{u.banned=true;renderUsers();};
+  unban.onclick=()=>{u.banned=false;renderUsers();};
+  actions.append(ban,unban);
+  card.append(title,id,wall,offer,country,pts,status,actions);
+  list.appendChild(card);
+ });
+}
 </script>
 </body>
 </html>
