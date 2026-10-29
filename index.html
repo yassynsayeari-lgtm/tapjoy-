@@ -42,7 +42,136 @@ function submitRequest(){if(!selectedCoins){alert('Please choose a withdrawal am
 function copyId(){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(userId).then(()=>alert('User ID copied.')).catch(()=>alert('Your User ID is: '+userId))}else alert('Your User ID is: '+userId)}
 refreshBalance();
 </script>
+
 <script type="module">
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {
+  getFirestore, doc, getDoc, setDoc, updateDoc,
+  onSnapshot, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {
+  getAuth, signInAnonymously, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",
+  authDomain: "yasjoy.firebaseapp.com",
+  projectId: "yasjoy",
+  storageBucket: "yasjoy.firebasestorage.app",
+  messagingSenderId: "967065409063",
+  appId: "1:967065409063:web:4f7b882cc38f17ec8a2002"
+};
+
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+async function loadSocialLinks() {
+  const ids = {
+    telegram: "telegramLink",
+    youtube: "youtubeLink",
+    tiktok: "tiktokLink",
+    instagram: "instagramLink"
+  };
+
+  const status = document.getElementById("socialStatus");
+
+  try {
+    const snap = await getDoc(doc(db, "socialLinks", "main"));
+
+    if (!snap.exists()) {
+      status.textContent = "Social links are not configured yet.";
+      return;
+    }
+
+    const links = snap.data();
+    let count = 0;
+
+    for (const [key, id] of Object.entries(ids)) {
+      const el = document.getElementById(id);
+      const url = links[key];
+
+      if (typeof url === "string" && /^https:\/\/\S+$/i.test(url)) {
+        el.href = url;
+        el.hidden = false;
+        count++;
+      } else {
+        el.hidden = true;
+      }
+    }
+
+    status.textContent = count
+      ? "Social links loaded from Firebase."
+      : "No valid social links configured.";
+  } catch (error) {
+    console.error("Social links error:", error);
+    status.textContent = "Could not load social links.";
+  }
+}
+
+async function setupUser(user) {
+  const userRef = doc(db, "users", user.uid);
+  const snap = await getDoc(userRef);
+  const publicId = "YJ-" + user.uid.slice(0, 8).toUpperCase();
+
+  if (!snap.exists()) {
+    await setDoc(userRef, {
+      uid: user.uid,
+      publicId,
+      createdAt: serverTimestamp(),
+      lastActiveAt: serverTimestamp()
+    });
+  } else {
+    await updateDoc(userRef, {
+      lastActiveAt: serverTimestamp()
+    });
+  }
+
+  document.getElementById("userId").textContent = publicId;
+
+  const profileText = document.querySelector("#profile .panel > p");
+  if (profileText) {
+    profileText.textContent = "Your YASJOY account";
+  }
+
+  const demoNote = document.querySelector("#userId")
+    ?.parentElement?.nextElementSibling;
+
+  if (demoNote) {
+    demoNote.textContent = "Your User ID is linked to your Firebase account.";
+  }
+
+  onSnapshot(userRef, (userSnap) => {
+    const data = userSnap.data() || {};
+    const coins = Number.isFinite(data.balance) ? data.balance : 0;
+
+    document.getElementById("balance").textContent =
+      coins.toLocaleString();
+
+    document.getElementById("withdrawBalance").textContent =
+      coins.toLocaleString();
+  }, (error) => {
+    console.error("User data error:", error);
+  });
+}
+
+loadSocialLinks();
+
+onAuthStateChanged(auth, async (user) => {
+  try {
+    if (user) {
+      await setupUser(user);
+    } else {
+      await signInAnonymously(auth);
+    }
+  } catch (error) {
+    console.error("Firebase account setup error:", error);
+    document.getElementById("userId").textContent =
+      "Connection error — reload the page";
+  }
+});
+</script>
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",authDomain:"yasjoy.firebaseapp.com",projectId:"yasjoy",storageBucket:"yasjoy.firebasestorage.app",messagingSenderId:"967065409063",appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"};
