@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YASJOY Admin</title>
+<style>
+:root{--blue:#1976d2;--light:#e3f2fd;--bg:#f4f7fb}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#172b4d}
+header{background:var(--blue);color:white;padding:22px 16px}
+header h1{margin:0;font-size:24px}
+header p{margin:8px 0 0;font-size:14px}
+main{max-width:800px;margin:auto;padding:16px}
+.folder{background:white;border-radius:15px;padding:18px;margin:14px 0;box-shadow:0 3px 12px #0000000c}
+.folder h2{font-size:19px;margin:0 0 14px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+button{border:0;border-radius:9px;padding:11px 13px;background:var(--light);color:#145a9e;font-weight:bold;cursor:pointer}
+button.active{background:var(--blue);color:white}
+.note{font-size:13px;color:#607080;line-height:1.7}
+.item{border:1px solid #e2eaf2;border-radius:11px;padding:13px;margin:10px 0;background:#fff}
+.item strong{display:block;margin-bottom:8px}
+.empty{text-align:center;color:#718096;padding:18px}
+.tag{display:inline-block;border-radius:20px;padding:5px 9px;background:#fff3cd;color:#765900;font-size:12px}
+.tag.green{background:#d9f7e8;color:#17683a}
+.tag.red{background:#ffe1e1;color:#9b2222}
+footer{text-align:center;color:#718096;font-size:12px;padding:22px}
+</style>
+</head>
+<body>
+<header>
+<h1>🛡️ YASJOY Admin</h1>
+<p>لوحة إدارة المستخدمين والسحوبات</p>
+</header>
+<main>
+<section class="folder">
+<h2>📁 User withdrawal of funds</h2>
+<div class="tabs" id="withdrawTabs">
+<button class="active" data-status="pending">طلبات السحب</button>
+<button data-status="paid">تم الدفع</button>
+<button data-status="rejected">تم رفض الدفع</button>
+</div>
+<div id="withdrawContent" class="empty">لا توجد طلبات معروضة حاليًا.</div>
+<p class="note">هذه واجهة أولية. لم يتم ربط طلبات السحب بقاعدة البيانات بعد.</p>
+</section>
+
+<section class="folder">
+<h2>📁 User Information</h2>
+<p>ستظهر هنا معلومات كل مستخدم بعد ربط Firebase:</p>
+<div class="item">🆔 <strong>User ID</strong><span class="note">معرّف المستخدم الفريد</span></div>
+<div class="item">🌍 <strong>الدولة وعلمها</strong><span class="note">بحسب بيانات الدولة المتاحة للمستخدم</span></div>
+<div class="item">🎯 <strong>جدار العروض والعروض</strong><span class="note">العروض المكتملة والجارية، والنقاط المسجلة</span></div>
+<p class="note">لن تظهر بيانات حقيقية حتى يتم الربط الآمن بقاعدة البيانات.</p>
+</section>
+</main>
+<footer>YASJOY Admin • لوحة تجريبية أولية</footer>
+<script>
+document.querySelectorAll('#withdrawTabs button').forEach(button=>{
+  button.addEventListener('click',()=>{
+    document.querySelectorAll('#withdrawTabs button').forEach(b=>b.classList.remove('active'));
+    button.classList.add('active');
+    const labels={
+      pending:'لا توجد طلبات سحب معروضة حاليًا.',
+      paid:'لا توجد طلبات مدفوعة معروضة حاليًا.',
+      rejected:'لا توجد طلبات مرفوضة معروضة حاليًا.'
+    };
+    document.getElementById('withdrawContent').textContent=labels[button.dataset.status];
+  });
+});
+</script>
+</body>
+</html>
