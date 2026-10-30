@@ -37,7 +37,10 @@
 <div class="form"><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden">
 <label>الاسم</label><input id="methodName" placeholder="Binance">
 <label>الحد الأدنى (عدد صحيح)</label><input id="methodMin" type="number" min="0" step="1">
-<label>التعليمات</label><textarea id="methodInstructions"></textarea>
+<label>التعليمات</label><textarea id="methodInstructions" placeholder="مثال: أدخل رقم Binance Pay الخاص بك"></textarea>
+<label>اسم حقل بيانات الاستلام</label><input id="methodAccountLabel" placeholder="مثال: Binance Pay ID أو بريد Payeer">
+<label>النص الإرشادي داخل الحقل</label><input id="methodAccountPlaceholder" placeholder="أدخل بيانات الاستلام">
+<label>نوع البيانات</label><select id="methodAccountType"><option value="text">نص</option><option value="email">بريد إلكتروني</option></select>
 <label>رابط الشعار (اختياري)</label><input id="methodLogo" type="url" placeholder="https://...">
 <label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label>
 <button id="saveMethod" class="primary">حفظ</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p>
@@ -123,20 +126,21 @@ if(!methods.length)l.append(el('div','لا توجد طرق سحب.','empty'));
 methods.forEach(m=>{
 const c=el('article','','item'),logo=validUrl(m.logo);
 if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;im.alt='';c.append(im)}
-c.append(el('div',m.name||m.id),el('div','الحد الأدنى: '+(m.minimumWithdrawal??'غير محدد')),el('div','التعليمات: '+(m.instructions||'—')),el('div',m.enabled?'مفعّلة':'متوقفة','badge'));
+c.append(el('div',m.name||m.id),el('div','الحد الأدنى: '+(m.minimumWithdrawal??'غير محدد')+' نقطة'),el('div','حقل الاستلام: '+(m.accountLabel||'بيانات الحساب')),el('div','التعليمات: '+(m.instructions||'—')),el('div',m.enabled?'مفعّلة':'متوقفة','badge'));
 const a=el('div','','actions');
 [['تعديل',()=>editMethod(m)],[m.enabled?'إيقاف':'تفعيل',()=>toggle('withdrawMethods',m.id,{enabled:!m.enabled})],['حذف',()=>remove('withdrawMethods',m.id)]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});
 c.append(a);l.append(c);
 });
 }
-function editMethod(m){$('methodId').value=m.id;$('methodName').value=m.name||'';$('methodMin').value=m.minimumWithdrawal??'';$('methodInstructions').value=m.instructions||'';$('methodLogo').value=m.logo||'';$('methodEnabled').checked=!!m.enabled;$('methodTitle').textContent='تعديل طريقة سحب'}
-function resetMethod(){['methodId','methodName','methodMin','methodInstructions','methodLogo'].forEach(x=>$(x).value='');$('methodEnabled').checked=true;$('methodTitle').textContent='إضافة طريقة سحب';$('methodMsg').textContent=''}
+function editMethod(m){$('methodId').value=m.id;$('methodName').value=m.name||'';$('methodMin').value=m.minimumWithdrawal??'';$('methodInstructions').value=m.instructions||'';$('methodAccountLabel').value=m.accountLabel||'بيانات الاستلام';$('methodAccountPlaceholder').value=m.accountPlaceholder||'أدخل بيانات الاستلام';$('methodAccountType').value=m.accountType==='email'?'email':'text';$('methodLogo').value=m.logo||'';$('methodEnabled').checked=!!m.enabled;$('methodTitle').textContent='تعديل طريقة سحب'}
+function resetMethod(){['methodId','methodName','methodMin','methodInstructions','methodAccountLabel','methodAccountPlaceholder','methodLogo'].forEach(x=>$(x).value='');$('methodAccountType').value='text';$('methodEnabled').checked=true;$('methodTitle').textContent='إضافة طريقة سحب';$('methodMsg').textContent=''}
 $('cancelMethod').onclick=resetMethod;
 $('saveMethod').onclick=async()=>{
 const id=$('methodId').value,name=$('methodName').value.trim(),min=$('methodMin').value,logoRaw=$('methodLogo').value.trim(),logo=validUrl(logoRaw);
 if(!name||min===''||!Number.isSafeInteger(Number(min))||Number(min)<0){$('methodMsg').textContent='أدخل اسمًا وحدًا أدنى صحيحًا.';$('methodMsg').className='error';return}
 if(logoRaw&&!logo){$('methodMsg').textContent='رابط الشعار يجب أن يبدأ بـ https://.';$('methodMsg').className='error';return}
-const data={name,minimumWithdrawal:Number(min),instructions:$('methodInstructions').value.trim(),enabled:$('methodEnabled').checked};if(logo)data.logo=logo;
+const accountLabel=$('methodAccountLabel').value.trim()||'بيانات الاستلام',accountPlaceholder=$('methodAccountPlaceholder').value.trim()||'أدخل بيانات الاستلام';
+const data={name,minimumWithdrawal:Number(min),instructions:$('methodInstructions').value.trim(),accountLabel,accountPlaceholder,accountType:$('methodAccountType').value==='email'?'email':'text',enabled:$('methodEnabled').checked};if(logo)data.logo=logo;
 try{if(id)await updateDoc(doc(db,'withdrawMethods',id),data);else await addDoc(collection(db,'withdrawMethods'),data);$('methodMsg').textContent='تم الحفظ.';$('methodMsg').className='success';resetMethod()}
 catch(e){$('methodMsg').textContent='فشل الحفظ: '+e.message;$('methodMsg').className='error'}
 };
