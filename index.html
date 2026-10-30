@@ -16,6 +16,13 @@ header{max-width:720px;margin:auto;padding:22px 18px;display:flex;align-items:ce
 @media(max-width:390px){header{padding:16px 10px}.brand{font-size:25px}.star{font-size:31px}.balance{padding:10px;font-size:17px}.wallet{font-size:67px}.banner{padding:17px;gap:9px}.offer{padding:10px}.provider-icon{width:45px;height:45px}.offer h3{font-size:16px}.offer p{font-size:12px}}
 </style></head>
 <body>
+ <section id="bannedScreen" class="banned-screen" hidden role="alert">
+  <div class="banned-card">
+    <div style="font-size:55px">🚫</div>
+    <h2>حسابك محظور</h2>
+    <p>تم إيقاف الوصول إلى YASJOY لهذا الحساب. يرجى التواصل مع إدارة التطبيق.</p>
+  </div>
+ </section>
 <header><div class="brand"><span class="star">⭐</span><span>YASJOY👑</span></div><div class="balance"><span class="coin">🪙</span><span id="balance">0</span><button onclick="refreshBalance()" style="border:0;background:none;color:#078af5;font-size:24px" aria-label="Refresh">⟳</button></div></header>
 <main>
 <section id="home" class="page active"><div class="banner"><div class="wallet">💰</div><div style="flex:1"><div class="banner-text">Withdraw your points</div><button class="go" onclick="showPage('withdraw')" aria-label="Withdraw">➜</button></div></div><div class="section-title">🔥 Offer Walls</div><p class="subtitle">Complete offers · Earn coins</p><div class="offers">
@@ -38,6 +45,29 @@ function openOffer(name){alert(name+' offer wall is not connected yet. Provider 
 function submitRequest(){if(!selectedCoins){alert('Please choose a withdrawal amount.');return}if(balance<selectedCoins){alert('Insufficient coins.');return}if(!document.getElementById('account').value.trim()){alert('Please enter your Binance payout details.');return}alert('Withdrawal requests are not enabled yet. No coins were deducted and no payment was made.')}
 function copyId(){if(!userId){alert('Your User ID is still loading.');return}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(userId).then(()=>alert('User ID copied.')).catch(()=>alert('Your User ID is: '+userId))}else alert('Your User ID is: '+userId)}
 refreshBalance();
+ /* Ban screen */
+.banned-screen{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:linear-gradient(145deg,#dcefff,#f2fcff,#d8f1ff);
+  text-align:center;
+}
+.banned-screen[hidden]{display:none!important}
+.banned-card{
+  width:100%;
+  max-width:420px;
+  padding:30px 22px;
+  border-radius:28px;
+  background:#fff;
+  box-shadow:0 8px 30px #12387820;
+}
+.banned-card h2{color:#d32f2f;margin:12px 0;font-size:27px}
+.banned-card p{color:#52657c;line-height:1.8;margin:0}
 </script>
 <script type="module">
 import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
