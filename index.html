@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -6,477 +5,144 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#dff4ff">
 <title>YASJOY - Earn Rewards</title>
-
 <style>
 *{box-sizing:border-box}
 :root{--blue:#078af5;--dark:#123878;--muted:#829cba}
-
-body{
-  margin:0;
-  background:linear-gradient(145deg,#dcefff,#f2fcff,#d8f1ff);
-  font-family:Arial,sans-serif;
-  color:var(--dark);
-  padding-bottom:100px
-}
-
-header{
-  max-width:720px;
-  margin:auto;
-  padding:22px 18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px
-}
-
+body{margin:0;background:linear-gradient(145deg,#dcefff,#f2fcff,#d8f1ff);font-family:Arial,sans-serif;color:var(--dark);padding-bottom:100px}
+header{max-width:720px;margin:auto;padding:22px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .brand{display:flex;align-items:center;gap:8px;font-size:30px;font-weight:900;color:#0878d7}
 .star{font-size:39px;filter:drop-shadow(1px 3px 2px #e9b900)}
 .balance{background:white;border-radius:35px;padding:12px 15px;display:flex;align-items:center;gap:10px;box-shadow:0 5px 18px #74bce833;font-size:20px;font-weight:bold}
-.coin{font-size:25px}
-button{cursor:pointer;font:inherit}
-
-main{max-width:720px;margin:auto;padding:0 18px}
-.page{display:none}
-.page.active{display:block}
-
-.banner{
-  min-height:205px;
-  border-radius:28px;
-  padding:25px;
-  background:linear-gradient(130deg,#04b9f0,#078af5 60%,#1266e9);
-  color:white;
-  display:flex;
-  align-items:center;
-  gap:16px;
-  box-shadow:0 12px 25px #078af526
-}
-
-.wallet{font-size:90px}
-.banner-text{font-size:clamp(23px,5vw,34px);font-weight:800;line-height:1.25}
+.coin{font-size:25px}button{cursor:pointer;font:inherit}
+main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{display:block}
+.banner{min-height:205px;border-radius:28px;padding:25px;background:linear-gradient(130deg,#04b9f0,#078af5 60%,#1266e9);color:white;display:flex;align-items:center;gap:16px;box-shadow:0 12px 25px #078af526}
+.wallet{font-size:90px}.banner-text{font-size:clamp(23px,5vw,34px);font-weight:800;line-height:1.25}
 .go{border:0;background:#ffffff38;color:white;border-radius:50%;width:55px;height:55px;font-size:30px;margin-top:15px}
-
-.section-title{font-size:30px;font-weight:900;margin:24px 0 4px}
-.subtitle{color:var(--muted);font-size:17px;margin:0 0 16px}
+.section-title{font-size:30px;font-weight:900;margin:24px 0 4px}.subtitle{color:var(--muted);font-size:17px;margin:0 0 16px}
 .offers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
-.offer{background:white;border:1px solid #d5edff;border-radius:22px;padding:15px;box-shadow:0 5px 14px #74bce833}
+.offer{background:white;border:1px solid #d5edff;border-radius:22px;padding:15px;box-shadow:0 5px 14px #74bce833;min-width:0}
 .offer-top{display:flex;align-items:center;gap:10px;min-height:86px}
-.provider-icon{width:58px;height:58px;flex-shrink:0;border-radius:16px;display:grid;place-items:center;font-size:22px;font-weight:bold;color:white}
-.tap{background:#f3223a}
-.fyber{background:#04b87b}
-.torox{background:#17143e}
-.revu{background:#dff4ff;color:#0758a8}
-.offer h3{font-size:19px;margin:0 0 7px}
-.offer p{font-size:14px;color:var(--muted);line-height:1.35;margin:0}
+.provider-icon{width:58px;height:58px;flex-shrink:0;border-radius:16px;display:grid;place-items:center;font-size:22px;font-weight:bold;color:white;overflow:hidden}
+.provider-icon img{width:100%;height:100%;object-fit:contain;background:white;border-radius:12px}
+.offer h3{font-size:19px;margin:0 0 7px;overflow-wrap:anywhere}.offer p{font-size:14px;color:var(--muted);line-height:1.35;margin:0}
 .earn{margin-top:12px;width:100%;border:0;border-radius:30px;padding:13px 5px;background:var(--blue);color:white;font-weight:bold}
-
+.earn:disabled{background:#aabbd0;color:#fff;cursor:not-allowed}
+.empty-offers{grid-column:1/-1;background:#fff;border:1px dashed #b9d9ef;border-radius:18px;padding:20px;text-align:center;color:var(--muted);line-height:1.6}
 .panel{background:white;border-radius:28px;padding:22px;margin:18px 0;box-shadow:0 5px 20px #80c9f433}
-.panel h2{margin:0 0 20px;font-size:30px}
-.small{font-size:14px;color:var(--muted);line-height:1.6}
-.field-label{display:block;margin:16px 0 8px}
-input,select{width:100%;padding:15px;border:1px solid #cfe7f7;border-radius:14px;font-size:16px;background:white}
+.panel h2{margin:0 0 20px;font-size:30px}.small{font-size:14px;color:var(--muted);line-height:1.6}
+.field-label{display:block;margin:16px 0 8px}input,select{width:100%;padding:15px;border:1px solid #cfe7f7;border-radius:14px;font-size:16px;background:white}
 .primary{width:100%;border:0;border-radius:14px;padding:15px;background:var(--blue);color:white;font-size:17px;font-weight:bold;margin-top:15px}
-.amounts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.amount{border:2px solid #d9efff;background:#f8fcff;color:#12366f;padding:15px;border-radius:18px;font-weight:bold}
+.amounts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.amount{border:2px solid #d9efff;background:#f8fcff;color:#12366f;padding:15px;border-radius:18px;font-weight:bold}
 .amount.selected{border-color:var(--blue);background:#e3f4ff}
-
 .social{display:flex;align-items:center;gap:13px;padding:14px 12px;margin:10px 0;border:1px solid #d9efff;border-radius:15px;background:#f8fcff;color:var(--dark);text-decoration:none;font-weight:bold}
 .social-icon{font-size:24px;width:35px;text-align:center}
 .id-box{background:#eff7ff;border-radius:14px;padding:15px;display:flex;justify-content:space-between;align-items:center;gap:8px;overflow-wrap:anywhere}
-
 .bottom{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(12px);border-radius:25px 25px 0 0;display:flex;justify-content:space-around;padding:12px 10px 18px;box-shadow:0 -5px 25px #74bce822}
-.nav{border:0;background:transparent;color:#829cba;font-size:16px;font-weight:bold;min-width:100px}
-.nav .ico{display:block;font-size:27px;margin-bottom:4px}
-.nav.active{color:var(--blue)}
+.nav{border:0;background:transparent;color:#829cba;font-size:16px;font-weight:bold;min-width:100px}.nav .ico{display:block;font-size:27px;margin-bottom:4px}.nav.active{color:var(--blue)}
 .notice{background:#fff7df;border:1px solid #ffe2a3;border-radius:14px;padding:12px;color:#765318;font-size:13px;line-height:1.5;margin-top:14px}
-
-/* Ban screen */
-.banned-screen{
-  position:fixed;
-  inset:0;
-  z-index:99999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-  background:linear-gradient(145deg,#dcefff,#f2fcff,#d8f1ff);
-  text-align:center
-}
-
-.banned-screen[hidden]{display:none!important}
-
-.banned-card{
-  width:100%;
-  max-width:420px;
-  padding:30px 22px;
-  border-radius:28px;
-  background:#fff;
-  box-shadow:0 8px 30px #12387820
-}
-
-.banned-card h2{color:#d32f2f;margin:12px 0;font-size:27px}
-.banned-card p{color:#52657c;line-height:1.8;margin:0}
-
-@media(max-width:390px){
-  header{padding:16px 10px}
-  .brand{font-size:25px}
-  .star{font-size:31px}
-  .balance{padding:10px;font-size:17px}
-  .wallet{font-size:67px}
-  .banner{padding:17px;gap:9px}
-  .offer{padding:10px}
-  .provider-icon{width:45px;height:45px}
-  .offer h3{font-size:16px}
-  .offer p{font-size:12px}
-}
+.banned-screen{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(145deg,#dcefff,#f2fcff,#d8f1ff);text-align:center}
+.banned-screen[hidden]{display:none!important}.banned-card{width:100%;max-width:420px;padding:30px 22px;border-radius:28px;background:#fff;box-shadow:0 8px 30px #12387820}
+.banned-card h2{color:#d32f2f;margin:12px 0;font-size:27px}.banned-card p{color:#52657c;line-height:1.8;margin:0}
+@media(max-width:390px){header{padding:16px 10px}.brand{font-size:25px}.star{font-size:31px}.balance{padding:10px;font-size:17px}.wallet{font-size:67px}.banner{padding:17px;gap:9px}.offer{padding:10px}.provider-icon{width:45px;height:45px}.offer h3{font-size:16px}.offer p{font-size:12px}}
 </style>
 </head>
-
 <body>
-
-<section id="bannedScreen" class="banned-screen" hidden role="alert">
-  <div class="banned-card">
-    <div style="font-size:55px">🚫</div>
-    <h2>حسابك محظور</h2>
-    <p>تم إيقاف الوصول إلى YASJOY لهذا الحساب. يرجى التواصل مع إدارة التطبيق.</p>
-  </div>
-</section>
-
+<section id="bannedScreen" class="banned-screen" hidden role="alert"><div class="banned-card"><div style="font-size:55px">🚫</div><h2>حسابك محظور</h2><p>تم إيقاف الوصول إلى YASJOY لهذا الحساب. يرجى التواصل مع إدارة التطبيق.</p></div></section>
 <header>
   <div class="brand"><span class="star">⭐</span><span>YASJOY👑</span></div>
-  <div class="balance">
-    <span class="coin">🪙</span>
-    <span id="balance">0</span>
-    <button onclick="refreshBalance()" style="border:0;background:none;color:#078af5;font-size:24px" aria-label="Refresh">⟳</button>
-  </div>
+  <div class="balance"><span class="coin">🪙</span><span id="balance">0</span><button onclick="refreshBalance()" style="border:0;background:none;color:#078af5;font-size:24px" aria-label="Refresh">⟳</button></div>
 </header>
-
 <main>
-
 <section id="home" class="page active">
-  <div class="banner">
-    <div class="wallet">💰</div>
-    <div style="flex:1">
-      <div class="banner-text">Withdraw your points</div>
-      <button class="go" onclick="showPage('withdraw')" aria-label="Withdraw">➜</button>
-    </div>
-  </div>
-
-  <div class="section-title">🔥 Offer Walls</div>
-  <p class="subtitle">Complete offers · Earn coins</p>
-
-  <div class="offers">
-    <article class="offer">
-      <div class="offer-top">
-        <div class="provider-icon tap">T</div>
-        <div><h3>Tapjoy</h3><p>Complete offers and get rewards</p></div>
-      </div>
-      <button class="earn" onclick="openOffer('Tapjoy')">🪙 Earn coins ›</button>
-    </article>
-
-    <article class="offer">
-      <div class="offer-top">
-        <div class="provider-icon fyber">F</div>
-        <div><h3>Fyber</h3><p>Play, install, and earn coins</p></div>
-      </div>
-      <button class="earn" onclick="openOffer('Fyber')">🪙 Earn coins ›</button>
-    </article>
-
-    <article class="offer">
-      <div class="offer-top">
-        <div class="provider-icon torox">T</div>
-        <div><h3>Torox</h3><p>Complete offers and get rewards</p></div>
-      </div>
-      <button class="earn" onclick="openOffer('Torox')">🪙 Earn coins ›</button>
-    </article>
-
-    <article class="offer">
-      <div class="offer-top">
-        <div class="provider-icon revu">R</div>
-        <div><h3>Revu</h3><p>Discover offers and earn coins</p></div>
-      </div>
-      <button class="earn" onclick="openOffer('Revu')">🪙 Earn coins ›</button>
-    </article>
-  </div>
-
-  <div class="notice">Offer walls are demo buttons until each provider approves YASJOY and a secure integration is completed.</div>
+  <div class="banner"><div class="wallet">💰</div><div style="flex:1"><div class="banner-text">Withdraw your points</div><button class="go" onclick="showPage('withdraw')" aria-label="Withdraw">➜</button></div></div>
+  <div class="section-title">🔥 Offer Walls</div><p class="subtitle">Complete offers · Earn coins</p>
+  <div class="offers" id="offersList"><div class="empty-offers">Loading offer walls…</div></div>
+  <div class="notice">Offer walls are available only when enabled by YASJOY administration. A listed wall is not proof that its provider has approved YASJOY or that rewards are active.</div>
 </section>
-
 <section id="withdraw" class="page">
-  <div class="panel">
-    <h2>Withdraw your points</h2>
-    <p class="small">Available Balance</p>
-
-    <div style="background:#1765ef;color:white;border-radius:22px;padding:25px;text-align:center;font-size:28px">
-      <strong id="withdrawBalance">0</strong>
-      <div style="font-size:17px">Coins</div>
-    </div>
-
-    <h3>Choose withdrawal amount</h3>
-
-    <div class="amounts">
+  <div class="panel"><h2>Withdraw your points</h2><p class="small">Available Balance</p>
+    <div style="background:#1765ef;color:white;border-radius:22px;padding:25px;text-align:center;font-size:28px"><strong id="withdrawBalance">0</strong><div style="font-size:17px">Coins</div></div>
+    <h3>Choose withdrawal amount</h3><div class="amounts">
       <button class="amount" onclick="selectAmount(this,100,0.10)">$0.10<br><small>100 coins</small></button>
       <button class="amount" onclick="selectAmount(this,250,0.25)">$0.25<br><small>250 coins</small></button>
       <button class="amount" onclick="selectAmount(this,1000,1)">$1.00<br><small>1,000 coins</small></button>
       <button class="amount" onclick="selectAmount(this,2000,2)">$2.00<br><small>2,000 coins</small></button>
       <button class="amount" onclick="selectAmount(this,3000,3)">$3.00<br><small>3,000 coins</small></button>
     </div>
-
-    <label class="field-label" for="method">Withdrawal method</label>
-    <select id="method"><option value="Binance">Binance</option></select>
-
-    <label class="field-label" for="account">Binance account identifier</label>
-    <input id="account" autocomplete="off" placeholder="Enter your Binance Pay ID or details">
-
+    <label class="field-label" for="method">Withdrawal method</label><select id="method"><option value="Binance">Binance</option></select>
+    <label class="field-label" for="account">Binance account identifier</label><input id="account" autocomplete="off" placeholder="Enter your Binance Pay ID or details">
     <button class="primary" onclick="submitRequest()">Submit withdrawal request</button>
-
     <p class="small">Demo interface only: this request is not saved, coins are not deducted, and no payment is sent.</p>
     <button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('home')">Back to Home</button>
   </div>
 </section>
-
 <section id="profile" class="page">
-  <div class="panel">
-    <h2>Profile</h2>
-    <p>Your YASJOY demo profile</p>
-
-    <label class="field-label">Your User ID</label>
-    <div class="id-box">
-      <strong id="userId">Connecting...</strong>
-      <button onclick="copyId()" style="border:0;background:none;color:#078af5;font-size:20px" aria-label="Copy User ID">📋</button>
-    </div>
-
+  <div class="panel"><h2>Profile</h2><p>Your YASJOY demo profile</p>
+    <label class="field-label">Your User ID</label><div class="id-box"><strong id="userId">Connecting...</strong><button onclick="copyId()" style="border:0;background:none;color:#078af5;font-size:20px" aria-label="Copy User ID">📋</button></div>
     <p class="small" id="userIdNote">Your User ID will be linked to your Firebase account.</p>
-
-    <hr style="border:0;border-top:1px solid #d9efff;margin:24px 0">
-
-    <h2 style="font-size:24px">🔗 My Social Links</h2>
-    <p class="small">Official YASJOY social links</p>
-
+    <hr style="border:0;border-top:1px solid #d9efff;margin:24px 0"><h2 style="font-size:24px">🔗 My Social Links</h2><p class="small">Official YASJOY social links</p>
     <a class="social" id="telegramLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">✈️</span>Telegram</a>
     <a class="social" id="youtubeLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">▶️</span>YouTube</a>
     <a class="social" id="tiktokLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">🎵</span>TikTok</a>
     <a class="social" id="instagramLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">📸</span>Instagram</a>
-
-    <p id="socialStatus" class="small">Loading social links from Firebase…</p>
-    <button class="primary" onclick="showPage('home')">Back to Home</button>
+    <p id="socialStatus" class="small">Loading social links from Firebase…</p><button class="primary" onclick="showPage('home')">Back to Home</button>
   </div>
 </section>
-
 </main>
-
-<nav class="bottom">
-  <button class="nav active" id="navHome" onclick="showPage('home')"><span class="ico">⌂</span>Home</button>
-  <button class="nav" id="navProfile" onclick="showPage('profile')"><span class="ico">👤</span>Profile</button>
-</nav>
-
+<nav class="bottom"><button class="nav active" id="navHome" onclick="showPage('home')"><span class="ico">⌂</span>Home</button><button class="nav" id="navProfile" onclick="showPage('profile')"><span class="ico">👤</span>Profile</button></nav>
 <script>
 let selectedCoins=0,selectedUSD=0,balance=0,userId="";
-
-function showPage(id){
-  if(document.getElementById("bannedScreen")?.hidden===false)return;
-
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const page=document.getElementById(id);
-  if(page)page.classList.add('active');
-
-  document.getElementById('navHome').classList.toggle('active',id==='home');
-  document.getElementById('navProfile').classList.toggle('active',id==='profile');
-
-  window.scrollTo(0,0);
-  refreshBalance();
-}
-
-function refreshBalance(){
-  document.getElementById('balance').textContent=balance.toLocaleString();
-  document.getElementById('withdrawBalance').textContent=balance.toLocaleString();
-}
-
-function selectAmount(button,coins,usd){
-  document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));
-  button.classList.add('selected');
-  selectedCoins=coins;
-  selectedUSD=usd;
-}
-
-function openOffer(name){
-  if(document.getElementById("bannedScreen")?.hidden===false)return;
-  alert(name+' offer wall is not connected yet. Provider approval and secure integration are required. No coins have been awarded.');
-}
-
-function submitRequest(){
-  if(document.getElementById("bannedScreen")?.hidden===false)return;
-  if(!selectedCoins){alert('Please choose a withdrawal amount.');return}
-  if(balance<selectedCoins){alert('Insufficient coins.');return}
-  if(!document.getElementById('account').value.trim()){alert('Please enter your Binance payout details.');return}
-  alert('Withdrawal requests are not enabled yet. No coins were deducted and no payment was made.');
-}
-
-function copyId(){
-  if(!userId){alert('Your User ID is still loading.');return}
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(userId)
-      .then(()=>alert('User ID copied.'))
-      .catch(()=>alert('Your User ID is: '+userId));
-  }else{
-    alert('Your User ID is: '+userId);
-  }
-}
-
+function showPage(id){if(document.getElementById("bannedScreen")?.hidden===false)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id);if(page)page.classList.add('active');document.getElementById('navHome').classList.toggle('active',id==='home');document.getElementById('navProfile').classList.toggle('active',id==='profile');window.scrollTo(0,0);refreshBalance()}
+function refreshBalance(){document.getElementById('balance').textContent=balance.toLocaleString();document.getElementById('withdrawBalance').textContent=balance.toLocaleString()}
+function selectAmount(button,coins,usd){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins;selectedUSD=usd}
+function openOffer(url,name,enabled){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!enabled){alert(name+' is currently disabled by YASJOY administration.');return}if(!url||!/^https:\/\/\S+$/i.test(url)){alert('This offer wall has no valid HTTPS link.');return}window.open(url,'_blank','noopener,noreferrer')}
+function submitRequest(){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!selectedCoins){alert('Please choose a withdrawal amount.');return}if(balance<selectedCoins){alert('Insufficient coins.');return}if(!document.getElementById('account').value.trim()){alert('Please enter your Binance payout details.');return}alert('Withdrawal requests are not enabled yet. No coins were deducted and no payment was made.')}
+function copyId(){if(!userId){alert('Your User ID is still loading.');return}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(userId).then(()=>alert('User ID copied.')).catch(()=>alert('Your User ID is: '+userId))}else{alert('Your User ID is: '+userId)}}
 refreshBalance();
 </script>
-
 <script type="module">
 import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-
-import {
-  getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-
-import {
-  getAuth,signInAnonymously,onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-
-const firebaseConfig={
-  apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",
-  authDomain:"yasjoy.firebaseapp.com",
-  projectId:"yasjoy",
-  storageBucket:"yasjoy.firebasestorage.app",
-  messagingSenderId:"967065409063",
-  appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"
-};
-
-const app=getApps().length?getApp():initializeApp(firebaseConfig);
-const db=getFirestore(app);
-const auth=getAuth(app);
-
-/* Show or hide the banned screen */
-function setBannedView(banned){
-  const screen=document.getElementById("bannedScreen");
-  if(!screen)return;
-
-  screen.hidden=!banned;
-
-  const header=document.querySelector("header");
-  const main=document.querySelector("main");
-  const nav=document.querySelector("nav.bottom");
-
-  if(header)header.style.display=banned?"none":"";
-  if(main)main.style.display=banned?"none":"";
-  if(nav)nav.style.display=banned?"none":"";
+import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+const firebaseConfig={apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",authDomain:"yasjoy.firebaseapp.com",projectId:"yasjoy",storageBucket:"yasjoy.firebasestorage.app",messagingSenderId:"967065409063",appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"};
+const app=getApps().length?getApp():initializeApp(firebaseConfig),db=getFirestore(app),auth=getAuth(app);
+function setBannedView(banned){const screen=document.getElementById("bannedScreen");if(!screen)return;screen.hidden=!banned;const header=document.querySelector("header"),main=document.querySelector("main"),nav=document.querySelector("nav.bottom");if(header)header.style.display=banned?"none":"";if(main)main.style.display=banned?"none":"";if(nav)nav.style.display=banned?"none":""}
+async function loadSocialLinks(){const ids={telegram:"telegramLink",youtube:"youtubeLink",tiktok:"tiktokLink",instagram:"instagramLink"},status=document.getElementById("socialStatus");try{const snap=await getDoc(doc(db,"socialLinks","main"));if(!snap.exists()){status.textContent="Social links are not configured yet.";Object.values(ids).forEach(id=>document.getElementById(id).hidden=true);return}const links=snap.data();let count=0;for(const [key,id] of Object.entries(ids)){const el=document.getElementById(id),url=links[key];if(typeof url==="string"&&/^https:\/\/\S+$/i.test(url)){el.href=url;el.hidden=false;count++}else el.hidden=true}status.textContent=count?"Social links loaded from Firebase.":"No valid social links configured."}catch(error){console.error("Social links error:",error);status.textContent="Could not load social links. Check Firebase rules and socialLinks/main."}}
+/* Live offer-wall list: only visible records are rendered. */
+function renderOfferWalls(snapshot){
+ const host=document.getElementById("offersList");host.replaceChildren();
+ const walls=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(w=>w.visible!==false);
+ if(!walls.length){const empty=document.createElement("div");empty.className="empty-offers";empty.textContent="No offer walls are currently available.";host.appendChild(empty);return}
+ walls.sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
+ for(const wall of walls){
+  const name=typeof wall.name==="string"&&wall.name.trim()?wall.name.trim():"Offer wall";
+  const url=typeof wall.url==="string"&&/^https:\/\/\S+$/i.test(wall.url)?wall.url:"";
+  const enabled=wall.enabled===true&&!!url;
+  const card=document.createElement("article");card.className="offer";
+  const top=document.createElement("div");top.className="offer-top";
+  const icon=document.createElement("div");icon.className="provider-icon";icon.style.background="#dff4ff";icon.style.color="#0758a8";
+  if(typeof wall.logo==="string"&&/^https:\/\/\S+$/i.test(wall.logo)){const img=document.createElement("img");img.src=wall.logo;img.alt=name+" logo";img.loading="lazy";img.onerror=()=>{icon.textContent=name.charAt(0).toUpperCase()};icon.appendChild(img)}else icon.textContent=name.charAt(0).toUpperCase();
+  const info=document.createElement("div"),title=document.createElement("h3"),description=document.createElement("p");
+  title.textContent=name;description.textContent=typeof wall.description==="string"&&wall.description.trim()?wall.description.trim():"Complete offers and get rewards";
+  info.append(title,description);top.append(icon,info);
+  const button=document.createElement("button");button.className="earn";button.textContent=enabled?"🪙 Earn coins ›":"Currently unavailable";button.disabled=!enabled;
+  button.addEventListener("click",()=>window.open(url,"_blank","noopener,noreferrer"));
+  card.append(top,button);host.appendChild(card);
+ }
 }
-
-async function loadSocialLinks(){
-  const ids={
-    telegram:"telegramLink",
-    youtube:"youtubeLink",
-    tiktok:"tiktokLink",
-    instagram:"instagramLink"
-  };
-
-  const status=document.getElementById("socialStatus");
-
-  try{
-    const snap=await getDoc(doc(db,"socialLinks","main"));
-
-    if(!snap.exists()){
-      status.textContent="Social links are not configured yet.";
-      Object.values(ids).forEach(id=>document.getElementById(id).hidden=true);
-      return;
-    }
-
-    const links=snap.data();
-    let count=0;
-
-    for(const [key,id] of Object.entries(ids)){
-      const el=document.getElementById(id);
-      const url=links[key];
-
-      if(typeof url==="string"&&/^https:\/\/\S+$/i.test(url)){
-        el.href=url;
-        el.hidden=false;
-        count++;
-      }else{
-        el.hidden=true;
-      }
-    }
-
-    status.textContent=count
-      ?"Social links loaded from Firebase."
-      :"No valid social links configured.";
-
-  }catch(error){
-    console.error("Social links error:",error);
-    status.textContent="Could not load social links. Check Firebase rules and socialLinks/main.";
-  }
-}
-
 let stopUserListener=null;
-
 async function setupUser(user){
-  const userRef=doc(db,"users",user.uid);
-  const snap=await getDoc(userRef);
-  const publicId="YJ-"+user.uid.slice(0,8).toUpperCase();
-
-  if(!snap.exists()){
-    await setDoc(userRef,{
-      uid:user.uid,
-      publicId,
-      createdAt:serverTimestamp(),
-      lastActiveAt:serverTimestamp()
-    });
-  }else{
-    await updateDoc(userRef,{
-      lastActiveAt:serverTimestamp(),
-      publicId
-    });
-  }
-
-  userId=publicId;
-
-  document.getElementById("userId").textContent=publicId;
-  document.getElementById("userIdNote").textContent="Your User ID is linked to your Firebase account.";
-
-  const profileText=document.querySelector("#profile .panel > p");
-  if(profileText)profileText.textContent="Your YASJOY account";
-
-  if(stopUserListener)stopUserListener();
-
-  stopUserListener=onSnapshot(
-    userRef,
-    userSnap=>{
-      const data=userSnap.data()||{};
-
-      /* Read the ban status directly from Firestore */
-      setBannedView(data.banned===true);
-
-      balance=Number.isFinite(data.balance)?data.balance:0;
-      refreshBalance();
-    },
-    error=>{
-      console.error("User data error:",error);
-    }
-  );
+ const userRef=doc(db,"users",user.uid),snap=await getDoc(userRef),publicId="YJ-"+user.uid.slice(0,8).toUpperCase();
+ if(!snap.exists())await setDoc(userRef,{uid:user.uid,publicId,createdAt:serverTimestamp(),lastActiveAt:serverTimestamp()});
+ else await updateDoc(userRef,{lastActiveAt:serverTimestamp(),publicId});
+ userId=publicId;document.getElementById("userId").textContent=publicId;document.getElementById("userIdNote").textContent="Your User ID is linked to your Firebase account.";
+ const profileText=document.querySelector("#profile .panel > p");if(profileText)profileText.textContent="Your YASJOY account";
+ if(stopUserListener)stopUserListener();
+ stopUserListener=onSnapshot(userRef,userSnap=>{const data=userSnap.data()||{};setBannedView(data.banned===true);balance=Number.isFinite(data.balance)?data.balance:0;refreshBalance()},error=>console.error("User data error:",error));
 }
-
 loadSocialLinks();
-
-onAuthStateChanged(auth,async user=>{
-  try{
-    if(!user){
-      await signInAnonymously(auth);
-      return;
-    }
-
-    await setupUser(user);
-
-  }catch(error){
-    console.error("Firebase account setup error:",error);
-
-    document.getElementById("userId").textContent="Connection error — reload the page";
-    document.getElementById("userIdNote").textContent="Could not connect. Check Anonymous Authentication and Firestore rules.";
-  }
-});
+onSnapshot(collection(db,"offerWalls"),renderOfferWalls,error=>{console.error("Offer walls listener error:",error);const host=document.getElementById("offersList");host.replaceChildren();const msg=document.createElement("div");msg.className="empty-offers";msg.textContent="Could not load offer walls. Please check your connection or Firebase rules.";host.appendChild(msg)});
+onAuthStateChanged(auth,async user=>{try{if(!user){await signInAnonymously(auth);return}await setupUser(user)}catch(error){console.error("Firebase account setup error:",error);document.getElementById("userId").textContent="Connection error — reload the page";document.getElementById("userIdNote").textContent="Could not connect. Check Anonymous Authentication and Firestore rules."}});
 </script>
-
 </body>
 </html>
