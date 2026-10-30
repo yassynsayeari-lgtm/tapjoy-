@@ -1,24 +1,63 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>YASJOY Admin</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YASJOY Admin</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f2f6fc;color:#183153;font-family:Arial,sans-serif}header{background:#1976d2;color:white;padding:20px 16px}main{max-width:900px;margin:auto;padding:15px}.box,.panel,.login{background:white;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #17365d0d}.menu{display:block;width:100%;text-align:right;background:white;border:1px solid #e0eafa;border-radius:12px;padding:16px;margin:10px 0;font-size:17px;font-weight:bold;color:#183153}.menu small{display:block;color:#718096;font-weight:normal;margin-top:5px}.panel{display:none}.panel.show{display:block}h2{font-size:20px}.tabs,.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tab,.btn,.primary{border:0;border-radius:9px;padding:11px 13px;font-weight:bold;cursor:pointer}.tab{background:#e4f1ff;color:#175ca4}.tab.active,.primary{background:#1976d2;color:white}.primary{width:100%}.btn{background:#e8f5e9;color:#176b37}.danger{background:#ffebee!important;color:#a51f2b!important}.item{border:1px solid #e0e8f0;border-radius:12px;padding:13px;margin:10px 0;overflow-wrap:anywhere}.muted{color:#718096;font-size:13px;line-height:1.7}.empty{text-align:center;padding:20px;color:#718096}.badge{display:inline-block;border-radius:20px;padding:5px 9px;background:#e8f5e9;color:#176b37;font-size:12px}input,textarea{width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px}textarea{min-height:75px}label{font-size:14px;font-weight:bold}.back{border:0;background:transparent;color:#1769aa;font-weight:bold;padding:8px 0 15px}.hidden{display:none!important}.error{color:#a51f2b}.success{color:#176b37}.form{border:1px solid #dce8f5;border-radius:12px;padding:13px;margin:12px 0;background:#fbfdff}.check{display:flex;align-items:center;gap:8px;margin:8px 0}.check input{width:auto;margin:0}img.logo{width:42px;height:42px;object-fit:contain;vertical-align:middle;margin-left:8px}
-</style></head><body>
-<header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header><main>
-<section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><p id="loginMsg" class="muted"></p></section>
-<section id="app" class="hidden"><p class="muted">تم التحقق من حساب المسؤول</p>
+*{box-sizing:border-box}body{margin:0;background:#f2f6fc;color:#183153;font-family:Arial,sans-serif}header{background:#1976d2;color:white;padding:20px 16px}main{max-width:900px;margin:auto;padding:15px}.box,.panel,.login{background:white;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #17365d0d}.menu{display:block;width:100%;text-align:right;background:white;border:1px solid #e0eafa;border-radius:12px;padding:16px;margin:10px 0;font-size:17px;font-weight:bold;color:#183153}.menu small{display:block;color:#718096;font-weight:normal;margin-top:5px}.panel{display:none}.panel.show{display:block}h2{font-size:20px}.tabs,.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tab,.btn,.primary{border:0;border-radius:9px;padding:11px 13px;font-weight:bold;cursor:pointer}.tab{background:#e4f1ff;color:#175ca4}.tab.active,.primary{background:#1976d2;color:white}.primary{width:100%}.btn{background:#e8f5e9;color:#176b37}.danger{background:#ffebee!important;color:#a51f2b!important}.item{border:1px solid #e0e8f0;border-radius:12px;padding:13px;margin:10px 0;overflow-wrap:anywhere}.muted{color:#718096;font-size:13px;line-height:1.7}.empty{text-align:center;padding:20px;color:#718096}.badge{display:inline-block;border-radius:20px;padding:5px 9px;background:#e8f5e9;color:#176b37;font-size:12px;margin:4px 0}input,textarea{width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px}textarea{min-height:75px}label{font-size:14px;font-weight:bold}.back{border:0;background:transparent;color:#1769aa;font-weight:bold;padding:8px 0 15px}.hidden{display:none!important}.error{color:#a51f2b}.success{color:#176b37}.form{border:1px solid #dce8f5;border-radius:12px;padding:13px;margin:12px 0;background:#fbfdff}.check{display:flex;align-items:center;gap:8px;margin:8px 0}.check input{width:auto;margin:0}img.logo{width:42px;height:42px;object-fit:contain;vertical-align:middle;margin-left:8px}.btn:disabled{opacity:.45;cursor:not-allowed}
+</style>
+</head>
+<body>
+<header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header>
+<main>
+<section id="login" class="login">
+<h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email">
+<label>كلمة المرور</label><input id="password" type="password">
+<button id="loginBtn" class="primary">تسجيل الدخول</button><p id="loginMsg" class="muted"></p>
+</section>
+<section id="app" class="hidden">
+<p class="muted">تم التحقق من حساب المسؤول</p>
 <div id="home">
 <button class="menu" onclick="openPanel('withdraw')">💳 طلبات السحب<small>معلّقة، مدفوعة، مرفوضة</small></button>
 <button class="menu" onclick="openPanel('users')">👥 المستخدمون<small>بحث، رصيد، آخر نشاط، حظر</small></button>
 <button class="menu" onclick="openPanel('methods')">💰 طرق السحب<small>إضافة وتعديل وتشغيل وإيقاف</small></button>
-<button class="menu" onclick="openPanel('walls')">🎁 جدران العروض<small>إضافة الروابط والشعارات وإدارتها</small></button>
+<button class="menu" onclick="openPanel('walls')">🎁 جدران العروض<small>إضافة، إظهار، إخفاء، تفعيل وحذف</small></button>
 </div>
-<section id="withdraw" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2><div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div><div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p></section>
-<section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userList"></div></section>
-<section id="methods" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة طرق السحب</h2><div class="form"><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden"><label>الاسم</label><input id="methodName" placeholder="Binance"><label>الحد الأدنى (عدد صحيح)</label><input id="methodMin" type="number" min="0" step="1"><label>التعليمات</label><textarea id="methodInstructions"></textarea><label>رابط الشعار (اختياري)</label><input id="methodLogo" type="url" placeholder="https://..."><label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label><button id="saveMethod" class="primary">حفظ</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
-<section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2><p class="muted">يجب إدخال رابط صحيح ومعتمد من مزوّد الخدمة. حفظ الرابط لا يعني تفعيل حساب المزوّد أو توثيق المكافآت.</p><div class="form"><h3 id="wallTitle">إضافة جدار عروض</h3><input id="wallId" type="hidden"><label>الاسم</label><input id="wallName" placeholder="Tapjoy"><label>رابط الجدار</label><input id="wallUrl" type="url" placeholder="https://..."><label>رابط الشعار (اختياري)</label><input id="wallLogo" type="url" placeholder="https://..."><label class="check"><input id="wallEnabled" type="checkbox"> مفعّل</label><button id="saveWall" class="primary">حفظ</button><button id="cancelWall" class="btn">إلغاء</button><p id="wallMsg" class="muted"></p></div><div id="wallList"></div></section>
-</section></main><footer class="muted" style="text-align:center;padding:20px">YASJOY Admin • Firebase</footer>
+<section id="withdraw" class="panel">
+<button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2>
+<div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div>
+<div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p>
+</section>
+<section id="users" class="panel">
+<button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2>
+<label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userList"></div>
+</section>
+<section id="methods" class="panel">
+<button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة طرق السحب</h2>
+<div class="form"><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden">
+<label>الاسم</label><input id="methodName" placeholder="Binance">
+<label>الحد الأدنى (عدد صحيح)</label><input id="methodMin" type="number" min="0" step="1">
+<label>التعليمات</label><textarea id="methodInstructions"></textarea>
+<label>رابط الشعار (اختياري)</label><input id="methodLogo" type="url" placeholder="https://...">
+<label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label>
+<button id="saveMethod" class="primary">حفظ</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p>
+</div><div id="methodList"></div>
+</section>
+<section id="walls" class="panel">
+<button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2>
+<p class="muted">الظهور منفصل عن التفعيل. يمكنك إخفاء الجدار أو عرضه مع إيقاف فتحه. يجب إدخال رابط HTTPS صحيح ومعتمد من مزوّد الخدمة. حفظ الرابط لا يعني تفعيل حساب المزوّد أو توثيق المكافآت.</p>
+<div class="form"><h3 id="wallTitle">إضافة جدار عروض</h3><input id="wallId" type="hidden">
+<label>الاسم</label><input id="wallName" placeholder="Tapjoy">
+<label>رابط الجدار</label><input id="wallUrl" type="url" placeholder="https://...">
+<label>رابط الشعار (اختياري)</label><input id="wallLogo" type="url" placeholder="https://...">
+<label class="check"><input id="wallVisible" type="checkbox" checked> ظاهر في تطبيق المستخدم</label>
+<label class="check"><input id="wallEnabled" type="checkbox"> مفعّل ويمكن فتحه</label>
+<button id="saveWall" class="primary">حفظ</button><button id="cancelWall" class="btn">إلغاء</button><p id="wallMsg" class="muted"></p>
+</div><div id="wallList"></div>
+</section>
+</section>
+</main>
+<footer class="muted" style="text-align:center;padding:20px">YASJOY Admin • Firebase</footer>
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';
 import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
@@ -27,34 +66,111 @@ const config={apiKey:'AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI',authDomain:'yasjo
 const ADMIN_UID='wQgo9HTzP0NWC6JO2D1Di8iIPm62',app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
 let users=[],withdrawals=[],methods=[],walls=[],status='pending',unsubs=[];
 setPersistence(auth,browserLocalPersistence).catch(console.error);
-$('loginBtn').onclick=async()=>{ $('loginMsg').textContent='جارٍ التحقق…';try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value)}catch(e){$('loginMsg').textContent='تعذّر تسجيل الدخول. تحقق من البيانات.';$('loginMsg').className='error'}};
+$('loginBtn').onclick=async()=>{$('loginMsg').textContent='جارٍ التحقق…';$('loginMsg').className='muted';try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value)}catch(e){$('loginMsg').textContent='تعذّر تسجيل الدخول. تحقق من البيانات.';$('loginMsg').className='error'}};
 $('password').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};
-onAuthStateChanged(auth,async u=>{unsubs.forEach(f=>f());unsubs=[];if(!u){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}if(u.uid!==ADMIN_UID){await signOut(auth);$('loginMsg').textContent='هذا الحساب غير مخوّل.';return}
+onAuthStateChanged(auth,async u=>{
+unsubs.forEach(f=>f());unsubs=[];
+if(!u){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}
+if(u.uid!==ADMIN_UID){await signOut(auth);$('loginMsg').textContent='هذا الحساب غير مخوّل.';return}
 $('login').classList.add('hidden');$('app').classList.remove('hidden');
-unsubs.push(onSnapshot(collection(db,'users'),s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));renderUsers()}));
-unsubs.push(onSnapshot(collection(db,'withdrawals'),s=>{withdrawals=s.docs.map(d=>({id:d.id,...d.data()}));renderWithdrawals()}));
-unsubs.push(onSnapshot(collection(db,'withdrawMethods'),s=>{methods=s.docs.map(d=>({id:d.id,...d.data()}));renderMethods()}));
-unsubs.push(onSnapshot(collection(db,'offerWalls'),s=>{walls=s.docs.map(d=>({id:d.id,...d.data()}));renderWalls()}));
+unsubs.push(onSnapshot(collection(db,'users'),s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));renderUsers()},e=>console.error('users:',e)));
+unsubs.push(onSnapshot(collection(db,'withdrawals'),s=>{withdrawals=s.docs.map(d=>({id:d.id,...d.data()}));renderWithdrawals()},e=>console.error('withdrawals:',e)));
+unsubs.push(onSnapshot(collection(db,'withdrawMethods'),s=>{methods=s.docs.map(d=>({id:d.id,...d.data()}));renderMethods()},e=>console.error('methods:',e)));
+unsubs.push(onSnapshot(collection(db,'offerWalls'),s=>{walls=s.docs.map(d=>({id:d.id,...d.data()}));renderWalls()},e=>{$('wallMsg').textContent='تعذّر تحميل الجدران. تحقق من اتصال Firebase والصلاحيات.';console.error('offerWalls:',e)}));
 });
-let current='home';function show(id){$('home').style.display=id==='home'?'block':'none';document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));if(id!=='home')$(id).classList.add('show');current=id}
-window.openPanel=show;window.goHome=()=>show('home');window.withdrawTab=(s,b)=>{status=s;document.querySelectorAll('#withdraw .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderWithdrawals()};
+function show(id){$('home').style.display=id==='home'?'block':'none';document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));if(id!=='home')$(id).classList.add('show')}
+window.openPanel=show;window.goHome=()=>show('home');
+window.withdrawTab=(s,b)=>{status=s;document.querySelectorAll('#withdraw .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderWithdrawals()};
 function balance(u){return Number(u.balance??u.points??u.coins??0)||0}
 function el(tag,txt,cls){const n=document.createElement(tag);n.textContent=txt;if(cls)n.className=cls;return n}
-function renderUsers(){const q=$('search').value.trim().toLowerCase(),list=$('userList');list.replaceChildren();const rows=users.filter(u=>[u.id,u.uid,u.publicId].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>balance(b)-balance(a));$('userMsg').textContent='عدد المستخدمين: '+users.length;if(!rows.length){list.append(el('div','لا توجد نتائج.','empty'));return}
-rows.forEach((u,i)=>{const c=el('article','', 'item');c.append(el('div',(i+1)+'. '+(u.publicId||'مستخدم')));c.append(el('div','Firebase UID: '+u.id));c.append(el('div','الرصيد: '+balance(u).toLocaleString('en-US')));let last='غير معروف';if(u.lastActiveAt){const d=u.lastActiveAt.toDate?u.lastActiveAt.toDate():new Date(u.lastActiveAt);if(!isNaN(d))last=d.toLocaleString('ar')}c.append(el('div','آخر نشاط: '+last));c.append(el('div',u.banned?'محظور':'غير محظور','badge'));const b=el('button',u.banned?'إلغاء الحظر':'حظر المستخدم','btn '+(u.banned?'':'danger'));b.onclick=async()=>{try{await updateDoc(doc(db,'users',u.id),{banned:!u.banned})}catch(e){alert('تعذّر تغيير الحظر: '+e.message)}};c.append(b);list.append(c)})}
-function renderWithdrawals(){const list=$('withdrawList');list.replaceChildren();const rows=withdrawals.filter(w=>String(w.status||'pending').toLowerCase()===status);if(!rows.length){list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));return}rows.forEach(w=>{const c=el('article','','item');c.append(el('div','رقم الطلب: '+w.id),el('div','User ID: '+(w.uid||w.userId||'غير متوفر')));['method','amountUSD','coins','walletAddress','payoutAddress','binanceWallet'].forEach(k=>{if(w[k]!==undefined)c.append(el('div',k+': '+w[k]))});c.append(el('div','الحالة: '+status));if(status==='pending'){const a=el('div','','actions');[['paid','تأكيد الدفع'],['rejected','رفض الطلب']].forEach(([s,t])=>{const b=el('button',t,'btn '+(s==='rejected'?'danger':''));b.onclick=async()=>{if(!confirm(s==='paid'?'هل دفعت المبلغ فعلًا؟':'هل تريد رفض الطلب؟'))return;try{await updateDoc(doc(db,'withdrawals',w.id),{status:s,updatedAt:new Date()})}catch(e){alert(e.message)}};a.append(b)});c.append(a)}list.append(c)})}
-function validUrl(v){if(!v)return '';try{const u=new URL(v);return ['http:','https:'].includes(u.protocol)?u.href:''}catch{return ''}}
-function renderMethods(){const l=$('methodList');l.replaceChildren();if(!methods.length)l.append(el('div','لا توجد طرق سحب.','empty'));methods.forEach(m=>{const c=el('article','','item');const logo=validUrl(m.logo);if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;c.append(im)}c.append(el('div',m.name||m.id),el('div','الحد الأدنى: '+(m.minimumWithdrawal??'غير محدد')),el('div','التعليمات: '+(m.instructions||'—')),el('div',m.enabled?'مفعّلة':'متوقفة','badge'));const a=el('div','','actions');[['تعديل',()=>editMethod(m)], [m.enabled?'إيقاف':'تفعيل',()=>toggle('withdrawMethods',m.id,!m.enabled)],['حذف',()=>remove('withdrawMethods',m.id)]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});c.append(a);l.append(c)})}
+function validUrl(v){if(!v)return '';try{const u=new URL(v);return u.protocol==='https:'?u.href:''}catch{return ''}}
+function renderUsers(){
+const q=$('search').value.trim().toLowerCase(),list=$('userList');list.replaceChildren();
+const rows=users.filter(u=>[u.id,u.uid,u.publicId].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>balance(b)-balance(a));
+$('userMsg').textContent='عدد المستخدمين: '+users.length;
+if(!rows.length){list.append(el('div','لا توجد نتائج.','empty'));return}
+rows.forEach((u,i)=>{
+const c=el('article','','item');c.append(el('div',(i+1)+'. '+(u.publicId||'مستخدم')),el('div','Firebase UID: '+u.id),el('div','الرصيد: '+balance(u).toLocaleString('en-US')));
+let last='غير معروف';if(u.lastActiveAt){const d=u.lastActiveAt.toDate?u.lastActiveAt.toDate():new Date(u.lastActiveAt);if(!isNaN(d))last=d.toLocaleString('ar')}
+c.append(el('div','آخر نشاط: '+last),el('div',u.banned?'محظور':'غير محظور','badge'));
+const b=el('button',u.banned?'إلغاء الحظر':'حظر المستخدم','btn '+(u.banned?'':'danger'));
+b.onclick=async()=>{try{await updateDoc(doc(db,'users',u.id),{banned:!u.banned})}catch(e){alert('تعذّر تغيير الحظر: '+e.message)}};
+c.append(b);list.append(c);
+});
+}
+function renderWithdrawals(){
+const list=$('withdrawList');list.replaceChildren();
+const rows=withdrawals.filter(w=>String(w.status||'pending').toLowerCase()===status);
+if(!rows.length){list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));return}
+rows.forEach(w=>{
+const c=el('article','','item');c.append(el('div','رقم الطلب: '+w.id),el('div','User ID: '+(w.uid||w.userId||'غير متوفر')));
+['method','amountUSD','coins','walletAddress','payoutAddress','binanceWallet'].forEach(k=>{if(w[k]!==undefined)c.append(el('div',k+': '+w[k]))});
+c.append(el('div','الحالة: '+status));
+if(status==='pending'){
+const a=el('div','','actions');
+[['paid','تأكيد الدفع'],['rejected','رفض الطلب']].forEach(([s,t])=>{
+const b=el('button',t,'btn '+(s==='rejected'?'danger':''));
+b.onclick=async()=>{if(!confirm(s==='paid'?'هل دفعت المبلغ فعلًا؟':'هل تريد رفض الطلب؟'))return;try{await updateDoc(doc(db,'withdrawals',w.id),{status:s,updatedAt:new Date()})}catch(e){alert(e.message)}};
+a.append(b);
+});c.append(a);
+}
+list.append(c);
+});
+}
+function renderMethods(){
+const l=$('methodList');l.replaceChildren();
+if(!methods.length)l.append(el('div','لا توجد طرق سحب.','empty'));
+methods.forEach(m=>{
+const c=el('article','','item'),logo=validUrl(m.logo);
+if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;im.alt='';c.append(im)}
+c.append(el('div',m.name||m.id),el('div','الحد الأدنى: '+(m.minimumWithdrawal??'غير محدد')),el('div','التعليمات: '+(m.instructions||'—')),el('div',m.enabled?'مفعّلة':'متوقفة','badge'));
+const a=el('div','','actions');
+[['تعديل',()=>editMethod(m)],[m.enabled?'إيقاف':'تفعيل',()=>toggle('withdrawMethods',m.id,{enabled:!m.enabled})],['حذف',()=>remove('withdrawMethods',m.id)]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});
+c.append(a);l.append(c);
+});
+}
 function editMethod(m){$('methodId').value=m.id;$('methodName').value=m.name||'';$('methodMin').value=m.minimumWithdrawal??'';$('methodInstructions').value=m.instructions||'';$('methodLogo').value=m.logo||'';$('methodEnabled').checked=!!m.enabled;$('methodTitle').textContent='تعديل طريقة سحب'}
 function resetMethod(){['methodId','methodName','methodMin','methodInstructions','methodLogo'].forEach(x=>$(x).value='');$('methodEnabled').checked=true;$('methodTitle').textContent='إضافة طريقة سحب';$('methodMsg').textContent=''}
 $('cancelMethod').onclick=resetMethod;
-$('saveMethod').onclick=async()=>{const id=$('methodId').value,name=$('methodName').value.trim(),min=$('methodMin').value,logoRaw=$('methodLogo').value.trim(),logo=validUrl(logoRaw);if(!name||min===''||!Number.isSafeInteger(Number(min))||Number(min)<0){$('methodMsg').textContent='أدخل اسمًا وحدًا أدنى صحيحًا.';$('methodMsg').className='error';return}if(logoRaw&&!logo){$('methodMsg').textContent='رابط الشعار غير صالح.';$('methodMsg').className='error';return}const data={name,minimumWithdrawal:Number(min),instructions:$('methodInstructions').value.trim(),enabled:$('methodEnabled').checked};if(logo)data.logo=logo;try{if(id)await updateDoc(doc(db,'withdrawMethods',id),data);else await addDoc(collection(db,'withdrawMethods'),data);$('methodMsg').textContent='تم الحفظ.';$('methodMsg').className='success';resetMethod()}catch(e){$('methodMsg').textContent='فشل الحفظ: '+e.message;$('methodMsg').className='error'}};
-function renderWalls(){const l=$('wallList');l.replaceChildren();if(!walls.length)l.append(el('div','لا توجد جدران عروض.','empty'));walls.forEach(w=>{const c=el('article','','item'),logo=validUrl(w.logo);if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;c.append(im)}c.append(el('div',w.name||w.id),el('div','الرابط: '+(typeof w.url==='string'?w.url:'غير مضبوط')),el('div',w.enabled?'مفعّل':'متوقف','badge'));const a=el('div','','actions');[['تعديل',()=>editWall(w)],[w.enabled?'إيقاف':'تفعيل',()=>toggle('offerWalls',w.id,!w.enabled)],['حذف',()=>remove('offerWalls',w.id)]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});c.append(a);l.append(c)})}
-function editWall(w){$('wallId').value=w.id;$('wallName').value=w.name||'';$('wallUrl').value=typeof w.url==='string'?w.url:'';$('wallLogo').value=w.logo||'';$('wallEnabled').checked=!!w.enabled;$('wallTitle').textContent='تعديل جدار عروض'}
-function resetWall(){['wallId','wallName','wallUrl','wallLogo'].forEach(x=>$(x).value='');$('wallEnabled').checked=false;$('wallTitle').textContent='إضافة جدار عروض';$('wallMsg').textContent=''}
+$('saveMethod').onclick=async()=>{
+const id=$('methodId').value,name=$('methodName').value.trim(),min=$('methodMin').value,logoRaw=$('methodLogo').value.trim(),logo=validUrl(logoRaw);
+if(!name||min===''||!Number.isSafeInteger(Number(min))||Number(min)<0){$('methodMsg').textContent='أدخل اسمًا وحدًا أدنى صحيحًا.';$('methodMsg').className='error';return}
+if(logoRaw&&!logo){$('methodMsg').textContent='رابط الشعار يجب أن يبدأ بـ https://.';$('methodMsg').className='error';return}
+const data={name,minimumWithdrawal:Number(min),instructions:$('methodInstructions').value.trim(),enabled:$('methodEnabled').checked};if(logo)data.logo=logo;
+try{if(id)await updateDoc(doc(db,'withdrawMethods',id),data);else await addDoc(collection(db,'withdrawMethods'),data);$('methodMsg').textContent='تم الحفظ.';$('methodMsg').className='success';resetMethod()}
+catch(e){$('methodMsg').textContent='فشل الحفظ: '+e.message;$('methodMsg').className='error'}
+};
+function renderWalls(){
+const l=$('wallList');l.replaceChildren();
+if(!walls.length)l.append(el('div','لا توجد جدران عروض.','empty'));
+walls.forEach(w=>{
+const c=el('article','','item'),logo=validUrl(w.logo);
+if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;im.alt='';c.append(im)}
+c.append(el('div',w.name||w.id),el('div','الرابط: '+(typeof w.url==='string'?w.url:'غير مضبوط')),el('div',w.visible===false?'مخفي عن المستخدم':'ظاهر للمستخدم','badge'),el('div',w.enabled?'مفعّل ويمكن فتحه':'متوقف ولا يمكن فتحه','badge'));
+const a=el('div','','actions');
+const actions=[
+['تعديل',()=>editWall(w)],
+[w.visible===false?'إظهار':'إخفاء',()=>toggle('offerWalls',w.id,{visible:w.visible===false})],
+[w.enabled?'إيقاف':'تفعيل',()=>toggle('offerWalls',w.id,{enabled:!w.enabled})],
+['حذف',()=>remove('offerWalls',w.id)]
+];
+actions.forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===3?'danger':''));b.onclick=f;a.append(b)});
+c.append(a);l.append(c);
+});
+}
+function editWall(w){$('wallId').value=w.id;$('wallName').value=w.name||'';$('wallUrl').value=typeof w.url==='string'?w.url:'';$('wallLogo').value=w.logo||'';$('wallVisible').checked=w.visible!==false;$('wallEnabled').checked=!!w.enabled;$('wallTitle').textContent='تعديل جدار عروض'}
+function resetWall(){['wallId','wallName','wallUrl','wallLogo'].forEach(x=>$(x).value='');$('wallVisible').checked=true;$('wallEnabled').checked=false;$('wallTitle').textContent='إضافة جدار عروض';$('wallMsg').textContent='';$('wallMsg').className='muted'}
 $('cancelWall').onclick=resetWall;
-$('saveWall').onclick=async()=>{const id=$('wallId').value,name=$('wallName').value.trim(),url=validUrl($('wallUrl').value.trim()),lr=$('wallLogo').value.trim(),logo=validUrl(lr);if(!name||!url){$('wallMsg').textContent='أدخل الاسم ورابطًا صحيحًا يبدأ بـ http أو https.';$('wallMsg').className='error';return}if(lr&&!logo){$('wallMsg').textContent='رابط الشعار غير صالح.';$('wallMsg').className='error';return}const data={name,url,enabled:$('wallEnabled').checked};if(logo)data.logo=logo;try{if(id)await updateDoc(doc(db,'offerWalls',id),data);else await addDoc(collection(db,'offerWalls'),data);$('wallMsg').textContent='تم الحفظ.';$('wallMsg').className='success';resetWall()}catch(e){$('wallMsg').textContent='فشل الحفظ: '+e.message;$('wallMsg').className='error'}};
-async function toggle(col,id,enabled){try{await updateDoc(doc(db,col,id),{enabled})}catch(e){alert('تعذّر تحديث الحالة: '+e.message)}}
+$('saveWall').onclick=async()=>{
+const id=$('wallId').value,name=$('wallName').value.trim(),url=validUrl($('wallUrl').value.trim()),lr=$('wallLogo').value.trim(),logo=validUrl(lr);
+if(!name||!url){$('wallMsg').textContent='أدخل الاسم ورابطًا صحيحًا يبدأ بـ https://.';$('wallMsg').className='error';return}
+if(lr&&!logo){$('wallMsg').textContent='رابط الشعار يجب أن يبدأ بـ https://.';$('wallMsg').className='error';return}
+const data={name,url,visible:$('wallVisible').checked,enabled:$('wallEnabled').checked};if(logo)data.logo=logo;
+try{if(id)await updateDoc(doc(db,'offerWalls',id),data);else await addDoc(collection(db,'offerWalls'),data);$('wallMsg').textContent='تم الحفظ.';$('wallMsg').className='success';resetWall()}
+catch(e){$('wallMsg').textContent='فشل الحفظ: '+e.message;$('wallMsg').className='error'}
+};
+async function toggle(col,id,changes){try{await updateDoc(doc(db,col,id),changes)}catch(e){alert('تعذّر تحديث الحالة: '+e.message)}}
 async function remove(col,id){if(!confirm('هل تريد حذف هذا السجل؟ لا يمكن التراجع.'))return;try{await deleteDoc(doc(db,col,id))}catch(e){alert('تعذّر الحذف: '+e.message)}}
 $('search').addEventListener('input',renderUsers);
-</script></body></html>
+</script>
+</body></html>
