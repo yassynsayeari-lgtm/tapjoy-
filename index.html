@@ -96,16 +96,69 @@ function showPage(id){if(document.getElementById("bannedScreen")?.hidden===false
 function refreshBalance(){document.getElementById('balance').textContent=balance.toLocaleString();document.getElementById('withdrawBalance').textContent=balance.toLocaleString()}
 function selectAmount(button,coins,usd){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins;selectedUSD=usd}
 function openOffer(url,name,enabled){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!enabled){alert(name+' is currently disabled by YASJOY administration.');return}if(!url||!/^https:\/\/\S+$/i.test(url)){alert('This offer wall has no valid HTTPS link.');return}window.open(url,'_blank','noopener,noreferrer')}
-function submitRequest(){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!selectedCoins){alert('Please choose a withdrawal amount.');return}if(balance<selectedCoins){alert('Insufficient coins.');return}if(!document.getElementById('account').value.trim()){alert('Please enter your Binance payout details.');return}alert('Withdrawal requests are not enabled yet. No coins were deducted and no payment was made.')}
+let withdrawalSubmitting=false;
+async function submitRequest(){
+ if(document.getElementById("bannedScreen")?.hidden===false)return;
+ if(withdrawalSubmitting)return;
+ if(!selectedCoins){alert('Please choose a withdrawal amount.');return}
+ if(balance<selectedCoins){alert('Insufficient coins.');return}
+ const payoutAddress=document.getElementById('account').value.trim();
+ if(!payoutAddress){alert('Please enter your Binance payout details.');return}
+ if(payoutAddress.length>180){alert('Payout details are too long.');return}
+ const button=document.querySelector('#withdraw .primary');
+ withdrawalSubmitting=true;
+ if(button){button.disabled=true;button.textContent='Submitting…'}
+ try{
+  await window.createYasjoyWithdrawal({
+   coins:selectedCoins,
+   amountUSD:selectedUSD,
+   method:document.getElementById('method').value,
+   payoutAddress
+  });
+  alert('Your withdrawal request was submitted and saved for admin review. No coins were deducted and no payment was sent.');
+  document.getElementById('account').value='';
+  selectedCoins=0;selectedUSD=0;
+  document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));
+ }catch(error){
+  console.error('Withdrawal request error:',error);
+  alert(error?.message||'Could not submit your request. Please try again.');
+ }finally{
+  withdrawalSubmitting=false;
+  if(button){button.disabled=false;button.textContent='Submit withdrawal request'}
+ }
+}
 function copyId(){if(!userId){alert('Your User ID is still loading.');return}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(userId).then(()=>alert('User ID copied.')).catch(()=>alert('Your User ID is: '+userId))}else{alert('Your User ID is: '+userId)}}
 refreshBalance();
 </script>
 <script type="module">
 import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection,addDoc} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 const firebaseConfig={apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",authDomain:"yasjoy.firebaseapp.com",projectId:"yasjoy",storageBucket:"yasjoy.firebasestorage.app",messagingSenderId:"967065409063",appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"};
 const app=getApps().length?getApp():initializeApp(firebaseConfig),db=getFirestore(app),auth=getAuth(app);
+let currentYasjoyUser=null;
+window.createYasjoyWithdrawal=async function(request){
+ const user=currentYasjoyUser;
+ if(!user)throw new Error('Your account is still connecting. Please try again.');
+ if(!Number.isInteger(request.coins)||request.coins<=0)throw new Error('Invalid coin amount.');
+ if(typeof request.amountUSD!=='number'||!Number.isFinite(request.amountUSD)||request.amountUSD<=0)throw new Error('Invalid withdrawal amount.');
+ if(request.method!=='Binance')throw new Error('Unsupported withdrawal method.');
+ if(typeof request.payoutAddress!=='string'||!request.payoutAddress.trim())throw new Error('Enter your Binance payout details.');
+ const userSnap=await getDoc(doc(db,'users',user.uid));
+ if(!userSnap.exists()||userSnap.data().banned===true)throw new Error('This account cannot submit withdrawal requests.');
+ const currentBalance=Number(userSnap.data().balance||0);
+ if(!Number.isFinite(currentBalance)||currentBalance<request.coins)throw new Error('Insufficient coins.');
+ await addDoc(collection(db,'withdrawals'),{
+  uid:user.uid,
+  publicId:'YJ-'+user.uid.slice(0,8).toUpperCase(),
+  method:'Binance',
+  amountUSD:request.amountUSD,
+  coins:request.coins,
+  payoutAddress:request.payoutAddress.trim(),
+  status:'pending',
+  createdAt:serverTimestamp()
+ });
+};
 function setBannedView(banned){const screen=document.getElementById("bannedScreen");if(!screen)return;screen.hidden=!banned;const header=document.querySelector("header"),main=document.querySelector("main"),nav=document.querySelector("nav.bottom");if(header)header.style.display=banned?"none":"";if(main)main.style.display=banned?"none":"";if(nav)nav.style.display=banned?"none":""}
 async function loadSocialLinks(){const ids={telegram:"telegramLink",youtube:"youtubeLink",tiktok:"tiktokLink",instagram:"instagramLink"},status=document.getElementById("socialStatus");try{const snap=await getDoc(doc(db,"socialLinks","main"));if(!snap.exists()){status.textContent="Social links are not configured yet.";Object.values(ids).forEach(id=>document.getElementById(id).hidden=true);return}const links=snap.data();let count=0;for(const [key,id] of Object.entries(ids)){const el=document.getElementById(id),url=links[key];if(typeof url==="string"&&/^https:\/\/\S+$/i.test(url)){el.href=url;el.hidden=false;count++}else el.hidden=true}status.textContent=count?"Social links loaded from Firebase.":"No valid social links configured."}catch(error){console.error("Social links error:",error);status.textContent="Could not load social links. Check Firebase rules and socialLinks/main."}}
 /* Live offer-wall list: only visible records are rendered. */
@@ -142,7 +195,7 @@ async function setupUser(user){
 }
 loadSocialLinks();
 onSnapshot(collection(db,"offerWalls"),renderOfferWalls,error=>{console.error("Offer walls listener error:",error);const host=document.getElementById("offersList");host.replaceChildren();const msg=document.createElement("div");msg.className="empty-offers";msg.textContent="Could not load offer walls. Please check your connection or Firebase rules.";host.appendChild(msg)});
-onAuthStateChanged(auth,async user=>{try{if(!user){await signInAnonymously(auth);return}await setupUser(user)}catch(error){console.error("Firebase account setup error:",error);document.getElementById("userId").textContent="Connection error — reload the page";document.getElementById("userIdNote").textContent="Could not connect. Check Anonymous Authentication and Firestore rules."}});
+onAuthStateChanged(auth,async user=>{try{if(!user){currentYasjoyUser=null;await signInAnonymously(auth);return}currentYasjoyUser=user;await setupUser(user)}catch(error){console.error("Firebase account setup error:",error);document.getElementById("userId").textContent="Connection error — reload the page";document.getElementById("userIdNote").textContent="Could not connect. Check Anonymous Authentication and Firestore rules."}});
 </script>
 </body>
 </html>
