@@ -70,9 +70,9 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
       <button class="amount" onclick="selectAmount(this,3000,3)">$3.00<br><small>3,000 coins</small></button>
     </div>
     <label class="field-label" for="method">Withdrawal method</label><select id="method"><option value="Binance">Binance</option></select>
-    <label class="field-label" for="account">Binance account identifier</label><input id="account" autocomplete="off" placeholder="Enter your Binance Pay ID or details">
+    <label class="field-label" for="account" id="accountLabel">Payout account details</label><input id="account" autocomplete="off" placeholder="Choose a withdrawal method first">
     <button class="primary" onclick="submitRequest()">Submit withdrawal request</button>
-    <p class="small">Demo interface only: this request is not saved, coins are not deducted, and no payment is sent.</p>
+    <p class="small" id="withdrawInfo">Choose an enabled withdrawal method. Requests are saved for admin review; no payment is sent automatically.</p>
     <button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('home')">Back to Home</button>
   </div>
 </section>
@@ -91,10 +91,51 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 </main>
 <nav class="bottom"><button class="nav active" id="navHome" onclick="showPage('home')"><span class="ico">⌂</span>Home</button><button class="nav" id="navProfile" onclick="showPage('profile')"><span class="ico">👤</span>Profile</button></nav>
 <script>
-let selectedCoins=0,selectedUSD=0,balance=0,userId="";
+let selectedCoins=0,selectedUSD=0,balance=0,userId="",withdrawalMethods=[],selectedMethod=null;
 function showPage(id){if(document.getElementById("bannedScreen")?.hidden===false)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id);if(page)page.classList.add('active');document.getElementById('navHome').classList.toggle('active',id==='home');document.getElementById('navProfile').classList.toggle('active',id==='profile');window.scrollTo(0,0);refreshBalance()}
 function refreshBalance(){document.getElementById('balance').textContent=balance.toLocaleString();document.getElementById('withdrawBalance').textContent=balance.toLocaleString()}
-function selectAmount(button,coins,usd){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins;selectedUSD=usd}
+function selectAmount(button,coins,usd){
+ document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));
+ button.classList.add('selected');selectedCoins=coins;selectedUSD=usd;
+} 
+function selectedWithdrawalMethod(){
+ const id=document.getElementById('method').value;
+ return withdrawalMethods.find(m=>m.id===id)||null;
+}
+function updatePayoutField(){
+ selectedMethod=selectedWithdrawalMethod();
+ const label=document.getElementById('accountLabel'),input=document.getElementById('account');
+ if(!selectedMethod){
+  label.textContent='Payout account details';input.value='';input.type='text';
+  input.placeholder='No enabled withdrawal methods';input.disabled=true;return;
+ }
+ input.disabled=false;
+ label.textContent=selectedMethod.accountLabel||('Your '+selectedMethod.name+' account');
+ input.placeholder=selectedMethod.accountPlaceholder||'Enter your payout details';
+ input.type=selectedMethod.accountType==='email'?'email':'text';
+ input.value='';
+ const info=document.getElementById('withdrawInfo');
+ const minimum=Number(selectedMethod.minimumWithdrawal||0);
+ info.textContent=(selectedMethod.instructions||'Requests are saved for admin review.')+
+  (minimum>0?' Minimum withdrawal: '+minimum.toLocaleString()+' coins.':'');
+}
+function renderWithdrawalMethods(snapshot){
+ const select=document.getElementById('method');
+ const previous=select.value;
+ withdrawalMethods=snapshot.docs.map(d=>({id:d.id,...d.data()}))
+  .filter(m=>m.enabled===true&&typeof m.name==='string'&&m.name.trim());
+ select.replaceChildren();
+ if(!withdrawalMethods.length){
+  const option=document.createElement('option');option.value='';option.textContent='No methods available';
+  select.appendChild(option);select.disabled=true;
+ }else{
+  select.disabled=false;
+  withdrawalMethods.sort((a,b)=>a.name.localeCompare(b.name));
+  withdrawalMethods.forEach(m=>{const option=document.createElement('option');option.value=m.id;option.textContent=m.name;select.appendChild(option)});
+  if(withdrawalMethods.some(m=>m.id===previous))select.value=previous;
+ }
+ updatePayoutField();
+}
 function openOffer(url,name,enabled){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!enabled){alert(name+' is currently disabled by YASJOY administration.');return}if(!url||!/^https:\/\/\S+$/i.test(url)){alert('This offer wall has no valid HTTPS link.');return}window.open(url,'_blank','noopener,noreferrer')}
 let withdrawalSubmitting=false;
 async function submitRequest(){
@@ -102,8 +143,13 @@ async function submitRequest(){
  if(withdrawalSubmitting)return;
  if(!selectedCoins){alert('Please choose a withdrawal amount.');return}
  if(balance<selectedCoins){alert('Insufficient coins.');return}
+ const method=selectedWithdrawalMethod();
+ if(!method){alert('No enabled withdrawal method is currently available.');return}
+ const minimum=Number(method.minimumWithdrawal||0);
+ if(!Number.isFinite(minimum)||minimum<0){alert('This withdrawal method has an invalid minimum.');return}
+ if(selectedCoins<minimum){alert('The minimum withdrawal for '+method.name+' is '+minimum.toLocaleString()+' coins.');return}
  const payoutAddress=document.getElementById('account').value.trim();
- if(!payoutAddress){alert('Please enter your Binance payout details.');return}
+ if(!payoutAddress){alert('Please enter your payout account details.');return}
  if(payoutAddress.length>180){alert('Payout details are too long.');return}
  const button=document.querySelector('#withdraw .primary');
  withdrawalSubmitting=true;
@@ -112,7 +158,8 @@ async function submitRequest(){
   await window.createYasjoyWithdrawal({
    coins:selectedCoins,
    amountUSD:selectedUSD,
-   method:document.getElementById('method').value,
+   methodId:method.id,
+   method:method.name,
    payoutAddress
   });
   alert('Your withdrawal request was submitted and saved for admin review. No coins were deducted and no payment was sent.');
@@ -142,8 +189,15 @@ window.createYasjoyWithdrawal=async function(request){
  if(!user)throw new Error('Your account is still connecting. Please try again.');
  if(!Number.isInteger(request.coins)||request.coins<=0)throw new Error('Invalid coin amount.');
  if(typeof request.amountUSD!=='number'||!Number.isFinite(request.amountUSD)||request.amountUSD<=0)throw new Error('Invalid withdrawal amount.');
- if(request.method!=='Binance')throw new Error('Unsupported withdrawal method.');
- if(typeof request.payoutAddress!=='string'||!request.payoutAddress.trim())throw new Error('Enter your Binance payout details.');
+ if(typeof request.methodId!=='string'||!request.methodId)throw new Error('Choose a withdrawal method.');
+ if(typeof request.payoutAddress!=='string'||!request.payoutAddress.trim())throw new Error('Enter your payout account details.');
+ const methodSnap=await getDoc(doc(db,'withdrawMethods',request.methodId));
+ if(!methodSnap.exists())throw new Error('This withdrawal method is no longer available.');
+ const methodData=methodSnap.data();
+ if(methodData.enabled!==true)throw new Error('This withdrawal method is currently disabled.');
+ if(typeof methodData.name!=='string'||methodData.name!==request.method)throw new Error('Withdrawal method information changed. Refresh and try again.');
+ const minimum=Number(methodData.minimumWithdrawal||0);
+ if(!Number.isFinite(minimum)||minimum<0||request.coins<minimum)throw new Error('This request is below the method minimum withdrawal amount.');
  const userSnap=await getDoc(doc(db,'users',user.uid));
  if(!userSnap.exists()||userSnap.data().banned===true)throw new Error('This account cannot submit withdrawal requests.');
  const currentBalance=Number(userSnap.data().balance||0);
@@ -151,7 +205,8 @@ window.createYasjoyWithdrawal=async function(request){
  await addDoc(collection(db,'withdrawals'),{
   uid:user.uid,
   publicId:'YJ-'+user.uid.slice(0,8).toUpperCase(),
-  method:'Binance',
+  methodId:request.methodId,
+  method:methodData.name,
   amountUSD:request.amountUSD,
   coins:request.coins,
   payoutAddress:request.payoutAddress.trim(),
@@ -194,6 +249,8 @@ async function setupUser(user){
  stopUserListener=onSnapshot(userRef,userSnap=>{const data=userSnap.data()||{};setBannedView(data.banned===true);balance=Number.isFinite(data.balance)?data.balance:0;refreshBalance()},error=>console.error("User data error:",error));
 }
 loadSocialLinks();
+onSnapshot(collection(db,"withdrawMethods"),renderWithdrawalMethods,error=>{console.error("Withdrawal methods listener error:",error);const select=document.getElementById("method");select.replaceChildren();const option=document.createElement("option");option.value="";option.textContent="Could not load methods";select.appendChild(option);select.disabled=true;updatePayoutField()});
+document.getElementById("method").addEventListener("change",updatePayoutField);
 onSnapshot(collection(db,"offerWalls"),renderOfferWalls,error=>{console.error("Offer walls listener error:",error);const host=document.getElementById("offersList");host.replaceChildren();const msg=document.createElement("div");msg.className="empty-offers";msg.textContent="Could not load offer walls. Please check your connection or Firebase rules.";host.appendChild(msg)});
 onAuthStateChanged(auth,async user=>{try{if(!user){currentYasjoyUser=null;await signInAnonymously(auth);return}currentYasjoyUser=user;await setupUser(user)}catch(error){console.error("Firebase account setup error:",error);document.getElementById("userId").textContent="Connection error — reload the page";document.getElementById("userIdNote").textContent="Could not connect. Check Anonymous Authentication and Firestore rules."}});
 </script>
