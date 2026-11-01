@@ -31,17 +31,15 @@ label{font-size:14px;font-weight:bold}.btn{border:0;border-radius:9px;padding:11
 <button class="menu" onclick="openPanel('withdraw')">💳 طلبات السحب <small>عرض، إضافة، تعديل، دفع، رفض، حذف منطقي</small></button>
 <button class="menu" onclick="openPanel('users')">👥 المستخدمون <small>بحث وتعديل النقاط وسجل الرصيد</small></button>
 <button class="menu" onclick="openPanel('walls')">🎁 جدران العروض <small>إضافة وتعديل وإظهار وإخفاء وتفعيل وحذف</small></button>
-<button class="menu" onclick="openPanel('methods')">💰 طرق السحب <small>إدارة طرق الدفع</small></button>
-<button class="menu" onclick="openPanel('amounts')">🪙 مبالغ السحب <small>تحديد الدولار والنقاط المقابلة</small></button>
+<button class="menu" onclick="openPanel('categories')">🧩 فئات السحب <small>إنشاء فئات مثل Binance وشحن شدات PUBG وتحديد خيارات كل فئة ونقاطها</small></button>
 <button class="menu" onclick="openPanel('managers')">🔐 المديرون <small>إضافة وتعديل صلاحيات المديرين (للمدير الأعلى فقط)</small></button>
 </div>
 <section id="withdraw" class="panel"><button class="back" onclick="goHome()">← الرئيسية</button><h2>طلبات السحب</h2>
 <div class="form"><h3>إضافة طلب سحب يدوي</h3>
 <label>معرّف المستخدم (Firebase UID أو publicId)</label><input id="wUser" placeholder="معرّف المستخدم">
-<label>عدد النقاط</label><input id="wCoins" type="number" min="1" step="1">
-<label>قيمة السحب بالدولار (للعرض والسجل)</label><input id="wUsd" type="number" min="0.01" step="0.01">
-<label>طريقة السحب</label><input id="wMethod" placeholder="مثلاً Payeer">
-<label>بيانات الاستلام</label><input id="wAddress" placeholder="معرّف المحفظة أو البريد">
+<label>فئة السحب</label><select id="wCategory"><option value="">اختر الفئة</option></select>
+<label>الخيار / الباقة</label><select id="wOption"><option value="">اختر الخيار</option></select>
+<label id="wAddressLabel">بيانات الاستلام</label><input id="wAddress" placeholder="رقم اللاعب أو بيانات المحفظة">
 <button id="addWithdrawal" class="primary">إنشاء الطلب وخصم النقاط</button><p id="wMsg" class="muted"></p>
 </div>
 <div id="withdrawStats" class="row" style="margin:12px 0"></div><input id="withdrawSearch" placeholder="بحث برقم الطلب أو UID أو طريقة السحب"><div class="row"><button id="exportWithdrawals" class="btn">تصدير النتائج CSV</button><button id="clearWithdrawSearch" class="btn">مسح البحث</button></div><div class="tabs"><button class="tab active" data-status="pending">معلقة</button><button class="tab" data-status="paid">مدفوعة</button><button class="tab" data-status="rejected">مرفوضة</button><button class="tab" data-status="deleted">محذوفة</button><button class="tab" data-status="all">الكل</button></div><div id="withdrawList"></div>
@@ -50,10 +48,28 @@ label{font-size:14px;font-weight:bold}.btn{border:0;border-radius:9px;padding:11
 <div class="card"><h3>تعديل رصيد النقاط</h3><label>UID المستخدم</label><input id="pUid"><label>عدد النقاط (+ للإضافة و- للخصم)</label><input id="pDelta" type="number" step="1"><label>سبب العملية</label><input id="pReason"><button id="adjustPoints" class="primary">تنفيذ وتسجيل العملية</button><p id="pMsg" class="muted"></p></div></section>
 <section id="walls" class="panel"><button class="back" onclick="goHome()">← الرئيسية</button><h2>جدران العروض</h2>
 <div class="card"><input id="wallId" type="hidden"><label>اسم الجدار</label><input id="wallName" placeholder="Torox"><label>رابط HTTPS</label><input id="wallUrl" placeholder="https://..."><label>رابط الشعار (اختياري)</label><input id="wallLogo" placeholder="https://..."><label><input id="wallVisible" type="checkbox" checked style="width:auto"> ظاهر للمستخدم</label><label><input id="wallEnabled" type="checkbox" style="width:auto"> مفعّل</label><button id="saveWall" class="primary">حفظ الجدار</button><button id="resetWall" class="btn">مسح الحقول</button><p id="wallMsg" class="muted"></p></div><div id="wallList"></div></section>
-<section id="methods" class="panel"><button class="back" onclick="goHome()">← الرئيسية</button><h2>طرق السحب</h2>
-<div class="card"><input id="methodId" type="hidden"><label>الاسم</label><input id="methodName"><label>الحد الأدنى بالنقاط</label><input id="methodMin" type="number" min="0"><label>التعليمات</label><textarea id="methodInstructions"></textarea><label>اسم حقل الاستلام</label><input id="methodLabel" placeholder="بيانات المحفظة"><label><input id="methodEnabled" type="checkbox" checked style="width:auto"> مفعّلة</label><button id="saveMethod" class="primary">حفظ الطريقة</button><button id="resetMethod" class="btn">مسح الحقول</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
-<section id="amounts" class="panel"><button class="back" onclick="goHome()">← الرئيسية</button><h2>مبالغ السحب</h2>
-<div class="card"><input id="amountId" type="hidden"><label>المبلغ بالدولار</label><input id="amountUsd" type="number" min="0.01" step="0.01"><label>النقاط المطلوبة</label><input id="amountCoins" type="number" min="1" step="1"><label><input id="amountEnabled" type="checkbox" checked style="width:auto"> مفعّل</label><button id="saveAmount" class="primary">حفظ المبلغ</button><button id="resetAmount" class="btn">مسح الحقول</button><p id="amountMsg" class="muted"></p></div><div id="amountList"></div></section>
+<section id="categories" class="panel"><button class="back" onclick="goHome()">← الرئيسية</button><h2>فئات السحب وخياراتها</h2>
+<p class="muted">أنشئ الفئة مرة واحدة، ثم أضف خياراتها. مثال: شحن شدات PUBG ← 60 شدة مقابل 1200 نقطة، أو Binance ← 0.10 دولار مقابل 100 نقطة. الخيارات المفعّلة فقط ستظهر في تطبيق المستخدم بعد ربط التطبيق بها.</p>
+<div class="card">
+<input id="categoryId" type="hidden">
+<label>اسم الفئة</label><input id="categoryName" placeholder="مثلاً شحن شدات PUBG أو Binance">
+<label>نوع الفئة</label><select id="categoryType"><option value="pubg_uc">شحن شدات PUBG</option><option value="binance">Binance / مبلغ نقدي</option><option value="other">أخرى</option></select>
+<label>اسم بيانات الاستلام</label><input id="categoryInputLabel" placeholder="رقم اللاعب (Player ID) أو عنوان المحفظة">
+<label>تعليمات للمستخدم (اختياري)</label><textarea id="categoryInstructions" placeholder="اكتب التعليمات التي ستظهر للمستخدم"></textarea>
+<label><input id="categoryEnabled" type="checkbox" checked style="width:auto"> الفئة مفعّلة</label>
+<button id="saveCategory" class="primary">حفظ الفئة</button><button id="resetCategory" class="btn">فئة جديدة / مسح</button><p id="categoryMsg" class="muted"></p>
+</div>
+<div class="card">
+<h3>إضافة خيار إلى الفئة المحددة</h3>
+<label>الفئة</label><select id="optionCategory"><option value="">اختر الفئة</option></select>
+<input id="optionId" type="hidden">
+<label>اسم الخيار الظاهر للمستخدم</label><input id="optionLabel" placeholder="60 شدة أو 0.10 دولار">
+<div class="row"><div><label>عدد النقاط المطلوبة</label><input id="optionCoins" type="number" min="1" step="1" placeholder="1200"></div>
+<div><label>الكمية (للشدات، اختياري)</label><input id="optionQuantity" type="number" min="0" step="1" placeholder="60"></div></div>
+<label>القيمة بالدولار (للفئات النقدية، اتركها 0 للشدات)</label><input id="optionUsd" type="number" min="0" step="0.01" placeholder="0.10">
+<label><input id="optionEnabled" type="checkbox" checked style="width:auto"> الخيار مفعّل</label>
+<button id="saveOption" class="primary">حفظ الخيار</button><button id="resetOption" class="btn">مسح حقول الخيار</button><p id="optionMsg" class="muted"></p>
+</div><div id="categoryList"></div></section>
 <section id="managers" class="panel"><button class="back" onclick="goHome()">← الرئيسية</button><h2>إدارة المديرين</h2><p class="muted">إضافة المدير تتطلب UID لحساب Firebase Auth موجود مسبقاً. المدير الأعلى وحده يستطيع تعديل الأدوار. لا تمنح صلاحية superAdmin إلا للمالك.</p>
 <div class="card"><label>UID المدير</label><input id="managerUid"><label>الدور</label><select id="managerRole"><option value="admin">مدير</option><option value="superAdmin">مدير أعلى</option></select><label>الصلاحيات (افصل بينها بفواصل)</label><input id="managerPerms" value="withdrawals,users,walls,methods,amounts"><button id="saveManager" class="primary">حفظ صلاحيات المدير</button><p id="managerMsg" class="muted"></p></div><div id="managerList"></div></section>
 </section></main>
@@ -68,7 +84,7 @@ const app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),functions
 const $=id=>document.getElementById(id);
 const ADMIN_UID='wQgo9HTzP0NWC6JO2D1Di8iIPm62';
 const call=name=>httpsCallable(functions,name);
-let users=[],withdrawals=[],walls=[],methods=[],amounts=[],managers=[],unsubs=[],withdrawStatus='pending',claims={};
+let users=[],withdrawals=[],walls=[],categories=[],managers=[],unsubs=[],withdrawStatus='pending',claims={};
 setPersistence(auth,browserLocalPersistence).catch(console.error);
 $('loginBtn').onclick=async()=>{ $('loginMsg').textContent='جارٍ التحقق…';try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value)}catch(e){$('loginMsg').textContent='فشل الدخول: '+e.message;$('loginMsg').className='error'}};
 $('password').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};
@@ -77,7 +93,7 @@ onAuthStateChanged(auth,async u=>{unsubs.forEach(x=>x());unsubs=[];if(!u){$('log
 try{const token=await u.getIdTokenResult(true);claims=token.claims;if(u.uid!==ADMIN_UID&&!claims.admin&&!claims.superAdmin&&claims.role!=='admin'&&claims.role!=='superAdmin')throw Error('هذا الحساب لا يحمل صلاحية إدارة.');$('login').classList.add('hidden');$('app').classList.remove('hidden');startListeners()}catch(e){$('loginMsg').textContent=e.message;await signOut(auth)}});
 function startListeners(){
  const listen=(name,cb)=>unsubs.push(onSnapshot(collection(db,name),s=>cb(s.docs.map(d=>({id:d.id,...d.data()}))),e=>console.error(name,e)));
- listen('users',v=>{users=v;renderUsers()});listen('withdrawals',v=>{withdrawals=v;renderWithdrawals()});listen('offerWalls',v=>{walls=v;renderWalls()});listen('withdrawMethods',v=>{methods=v;renderMethods()});listen('withdrawalAmounts',v=>{amounts=v;renderAmounts()});
+ listen('users',v=>{users=v;renderUsers()});listen('withdrawals',v=>{withdrawals=v;renderWithdrawals()});listen('offerWalls',v=>{walls=v;renderWalls()});listen('withdrawalCategories',v=>{categories=v;renderCategories();fillCategorySelects()});
  if(claims.superAdmin||claims.role==='superAdmin')listen('adminManagers',v=>{managers=v;renderManagers()});
 }
 function openPanel(id){$('home').style.display='none';document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));$(id).classList.add('show')}
@@ -88,7 +104,8 @@ function bal(u){const n=Number(u.balance??u.points??u.coins??0);return Number.is
 function err(el,e){$(el).textContent=e?.message||String(e);$(el).className='error'}
 async function run(btn,fn){btn.disabled=true;try{await fn()}catch(e){alert(e.message||e)}finally{btn.disabled=false}}
 /* Withdrawals: every point deduction is performed in a trusted Cloud Function transaction. */
-$('addWithdrawal').onclick=()=>run($('addWithdrawal'),async()=>{const data={userKey:$('wUser').value.trim(),coins:Number($('wCoins').value),amountUSD:Number($('wUsd').value),method:$('wMethod').value.trim(),payoutAddress:$('wAddress').value.trim()};if(!data.userKey||!Number.isSafeInteger(data.coins)||data.coins<=0||!Number.isFinite(data.amountUSD)||data.amountUSD<=0||!data.method||!data.payoutAddress)throw Error('أكمل بيانات الطلب وتأكد من النقاط والمبلغ.');const r=await call('adminCreateWithdrawal')(data);$('wMsg').textContent='تم إنشاء الطلب وخصم '+data.coins+' نقطة. رقم الطلب: '+r.data.withdrawalId;$('wMsg').className='success';['wUser','wCoins','wUsd','wMethod','wAddress'].forEach(x=>$(x).value='')});
+$('wCategory').onchange=()=>fillOptionSelect();
+$('addWithdrawal').onclick=()=>run($('addWithdrawal'),async()=>{const category=categories.find(x=>x.id===$('wCategory').value),option=category?.options?.find(x=>x.id===$('wOption').value);const data={userKey:$('wUser').value.trim(),categoryId:category?.id,optionId:option?.id,payoutAddress:$('wAddress').value.trim()};if(!data.userKey||!category||!option||!data.payoutAddress)throw Error('اختر فئة وخياراً مفعّلين وأكمل بيانات الاستلام.');const r=await call('adminCreateWithdrawal')(data);$('wMsg').textContent='تم إرسال طلب الإنشاء للدالة الآمنة. رقم الطلب: '+(r.data.withdrawalId||'—');$('wMsg').className='success';['wUser','wAddress'].forEach(x=>$(x).value='')});
 document.querySelectorAll('[data-status]').forEach(b=>b.onclick=()=>{withdrawStatus=b.dataset.status;document.querySelectorAll('[data-status]').forEach(x=>x.classList.toggle('active',x===b));renderWithdrawals()});
 // أدوات متابعة إضافية: إحصاءات، بحث فوري، وتصدير CSV للنتائج الحالية.
 const baseRenderWithdrawals=renderWithdrawals;
@@ -112,7 +129,7 @@ $('exportWithdrawals').onclick=()=>{
  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
  a.href=url;a.download='yasjoy-withdrawals-'+new Date().toISOString().slice(0,10)+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
-function renderWithdrawals(){let l=$('withdrawList');l.replaceChildren();let rows=withdrawals.filter(w=>withdrawStatus==='all'||(w.status||'pending')===withdrawStatus).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));if(!rows.length){l.append(node('div','لا توجد طلبات.','muted'));return}rows.forEach(w=>{let c=node('article','','item');c.append(node('b','طلب: '+w.id),node('div','المستخدم: '+(w.uid||w.userId||'—')),node('div','النقاط المخصومة: '+(w.coins??'—')),node('div','المبلغ: $'+(w.amountUSD??'—')),node('div','الطريقة: '+(w.method||'—')),node('div','الحالة: '+(w.status||'pending'),'badge'));let a=node('div','','row');if(w.status==='pending'){for(let [s,t] of [['paid','تأكيد الدفع'],['rejected','رفض الطلب']]){let b=node('button',t,'btn '+(s==='paid'?'good':'danger'));b.onclick=()=>run(b,async()=>{if(!confirm(s==='paid'?'هل تم إرسال الدفع فعلاً؟':'رفض الطلب؟ لن تعاد النقاط.'))return;await call('adminSetWithdrawalStatus')({withdrawalId:w.id,status:s})});a.append(b)}}if(w.status!=='deleted'){let edit=node('button','تعديل البيانات','btn');edit.onclick=async()=>{let method=prompt('طريقة السحب',w.method||'');if(method===null)return;let address=prompt('بيانات الاستلام',w.payoutAddress||w.walletAddress||'');if(address===null)return;await call('adminEditWithdrawal')({withdrawalId:w.id,method,payoutAddress:address})};a.append(edit);let del=node('button','حذف / أرشفة','btn danger');del.onclick=()=>run(del,async()=>{if(confirm('أرشفة الطلب؟ لن تعاد النقاط ولن يمحى سجل العملية.'))await call('adminDeleteWithdrawal')({withdrawalId:w.id})});a.append(del)}c.append(a);l.append(c)})}
+function renderWithdrawals(){let l=$('withdrawList');l.replaceChildren();let rows=withdrawals.filter(w=>withdrawStatus==='all'||(w.status||'pending')===withdrawStatus).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));if(!rows.length){l.append(node('div','لا توجد طلبات.','muted'));return}rows.forEach(w=>{let c=node('article','','item');c.append(node('b','طلب: '+w.id),node('div','المستخدم: '+(w.uid||w.userId||'—')),node('div','النقاط المخصومة: '+(w.coins??'—')),node('div','المبلغ: $'+(w.amountUSD??'—')),node('div','الفئة: '+(w.categoryName||w.method||'—')),node('div','الخيار: '+(w.optionLabel||'—')),node('div','بيانات الاستلام: '+(w.payoutAddress||w.playerId||'—')),node('div','الحالة: '+(w.status||'pending'),'badge'));let a=node('div','','row');if(w.status==='pending'){for(let [s,t] of [['paid','تأكيد الدفع'],['rejected','رفض الطلب']]){let b=node('button',t,'btn '+(s==='paid'?'good':'danger'));b.onclick=()=>run(b,async()=>{if(!confirm(s==='paid'?'هل تم إرسال الدفع فعلاً؟':'رفض الطلب؟ لن تعاد النقاط.'))return;await call('adminSetWithdrawalStatus')({withdrawalId:w.id,status:s})});a.append(b)}}if(w.status!=='deleted'){let edit=node('button','تعديل البيانات','btn');edit.onclick=async()=>{let method=prompt('طريقة السحب',w.method||'');if(method===null)return;let address=prompt('بيانات الاستلام',w.payoutAddress||w.walletAddress||'');if(address===null)return;await call('adminEditWithdrawal')({withdrawalId:w.id,method,payoutAddress:address})};a.append(edit);let del=node('button','حذف / أرشفة','btn danger');del.onclick=()=>run(del,async()=>{if(confirm('أرشفة الطلب؟ لن تعاد النقاط ولن يمحى سجل العملية.'))await call('adminDeleteWithdrawal')({withdrawalId:w.id})});a.append(del)}c.append(a);l.append(c)})}
 /* Users and points */
 $('userSearch').oninput=renderUsers;function renderUsers(){let l=$('userList');l.replaceChildren();let q=$('userSearch').value.toLowerCase();let rows=users.filter(u=>(u.id+' '+(u.publicId||'')).toLowerCase().includes(q));rows.sort((a,b)=>String(a.publicId||a.id).localeCompare(String(b.publicId||b.id)));if(!rows.length){l.append(node('div','لا يوجد مستخدم مطابق.','muted'));return}rows.slice(0,100).forEach(u=>{let c=node('div','','item');c.append(node('b',u.publicId||u.id),node('div','UID: '+u.id),node('div','الرصيد: '+bal(u).toLocaleString('en-US')+' نقطة'));let b=node('button','استخدام UID','btn');b.onclick=()=>$('pUid').value=u.id;c.append(b);l.append(c)})}
 $('adjustPoints').onclick=()=>run($('adjustPoints'),async()=>{let uid=$('pUid').value.trim(),delta=Number($('pDelta').value),reason=$('pReason').value.trim();if(!uid||!Number.isSafeInteger(delta)||delta===0||!reason)throw Error('أدخل UID وتغيير نقاط صحيحاً وسبباً.');await call('adminAdjustPoints')({uid,delta,reason});$('pMsg').textContent='تم تحديث الرصيد وتسجيل العملية.';$('pMsg').className='success'});
@@ -120,14 +137,61 @@ $('adjustPoints').onclick=()=>run($('adjustPoints'),async()=>{let uid=$('pUid').
 function renderWalls(){let l=$('wallList');l.replaceChildren();walls.forEach(w=>{let c=node('div','','item');c.append(node('b',w.name||w.id),node('div',w.url||''),node('div',(w.visible===false?'مخفي':'ظاهر')+' • '+(w.enabled?'مفعّل':'متوقف'),'badge'));let a=node('div','','row');let e=node('button','تعديل','btn');e.onclick=()=>{ $('wallId').value=w.id;$('wallName').value=w.name||'';$('wallUrl').value=w.url||'';$('wallLogo').value=w.logo||'';$('wallVisible').checked=w.visible!==false;$('wallEnabled').checked=!!w.enabled};a.append(e);for(let [t,data] of [[w.visible===false?'إظهار':'إخفاء',{visible:w.visible===false}],[w.enabled?'إيقاف':'تفعيل',{enabled:!w.enabled}]]){let b=node('button',t,'btn');b.onclick=()=>run(b,()=>updateDoc(doc(db,'offerWalls',w.id),data));a.append(b)}let d=node('button','حذف','btn danger');d.onclick=()=>run(d,async()=>{if(confirm('حذف الجدار؟'))await deleteDoc(doc(db,'offerWalls',w.id))});a.append(d);c.append(a);l.append(c)})}
 $('resetWall').onclick=()=>{['wallId','wallName','wallUrl','wallLogo'].forEach(x=>$(x).value='');$('wallVisible').checked=true;$('wallEnabled').checked=false};
 $('saveWall').onclick=()=>run($('saveWall'),async()=>{let id=$('wallId').value,name=$('wallName').value.trim(),url=validHttps($('wallUrl').value.trim()),logoRaw=$('wallLogo').value.trim(),logo=logoRaw?validHttps(logoRaw):'';if(!name||!url||(logoRaw&&!logo))throw Error('أدخل اسماً وروابط HTTPS صحيحة.');let d={name,url,logo,visible:$('wallVisible').checked,enabled:$('wallEnabled').checked,updatedAt:new Date()};if(id)await updateDoc(doc(db,'offerWalls',id),d);else await addDoc(collection(db,'offerWalls'),{...d,createdAt:new Date()});$('wallMsg').textContent='تم الحفظ.';$('wallMsg').className='success';$('resetWall').click()});
-/* Withdrawal methods */
-function renderMethods(){let l=$('methodList');l.replaceChildren();methods.forEach(m=>{let c=node('div','','item');c.append(node('b',m.name||m.id),node('div','الحد الأدنى: '+(m.minimumWithdrawal||0)+' نقطة'),node('div',m.enabled?'مفعّلة':'متوقفة','badge'));let e=node('button','تعديل','btn');e.onclick=()=>{$('methodId').value=m.id;$('methodName').value=m.name||'';$('methodMin').value=m.minimumWithdrawal||0;$('methodInstructions').value=m.instructions||'';$('methodLabel').value=m.accountLabel||'';$('methodEnabled').checked=!!m.enabled};let t=node('button',m.enabled?'إيقاف':'تفعيل','btn');t.onclick=()=>run(t,()=>updateDoc(doc(db,'withdrawMethods',m.id),{enabled:!m.enabled}));let d=node('button','حذف','btn danger');d.onclick=()=>run(d,async()=>{if(confirm('حذف الطريقة؟'))await deleteDoc(doc(db,'withdrawMethods',m.id))});c.append(e,t,d);l.append(c)})}
-$('resetMethod').onclick=()=>{['methodId','methodName','methodMin','methodInstructions','methodLabel'].forEach(x=>$(x).value='');$('methodEnabled').checked=true};
-$('saveMethod').onclick=()=>run($('saveMethod'),async()=>{let id=$('methodId').value,name=$('methodName').value.trim(),min=Number($('methodMin').value);if(!name||!Number.isSafeInteger(min)||min<0)throw Error('تحقق من الاسم والحد الأدنى.');let d={name,minimumWithdrawal:min,instructions:$('methodInstructions').value.trim(),accountLabel:$('methodLabel').value.trim(),enabled:$('methodEnabled').checked,updatedAt:new Date()};if(id)await updateDoc(doc(db,'withdrawMethods',id),d);else await addDoc(collection(db,'withdrawMethods'),{...d,createdAt:new Date()});$('methodMsg').textContent='تم الحفظ.';$('resetMethod').click()});
-/* Withdrawal amounts */
-function renderAmounts(){let l=$('amountList');l.replaceChildren();amounts.forEach(m=>{let c=node('div','','item');c.append(node('b','$'+Number(m.amountUSD||0).toFixed(2)),node('div',Number(m.coins||0).toLocaleString()+' نقطة'),node('div',m.enabled?'مفعّل':'متوقف','badge'));let e=node('button','تعديل','btn');e.onclick=()=>{$('amountId').value=m.id;$('amountUsd').value=m.amountUSD;$('amountCoins').value=m.coins;$('amountEnabled').checked=!!m.enabled};let t=node('button',m.enabled?'إيقاف':'تفعيل','btn');t.onclick=()=>run(t,()=>updateDoc(doc(db,'withdrawalAmounts',m.id),{enabled:!m.enabled}));let d=node('button','حذف','btn danger');d.onclick=()=>run(d,async()=>{if(confirm('حذف مبلغ السحب؟'))await deleteDoc(doc(db,'withdrawalAmounts',m.id))});c.append(e,t,d);l.append(c)})}
-$('resetAmount').onclick=()=>{['amountId','amountUsd','amountCoins'].forEach(x=>$(x).value='');$('amountEnabled').checked=true};
-$('saveAmount').onclick=()=>run($('saveAmount'),async()=>{let id=$('amountId').value,usd=Number($('amountUsd').value),coins=Number($('amountCoins').value);if(!Number.isFinite(usd)||usd<=0||!Number.isSafeInteger(coins)||coins<=0)throw Error('أدخل مبلغاً ونقاطاً صحيحة.');let d={amountUSD:usd,coins,enabled:$('amountEnabled').checked,updatedAt:new Date()};if(id)await updateDoc(doc(db,'withdrawalAmounts',id),d);else await addDoc(collection(db,'withdrawalAmounts'),{...d,createdAt:new Date()});$('amountMsg').textContent='تم الحفظ.';$('resetAmount').click()});
+/* Unified withdrawal categories and options.
+   Firestore schema: withdrawalCategories/{categoryId} with options: [{id,label,coins,quantity,amountUSD,enabled}].
+   Financial creation/validation must be enforced again by trusted Cloud Functions. */
+function fillCategorySelects(){
+ const fill=(id,selected='')=>{const el=$(id);if(!el)return;el.replaceChildren(new Option('اختر الفئة',''));categories.forEach(c=>{const o=new Option(c.name||c.id,c.id);if(c.id===selected)o.selected=true;el.add(o)})};
+ fill('optionCategory',$('optionCategory').value);fill('wCategory',$('wCategory').value);fill('optionCategory');
+}
+function fillOptionSelect(){
+ const c=categories.find(x=>x.id===$('wCategory').value),el=$('wOption');el.replaceChildren(new Option('اختر الخيار',''));
+ (c?.options||[]).filter(o=>o.enabled!==false).forEach(o=>el.add(new Option(`${o.label} — ${Number(o.coins||0).toLocaleString()} نقطة`,o.id)));
+ $('wAddressLabel').textContent=c?.inputLabel||'بيانات الاستلام';
+ $('wAddress').placeholder=c?.inputLabel||'بيانات الاستلام';
+}
+function renderCategories(){
+ const l=$('categoryList');l.replaceChildren();
+ categories.forEach(c=>{
+  const card=node('article','','item');card.append(node('b',c.name||c.id),node('div','النوع: '+({pubg_uc:'شحن شدات PUBG',binance:'Binance / نقدي',other:'أخرى'}[c.type]||c.type||'أخرى')),node('div',c.enabled===false?'متوقفة':'مفعّلة','badge'));
+  card.append(node('div','حقل الاستلام: '+(c.inputLabel||'بيانات الاستلام'),'muted'));
+  (c.options||[]).forEach(o=>{
+   const line=node('div','','item');line.style.background='#f8fbff';
+   const detail=`${o.label||'خيار'} • ${Number(o.coins||0).toLocaleString()} نقطة`+(Number(o.quantity||0)>0?` • كمية ${o.quantity}`:'')+(Number(o.amountUSD||0)>0?` • $${Number(o.amountUSD).toFixed(2)}`:'')+` • ${o.enabled===false?'متوقف':'مفعّل'}`;
+   line.append(node('div',detail));
+   const edit=node('button','تعديل الخيار','btn');edit.onclick=()=>{ $('optionCategory').value=c.id;$('optionId').value=o.id;$('optionLabel').value=o.label||'';$('optionCoins').value=o.coins||'';$('optionQuantity').value=o.quantity||'';$('optionUsd').value=o.amountUSD||0;$('optionEnabled').checked=o.enabled!==false };
+   const toggle=node('button',o.enabled===false?'تفعيل الخيار':'إيقاف الخيار','btn');toggle.onclick=()=>run(toggle,async()=>{const opts=(c.options||[]).map(x=>x.id===o.id?{...x,enabled:x.enabled===false}:x);await updateDoc(doc(db,'withdrawalCategories',c.id),{options:opts,updatedAt:new Date()})});
+   const del=node('button','حذف الخيار','btn danger');del.onclick=()=>run(del,async()=>{if(confirm('حذف هذا الخيار؟ الطلبات القديمة لا تتأثر.'))await updateDoc(doc(db,'withdrawalCategories',c.id),{options:(c.options||[]).filter(x=>x.id!==o.id),updatedAt:new Date()})});
+   line.append(edit,toggle,del);card.append(line);
+  });
+  const actions=node('div','','row');
+  const edit=node('button','تعديل الفئة','btn');edit.onclick=()=>{$('categoryId').value=c.id;$('categoryName').value=c.name||'';$('categoryType').value=c.type||'other';$('categoryInputLabel').value=c.inputLabel||'';$('categoryInstructions').value=c.instructions||'';$('categoryEnabled').checked=c.enabled!==false;window.scrollTo({top:0,behavior:'smooth'})};
+  const toggle=node('button',c.enabled===false?'تفعيل الفئة':'إيقاف الفئة','btn');toggle.onclick=()=>run(toggle,()=>updateDoc(doc(db,'withdrawalCategories',c.id),{enabled:c.enabled===false,updatedAt:new Date()}));
+  const del=node('button','حذف الفئة','btn danger');del.onclick=()=>run(del,async()=>{if(confirm('حذف الفئة؟ لن تُحذف الطلبات السابقة، لكن لن يستطيع المستخدم اختيارها.'))await deleteDoc(doc(db,'withdrawalCategories',c.id))});
+  actions.append(edit,toggle,del);card.append(actions);l.append(card);
+ });
+ if(!categories.length)l.append(node('p','لم تضف فئات سحب بعد.','muted'));
+}
+$('resetCategory').onclick=()=>{['categoryId','categoryName','categoryInputLabel','categoryInstructions'].forEach(x=>$(x).value='');$('categoryType').value='pubg_uc';$('categoryEnabled').checked=true};
+$('saveCategory').onclick=()=>run($('saveCategory'),async()=>{
+ const id=$('categoryId').value,name=$('categoryName').value.trim(),inputLabel=$('categoryInputLabel').value.trim(),type=$('categoryType').value;
+ if(!name||!inputLabel)throw Error('أدخل اسم الفئة واسم حقل الاستلام.');
+ const old=categories.find(x=>x.id===id),data={name,type,inputLabel,instructions:$('categoryInstructions').value.trim(),enabled:$('categoryEnabled').checked,options:old?.options||[],updatedAt:new Date()};
+ if(id)await updateDoc(doc(db,'withdrawalCategories',id),data);else await addDoc(collection(db,'withdrawalCategories'),{...data,createdAt:new Date()});
+ $('categoryMsg').textContent='تم حفظ الفئة.';$('categoryMsg').className='success';$('resetCategory').click();
+});
+$('resetOption').onclick=()=>{['optionId','optionLabel','optionCoins','optionQuantity','optionUsd'].forEach(x=>$(x).value='');$('optionEnabled').checked=true};
+$('saveOption').onclick=()=>run($('saveOption'),async()=>{
+ const cid=$('optionCategory').value,c=categories.find(x=>x.id===cid),id=$('optionId').value,label=$('optionLabel').value.trim(),coins=Number($('optionCoins').value),quantity=Number($('optionQuantity').value||0),amountUSD=Number($('optionUsd').value||0);
+ if(!c||!label||!Number.isSafeInteger(coins)||coins<=0||!Number.isSafeInteger(quantity)||quantity<0||!Number.isFinite(amountUSD)||amountUSD<0)throw Error('اختر الفئة وأدخل اسم الخيار والنقاط وقيمًا صحيحة.');
+ if(c.type==='pubg_uc'&&quantity<=0)throw Error('أدخل كمية الشدات لهذا الخيار.');
+ if(c.type==='binance'&&amountUSD<=0)throw Error('أدخل قيمة الدولار لخيار Binance.');
+ const option={id:id||('opt_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)),label,coins,quantity,amountUSD,enabled:$('optionEnabled').checked};
+ const opts=[...(c.options||[])];const index=opts.findIndex(x=>x.id===id);if(index>=0)opts[index]=option;else opts.push(option);
+ await updateDoc(doc(db,'withdrawalCategories',cid),{options:opts,updatedAt:new Date()});
+ $('optionMsg').textContent='تم حفظ الخيار داخل الفئة.';$('optionMsg').className='success';$('resetOption').click();
+});
+$('optionCategory').onchange=()=>{$('optionMsg').textContent='الفئة المحددة: '+(categories.find(c=>c.id===$('optionCategory').value)?.name||'—')};
 /* Managers: callable function validates superAdmin server-side */
 function renderManagers(){let l=$('managerList');l.replaceChildren();managers.forEach(m=>{let c=node('div','','item');c.append(node('b',m.uid),node('div','الدور: '+m.role),node('div','الصلاحيات: '+(m.permissions||[]).join(', ')));let b=node('button','إزالة صلاحيات الإدارة','btn danger');b.onclick=()=>run(b,async()=>{if(confirm('إزالة صلاحيات هذا المدير؟'))await call('adminSetManager')({uid:m.uid,remove:true})});c.append(b);l.append(c)})}
 $('saveManager').onclick=()=>run($('saveManager'),async()=>{let uid=$('managerUid').value.trim(),role=$('managerRole').value,permissions=$('managerPerms').value.split(',').map(x=>x.trim()).filter(Boolean);if(!uid)throw Error('أدخل UID.');await call('adminSetManager')({uid,role,permissions});$('managerMsg').textContent='تم تحديث الصلاحيات.';$('managerMsg').className='success'});
