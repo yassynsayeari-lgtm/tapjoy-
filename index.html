@@ -162,7 +162,7 @@ async function submitRequest(){
    method:method.name,
    payoutAddress
   });
-  alert('Your withdrawal request was submitted and saved for admin review. No coins were deducted and no payment was sent.');
+  alert('Withdrawal request submitted successfully. Coins deducted and waiting for review.');
   document.getElementById('account').value='';
   selectedCoins=0;selectedUSD=0;
   document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));
@@ -179,7 +179,7 @@ refreshBalance();
 </script>
 <script type="module">
 import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection,addDoc} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection,addDoc,runTransaction} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 const firebaseConfig={apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",authDomain:"yasjoy.firebaseapp.com",projectId:"yasjoy",storageBucket:"yasjoy.firebasestorage.app",messagingSenderId:"967065409063",appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"};
 const app=getApps().length?getApp():initializeApp(firebaseConfig),db=getFirestore(app),auth=getAuth(app);
@@ -191,27 +191,45 @@ window.createYasjoyWithdrawal=async function(request){
  if(typeof request.amountUSD!=='number'||!Number.isFinite(request.amountUSD)||request.amountUSD<=0)throw new Error('Invalid withdrawal amount.');
  if(typeof request.methodId!=='string'||!request.methodId)throw new Error('Choose a withdrawal method.');
  if(typeof request.payoutAddress!=='string'||!request.payoutAddress.trim())throw new Error('Enter your payout account details.');
- const methodSnap=await getDoc(doc(db,'withdrawMethods',request.methodId));
- if(!methodSnap.exists())throw new Error('This withdrawal method is no longer available.');
- const methodData=methodSnap.data();
- if(methodData.enabled!==true)throw new Error('This withdrawal method is currently disabled.');
- if(typeof methodData.name!=='string'||methodData.name!==request.method)throw new Error('Withdrawal method information changed. Refresh and try again.');
- const minimum=Number(methodData.minimumWithdrawal||0);
- if(!Number.isFinite(minimum)||minimum<0||request.coins<minimum)throw new Error('This request is below the method minimum withdrawal amount.');
- const userSnap=await getDoc(doc(db,'users',user.uid));
- if(!userSnap.exists()||userSnap.data().banned===true)throw new Error('This account cannot submit withdrawal requests.');
- const currentBalance=Number(userSnap.data().balance||0);
- if(!Number.isFinite(currentBalance)||currentBalance<request.coins)throw new Error('Insufficient coins.');
- await addDoc(collection(db,'withdrawals'),{
-  uid:user.uid,
-  publicId:'YJ-'+user.uid.slice(0,8).toUpperCase(),
-  methodId:request.methodId,
-  method:methodData.name,
-  amountUSD:request.amountUSD,
-  coins:request.coins,
-  payoutAddress:request.payoutAddress.trim(),
-  status:'pending',
-  createdAt:serverTimestamp()
+
+ const methodRef=doc(db,'withdrawMethods',request.methodId);
+ const userRef=doc(db,'users',user.uid);
+ const withdrawalRef=doc(collection(db,'withdrawals'));
+
+ await runTransaction(db,async(transaction)=>{
+  const methodSnap=await transaction.get(methodRef);
+  const userSnap=await transaction.get(userRef);
+
+  if(!methodSnap.exists())throw new Error('This withdrawal method is no longer available.');
+  const methodData=methodSnap.data();
+
+  if(methodData.enabled!==true)throw new Error('This withdrawal method is currently disabled.');
+  if(typeof methodData.name!=='string'||methodData.name!==request.method)
+   throw new Error('Withdrawal method information changed. Refresh and try again.');
+
+  const minimum=Number(methodData.minimumWithdrawal||0);
+  if(!Number.isFinite(minimum)||minimum<0||request.coins<minimum)
+   throw new Error('This request is below the method minimum withdrawal amount.');
+
+  if(!userSnap.exists()||userSnap.data().banned===true)
+   throw new Error('This account cannot submit withdrawal requests.');
+
+  const currentBalance=Number(userSnap.data().balance||0);
+  if(!Number.isFinite(currentBalance)||currentBalance<request.coins)
+   throw new Error('Insufficient coins.');
+
+  transaction.update(userRef,{balance:currentBalance-request.coins});
+  transaction.set(withdrawalRef,{
+   uid:user.uid,
+   publicId:'YJ-'+user.uid.slice(0,8).toUpperCase(),
+   methodId:request.methodId,
+   method:methodData.name,
+   amountUSD:request.amountUSD,
+   coins:request.coins,
+   payoutAddress:request.payoutAddress.trim(),
+   status:'pending',
+   createdAt:serverTimestamp()
+  });
  });
 };
 function setBannedView(banned){const screen=document.getElementById("bannedScreen");if(!screen)return;screen.hidden=!banned;const header=document.querySelector("header"),main=document.querySelector("main"),nav=document.querySelector("nav.bottom");if(header)header.style.display=banned?"none":"";if(main)main.style.display=banned?"none":"";if(nav)nav.style.display=banned?"none":""}
