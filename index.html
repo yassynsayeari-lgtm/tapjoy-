@@ -127,7 +127,7 @@ refreshBalance();
 </script>
 <script type="module">
 import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection,writeBatch} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection,runTransaction} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 const firebaseConfig={apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",authDomain:"yasjoy.firebaseapp.com",projectId:"yasjoy",storageBucket:"yasjoy.firebasestorage.app",messagingSenderId:"967065409063",appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"};
 const app=getApps().length?getApp():initializeApp(firebaseConfig),db=getFirestore(app),auth=getAuth(app);
@@ -137,63 +137,60 @@ window.createYasjoyWithdrawal=async function(request){
  if(!user)throw new Error('Your account is still connecting. Please try again.');
  const coins=Number(request.coins);
  const walletAddress=String(request.walletAddress||'').trim();
+ const methodId=String(request.methodId||'');
  if(!Number.isSafeInteger(coins)||coins<=0)throw new Error('Invalid coin amount.');
  if(walletAddress.length<6||walletAddress.length>180)throw new Error('Invalid payout account details.');
- const methodSnap=await getDoc(doc(db,'withdrawMethods',String(request.methodId||'')));
- if(!methodSnap.exists())throw new Error('This withdrawal method is no longer available.');
- const methodData=methodSnap.data();
- if(methodData.enabled!==true||methodData.name!==request.method)throw new Error('This withdrawal method is unavailable. Refresh and try again.');
- const tier=(Array.isArray(methodData.tiers)?methodData.tiers:[]).find(t=>Number(t.coins)===coins&&Number(t.amountUSD)===Number(request.amountUSD));
- if(!tier)throw new Error('This withdrawal amount is not available for the selected method.');
+ if(!methodId)throw new Error('Please choose a withdrawal method.');
 
+ const methodRef=doc(db,'withdrawMethods',methodId);
  const userRef=doc(db,'users',user.uid);
- const userSnap=await getDoc(userRef);
- if(!userSnap.exists())throw new Error('User account not found.');
- const userData=userSnap.data();
- if(userData.banned===true)throw new Error('This account cannot submit withdrawal requests.');
- if(typeof userData.balance!=='number'||!Number.isFinite(userData.balance)) {
-  throw new Error('Your balance is not initialized. Please contact YASJOY administration.');
- }
- const oldBalance=userData.balance;
- if(oldBalance<coins)throw new Error('Insufficient coins.');
- const remainingBalance=oldBalance-coins;
  const withdrawalId=doc(collection(db,'withdrawals')).id;
  const withdrawalRef=doc(db,'withdrawals',withdrawalId);
  const transactionRef=doc(db,'transactions',withdrawalId);
- const batch=writeBatch(db);
 
- // The three writes are committed atomically: all succeed or none do.
- batch.update(userRef,{
-  balance:remainingBalance,
-  lastWithdrawalId:withdrawalId
- });
- batch.set(withdrawalRef,{
-  uid:user.uid,
-  publicId:'YJ-'+user.uid.slice(0,8).toUpperCase(),
-  method:methodData.name,
-  amountUSD:Number(tier.amountUSD),
-  coins:coins,
-  walletAddress:walletAddress,
-  status:'pending',
-  createdAt:serverTimestamp()
- });
- batch.set(transactionRef,{
-  uid:user.uid,
-  type:'withdrawal',
-  coins:-coins,
-  withdrawalId:withdrawalId,
-  createdAt:serverTimestamp()
- });
+ return await runTransaction(db,async transaction=>{
+  // All reads happen before writes. Firestore retries if a read document changes.
+  const methodSnap=await transaction.get(methodRef);
+  const userSnap=await transaction.get(userRef);
+  if(!methodSnap.exists())throw new Error('This withdrawal method is no longer available.');
+  if(!userSnap.exists())throw new Error('User account not found.');
 
- await batch.commit();
- return {
-  success:true,
-  withdrawalId,
-  deductedCoins:coins,
-  remainingBalance,
-  amountUSD:Number(tier.amountUSD),
-  status:'pending'
- };
+  const methodData=methodSnap.data();
+  const userData=userSnap.data();
+  if(methodData.enabled!==true||methodData.name!==request.method)
+   throw new Error('This withdrawal method is unavailable. Refresh and try again.');
+
+  const tier=(Array.isArray(methodData.tiers)?methodData.tiers:[]).find(t=>
+   Number(t.coins)===coins&&Number(t.amountUSD)===Number(request.amountUSD)
+  );
+  if(!tier)throw new Error('This withdrawal amount is not available for the selected method.');
+  if(userData.banned===true)throw new Error('This account cannot submit withdrawal requests.');
+  if(typeof userData.balance!=='number'||!Number.isFinite(userData.balance))
+   throw new Error('Your balance is not initialized. Please contact YASJOY administration.');
+  if(userData.balance<coins)throw new Error('Insufficient coins.');
+
+  const remainingBalance=userData.balance-coins;
+  transaction.update(userRef,{balance:remainingBalance,lastWithdrawalId:withdrawalId});
+  transaction.set(withdrawalRef,{
+   uid:user.uid,
+   publicId:'YJ-'+user.uid.slice(0,8).toUpperCase(),
+   method:methodData.name,
+   methodId:methodId,
+   amountUSD:Number(tier.amountUSD),
+   coins:coins,
+   walletAddress:walletAddress,
+   status:'pending',
+   createdAt:serverTimestamp()
+  });
+  transaction.set(transactionRef,{
+   uid:user.uid,
+   type:'withdrawal',
+   coins:-coins,
+   withdrawalId:withdrawalId,
+   createdAt:serverTimestamp()
+  });
+  return {success:true,withdrawalId,deductedCoins:coins,remainingBalance,amountUSD:Number(tier.amountUSD),status:'pending'};
+ });
 };
 function setBannedView(banned){const screen=document.getElementById("bannedScreen");if(!screen)return;screen.hidden=!banned;const header=document.querySelector("header"),main=document.querySelector("main"),nav=document.querySelector("nav.bottom");if(header)header.style.display=banned?"none":"";if(main)main.style.display=banned?"none":"";if(nav)nav.style.display=banned?"none":""}
 function renderWithdrawalMethods(snapshot){
