@@ -33,7 +33,7 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .field-label{display:block;margin:16px 0 8px}input,select{width:100%;padding:15px;border:1px solid #cfe7f7;border-radius:14px;font-size:16px;background:white}
 .primary{width:100%;border:0;border-radius:14px;padding:15px;background:var(--blue);color:white;font-size:17px;font-weight:bold;margin-top:15px}
 .amounts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.amount{border:2px solid #d9efff;background:#f8fcff;color:#12366f;padding:15px;border-radius:18px;font-weight:bold}
-.amount.selected{border-color:var(--blue);background:#e3f4ff}
+.amount.selected{border-color:var(--blue);background:#e3f4ff}.withdraw-methods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.withdraw-method{display:flex;align-items:center;gap:10px;text-align:right;border:2px solid #d9efff;background:#fff;color:var(--dark);padding:13px;border-radius:16px;font-weight:bold;min-width:0}.withdraw-method.selected{border-color:var(--blue);background:#eaf6ff}.withdraw-method img{width:42px;height:42px;object-fit:contain;border-radius:10px}.withdraw-method .method-fallback{width:42px;height:42px;display:grid;place-items:center;background:#e3f4ff;border-radius:10px;font-size:20px}.withdraw-method span:last-child{overflow-wrap:anywhere}.withdraw-status{grid-column:1/-1}
 .social{display:flex;align-items:center;gap:13px;padding:14px 12px;margin:10px 0;border:1px solid #d9efff;border-radius:15px;background:#f8fcff;color:var(--dark);text-decoration:none;font-weight:bold}
 .social-icon{font-size:24px;width:35px;text-align:center}
 .id-box{background:#eff7ff;border-radius:14px;padding:15px;display:flex;justify-content:space-between;align-items:center;gap:8px;overflow-wrap:anywhere}
@@ -62,15 +62,9 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 <section id="withdraw" class="page">
   <div class="panel"><h2>Withdraw your points</h2><p class="small">Available Balance</p>
     <div style="background:#1765ef;color:white;border-radius:22px;padding:25px;text-align:center;font-size:28px"><strong id="withdrawBalance">0</strong><div style="font-size:17px">Coins</div></div>
-    <h3>Choose withdrawal amount</h3><div class="amounts">
-      <button class="amount" onclick="selectAmount(this,100,0.10)">$0.10<br><small>100 coins</small></button>
-      <button class="amount" onclick="selectAmount(this,250,0.25)">$0.25<br><small>250 coins</small></button>
-      <button class="amount" onclick="selectAmount(this,1000,1)">$1.00<br><small>1,000 coins</small></button>
-      <button class="amount" onclick="selectAmount(this,2000,2)">$2.00<br><small>2,000 coins</small></button>
-      <button class="amount" onclick="selectAmount(this,3000,3)">$3.00<br><small>3,000 coins</small></button>
-    </div>
-    <label class="field-label" for="method">Withdrawal method</label><select id="method"><option value="Binance">Binance</option></select>
-    <label class="field-label" for="account">Binance account identifier</label><input id="account" autocomplete="off" placeholder="Enter your Binance Pay ID or details">
+    <h3>Choose withdrawal method</h3><div class="withdraw-methods" id="withdrawMethodsList"><div class="empty-offers withdraw-status">Loading withdrawal methods…</div></div>
+    <h3>Choose withdrawal amount</h3><div class="amounts" id="withdrawalTiers"><div class="empty-offers withdraw-status">Choose a withdrawal method first.</div></div>
+    <label class="field-label" for="account">Payout account details</label><input id="account" autocomplete="off" placeholder="Enter your payout account details">
     <button class="primary" onclick="submitRequest()">Submit withdrawal request</button>
     <p class="small">Your points are deducted when the request is successfully submitted. The request will be reviewed by YASJOY administration. Submitting a request does not mean payment has been sent.</p>
     <button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('home')">Back to Home</button>
@@ -91,7 +85,7 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 </main>
 <nav class="bottom"><button class="nav active" id="navHome" onclick="showPage('home')"><span class="ico">⌂</span>Home</button><button class="nav" id="navProfile" onclick="showPage('profile')"><span class="ico">👤</span>Profile</button></nav>
 <script>
-let selectedCoins=0,selectedUSD=0,balance=0,userId="";
+let selectedCoins=0,selectedUSD=0,balance=0,userId="",selectedMethod=null,withdrawalMethods=[];
 function showPage(id){if(document.getElementById("bannedScreen")?.hidden===false)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id);if(page)page.classList.add('active');document.getElementById('navHome').classList.toggle('active',id==='home');document.getElementById('navProfile').classList.toggle('active',id==='profile');window.scrollTo(0,0);refreshBalance()}
 function refreshBalance(){document.getElementById('balance').textContent=balance.toLocaleString();document.getElementById('withdrawBalance').textContent=balance.toLocaleString()}
 function selectAmount(button,coins,usd){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins;selectedUSD=usd}
@@ -100,12 +94,13 @@ let withdrawalSubmitting=false;
 async function submitRequest(){
  if(document.getElementById("bannedScreen")?.hidden===false)return;
  if(withdrawalSubmitting)return;
+ if(!selectedMethod){alert('Please choose a withdrawal method.');return}
  if(!selectedCoins){alert('Please choose a withdrawal amount.');return}
  if(!Number.isSafeInteger(selectedCoins)||selectedCoins<=0){alert('Invalid withdrawal amount.');return}
  if(balance<selectedCoins){alert('Insufficient coins.');return}
  const walletAddress=document.getElementById('account').value.trim();
  if(!walletAddress){alert('Please enter your Binance wallet address or Pay ID.');return}
- if(walletAddress.length<6||walletAddress.length>180){alert('Please check your Binance wallet details.');return}
+ if(walletAddress.length<6||walletAddress.length>180){alert('Please check your payout account details.');return}
  const button=document.querySelector('#withdraw .primary');
  withdrawalSubmitting=true;
  if(button){button.disabled=true;button.textContent='Submitting…'}
@@ -113,7 +108,7 @@ async function submitRequest(){
   const result=await window.createYasjoyWithdrawal({
    coins:selectedCoins,
    walletAddress,
-   method:document.getElementById('method').value
+   method:selectedMethod.name,methodId:selectedMethod.id,amountUSD:selectedUSD
   });
   alert('Your withdrawal request was submitted for admin review. Coins deducted: '+result.deductedCoins+'. Remaining balance: '+result.remainingBalance+'.');
   document.getElementById('account').value='';
@@ -140,11 +135,16 @@ let currentYasjoyUser=null;
 window.createYasjoyWithdrawal=async function(request){
  const user=currentYasjoyUser;
  if(!user)throw new Error('Your account is still connecting. Please try again.');
- if(request.method!=='Binance')throw new Error('Unsupported withdrawal method.');
  const coins=Number(request.coins);
  const walletAddress=String(request.walletAddress||'').trim();
  if(!Number.isSafeInteger(coins)||coins<=0)throw new Error('Invalid coin amount.');
- if(walletAddress.length<6||walletAddress.length>180)throw new Error('Invalid Binance wallet details.');
+ if(walletAddress.length<6||walletAddress.length>180)throw new Error('Invalid payout account details.');
+ const methodSnap=await getDoc(doc(db,'withdrawMethods',String(request.methodId||'')));
+ if(!methodSnap.exists())throw new Error('This withdrawal method is no longer available.');
+ const methodData=methodSnap.data();
+ if(methodData.enabled!==true||methodData.name!==request.method)throw new Error('This withdrawal method is unavailable. Refresh and try again.');
+ const tier=(Array.isArray(methodData.tiers)?methodData.tiers:[]).find(t=>Number(t.coins)===coins&&Number(t.amountUSD)===Number(request.amountUSD));
+ if(!tier)throw new Error('This withdrawal amount is not available for the selected method.');
 
  const userRef=doc(db,'users',user.uid);
  const userSnap=await getDoc(userRef);
@@ -170,8 +170,8 @@ window.createYasjoyWithdrawal=async function(request){
  batch.set(withdrawalRef,{
   uid:user.uid,
   publicId:'YJ-'+user.uid.slice(0,8).toUpperCase(),
-  method:'Binance',
-  amountUSD:coins/1000,
+  method:methodData.name,
+  amountUSD:Number(tier.amountUSD),
   coins:coins,
   walletAddress:walletAddress,
   status:'pending',
@@ -191,11 +191,26 @@ window.createYasjoyWithdrawal=async function(request){
   withdrawalId,
   deductedCoins:coins,
   remainingBalance,
-  amountUSD:coins/1000,
+  amountUSD:Number(tier.amountUSD),
   status:'pending'
  };
 };
 function setBannedView(banned){const screen=document.getElementById("bannedScreen");if(!screen)return;screen.hidden=!banned;const header=document.querySelector("header"),main=document.querySelector("main"),nav=document.querySelector("nav.bottom");if(header)header.style.display=banned?"none":"";if(main)main.style.display=banned?"none":"";if(nav)nav.style.display=banned?"none":""}
+function renderWithdrawalMethods(snapshot){
+ withdrawalMethods=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(m=>m.enabled===true);
+ const host=document.getElementById('withdrawMethodsList');host.replaceChildren();
+ selectedMethod=null;selectedCoins=0;selectedUSD=0;document.getElementById('withdrawalTiers').replaceChildren();
+ document.getElementById('withdrawalTiers').append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
+ if(!withdrawalMethods.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal methods are currently available.'}));return}
+ withdrawalMethods.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+ withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b)});
+}
+function chooseWithdrawalMethod(method,button){
+ selectedMethod=method;selectedCoins=0;selectedUSD=0;document.querySelectorAll('.withdraw-method').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');
+ const host=document.getElementById('withdrawalTiers');host.replaceChildren();const tiers=Array.isArray(method.tiers)?method.tiers.filter(t=>Number.isSafeInteger(Number(t.coins))&&Number(t.coins)>0&&Number.isFinite(Number(t.amountUSD))&&Number(t.amountUSD)>0).sort((a,b)=>Number(a.coins)-Number(b.coins)):[];
+ if(!tiers.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal amounts have been configured for this method.'}));return}
+ tiers.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='amount';b.innerHTML='';const amount=document.createElement('strong');amount.textContent='$'+Number(t.amountUSD).toFixed(2);const points=document.createElement('small');points.textContent=Number(t.coins).toLocaleString('en-US')+' coins';b.append(amount,document.createElement('br'),points);b.onclick=()=>selectAmount(b,Number(t.coins),Number(t.amountUSD));host.append(b)});
+}
 async function loadSocialLinks(){const ids={telegram:"telegramLink",youtube:"youtubeLink",tiktok:"tiktokLink",instagram:"instagramLink"},status=document.getElementById("socialStatus");try{const snap=await getDoc(doc(db,"socialLinks","main"));if(!snap.exists()){status.textContent="Social links are not configured yet.";Object.values(ids).forEach(id=>document.getElementById(id).hidden=true);return}const links=snap.data();let count=0;for(const [key,id] of Object.entries(ids)){const el=document.getElementById(id),url=links[key];if(typeof url==="string"&&/^https:\/\/\S+$/i.test(url)){el.href=url;el.hidden=false;count++}else el.hidden=true}status.textContent=count?"Social links loaded from Firebase.":"No valid social links configured."}catch(error){console.error("Social links error:",error);status.textContent="Could not load social links. Check Firebase rules and socialLinks/main."}}
 /* Live offer-wall list: only visible records are rendered. */
 function renderOfferWalls(snapshot){
@@ -230,6 +245,7 @@ async function setupUser(user){
  stopUserListener=onSnapshot(userRef,userSnap=>{const data=userSnap.data()||{};setBannedView(data.banned===true);balance=Number.isFinite(data.balance)?data.balance:0;refreshBalance()},error=>console.error("User data error:",error));
 }
 loadSocialLinks();
+onSnapshot(collection(db,"withdrawMethods"),renderWithdrawalMethods,error=>{console.error("Withdrawal methods listener error:",error);const host=document.getElementById("withdrawMethodsList");host.replaceChildren();const msg=document.createElement("div");msg.className="empty-offers withdraw-status";msg.textContent="Could not load withdrawal methods. Check Firebase rules.";host.appendChild(msg)});
 onSnapshot(collection(db,"offerWalls"),renderOfferWalls,error=>{console.error("Offer walls listener error:",error);const host=document.getElementById("offersList");host.replaceChildren();const msg=document.createElement("div");msg.className="empty-offers";msg.textContent="Could not load offer walls. Please check your connection or Firebase rules.";host.appendChild(msg)});
 onAuthStateChanged(auth,async user=>{try{if(!user){currentYasjoyUser=null;await signInAnonymously(auth);return}currentYasjoyUser=user;await setupUser(user)}catch(error){console.error("Firebase account setup error:",error);document.getElementById("userId").textContent="Connection error — reload the page";document.getElementById("userIdNote").textContent="Could not connect. Check Anonymous Authentication and Firestore rules."}});
 </script>
