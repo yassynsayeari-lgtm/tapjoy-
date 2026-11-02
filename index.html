@@ -1,146 +1,237 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>YASJOY Admin</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#dff4ff">
+<title>YASJOY - Earn Rewards</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f2f6fc;color:#183153;font-family:Arial,sans-serif}header{background:#1976d2;color:white;padding:20px 16px}main{max-width:900px;margin:auto;padding:15px}.box,.panel,.login{background:white;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #17365d0d}.menu{display:block;width:100%;text-align:right;background:white;border:1px solid #e0eafa;border-radius:12px;padding:16px;margin:10px 0;font-size:17px;font-weight:bold;color:#183153}.menu small{display:block;color:#718096;font-weight:normal;margin-top:5px}.panel{display:none}.panel.show{display:block}h2{font-size:20px}.tabs,.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tab,.btn,.primary{border:0;border-radius:9px;padding:11px 13px;font-weight:bold;cursor:pointer}.tab{background:#e4f1ff;color:#175ca4}.tab.active,.primary{background:#1976d2;color:white}.primary{width:100%}.btn{background:#e8f5e9;color:#176b37}.danger{background:#ffebee!important;color:#a51f2b!important}.item{border:1px solid #e0e8f0;border-radius:12px;padding:13px;margin:10px 0;overflow-wrap:anywhere}.muted{color:#718096;font-size:13px;line-height:1.7}.empty{text-align:center;padding:20px;color:#718096}.badge{display:inline-block;border-radius:20px;padding:5px 9px;background:#e8f5e9;color:#176b37;font-size:12px}input,textarea{width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px}textarea{min-height:75px}label{font-size:14px;font-weight:bold}.back{border:0;background:transparent;color:#1769aa;font-weight:bold;padding:8px 0 15px}.hidden{display:none!important}.error{color:#a51f2b}.success{color:#176b37}.form{border:1px solid #dce8f5;border-radius:12px;padding:13px;margin:12px 0;background:#fbfdff}.check{display:flex;align-items:center;gap:8px;margin:8px 0}.check input{width:auto;margin:0}.details-box{background:#f7faff;border:1px solid #cfe0f5;border-radius:10px;padding:12px;margin-top:10px;line-height:1.9}.details-box .ok{color:#176b37;font-weight:bold}.details-box .warn{color:#a51f2b;font-weight:bold}.details-box code{direction:ltr;unicode-bidi:break-all;overflow-wrap:anywhere}img.logo{width:42px;height:42px;object-fit:contain;vertical-align:middle;margin-left:8px}
-</style></head><body>
-<header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header><main>
-<section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><p id="loginMsg" class="muted"></p></section>
-<section id="app" class="hidden"><p class="muted">تم التحقق من حساب المسؤول</p>
-<div id="home">
-<button class="menu" onclick="openPanel('withdraw')">💳 طلبات السحب<small>معلّقة، مدفوعة، مرفوضة</small></button>
-<button class="menu" onclick="openPanel('users')">👥 المستخدمون<small>بحث، رصيد، آخر نشاط، حظر</small></button>
-<button class="menu" onclick="openPanel('methods')">💰 طرق السحب<small>إضافة وتعديل وتشغيل وإيقاف</small></button>
-<button class="menu" onclick="openPanel('walls')">🎁 جدران العروض<small>إضافة الروابط والشعارات وإدارتها</small></button>
-</div>
-<section id="withdraw" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2><div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div><div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p></section>
-<section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userList"></div></section>
-<section id="methods" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة طرق السحب</h2><div class="form"><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden"><label>الاسم</label><input id="methodName" placeholder="Binance"><label>الحد الأدنى (عدد صحيح)</label><input id="methodMin" type="number" min="0" step="1"><label>التعليمات</label><textarea id="methodInstructions"></textarea><label>رابط الشعار (اختياري)</label><input id="methodLogo" type="url" placeholder="https://..."><label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label><button id="saveMethod" class="primary">حفظ</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
-<section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2><p class="muted">يجب إدخال رابط صحيح ومعتمد من مزوّد الخدمة. حفظ الرابط لا يعني تفعيل حساب المزوّد أو توثيق المكافآت.</p><div class="form"><h3 id="wallTitle">إضافة جدار عروض</h3><input id="wallId" type="hidden"><label>الاسم</label><input id="wallName" placeholder="Tapjoy"><label>رابط الجدار</label><input id="wallUrl" type="url" placeholder="https://..."><label>رابط الشعار (اختياري)</label><input id="wallLogo" type="url" placeholder="https://..."><label class="check"><input id="wallEnabled" type="checkbox"> مفعّل</label><button id="saveWall" class="primary">حفظ</button><button id="cancelWall" class="btn">إلغاء</button><p id="wallMsg" class="muted"></p></div><div id="wallList"></div></section>
-</section></main><footer class="muted" style="text-align:center;padding:20px">YASJOY Admin • Firebase</footer>
-<script type="module">
-import{initializeApp}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';
-import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
-import{getFirestore,collection,onSnapshot,doc,updateDoc,addDoc,deleteDoc,getDoc,serverTimestamp}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js';
-const config={apiKey:'AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI',authDomain:'yasjoy.firebaseapp.com',projectId:'yasjoy',storageBucket:'yasjoy.firebasestorage.app',messagingSenderId:'967065409063',appId:'1:967065409063:web:4f7b882cc38f17ec8a2002'};
-const ADMIN_UID='wQgo9HTzP0NWC6JO2D1Di8iIPm62',app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
-let users=[],withdrawals=[],methods=[],walls=[],status='pending',unsubs=[];
-setPersistence(auth,browserLocalPersistence).catch(console.error);
-$('loginBtn').onclick=async()=>{ $('loginMsg').textContent='جارٍ التحقق…';try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value)}catch(e){$('loginMsg').textContent='تعذّر تسجيل الدخول. تحقق من البيانات.';$('loginMsg').className='error'}};
-$('password').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};
-onAuthStateChanged(auth,async u=>{unsubs.forEach(f=>f());unsubs=[];if(!u){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}if(u.uid!==ADMIN_UID){await signOut(auth);$('loginMsg').textContent='هذا الحساب غير مخوّل.';return}
-$('login').classList.add('hidden');$('app').classList.remove('hidden');
-unsubs.push(onSnapshot(collection(db,'users'),s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));renderUsers()}));
-unsubs.push(onSnapshot(collection(db,'withdrawals'),s=>{withdrawals=s.docs.map(d=>({id:d.id,...d.data()}));renderWithdrawals()}));
-unsubs.push(onSnapshot(collection(db,'withdrawMethods'),s=>{methods=s.docs.map(d=>({id:d.id,...d.data()}));renderMethods()}));
-unsubs.push(onSnapshot(collection(db,'offerWalls'),s=>{walls=s.docs.map(d=>({id:d.id,...d.data()}));renderWalls()}));
-});
-let current='home';function show(id){$('home').style.display=id==='home'?'block':'none';document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));if(id!=='home')$(id).classList.add('show');current=id}
-window.openPanel=show;window.goHome=()=>show('home');window.withdrawTab=(s,b)=>{status=s;document.querySelectorAll('#withdraw .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderWithdrawals()};
-function balance(u){return Number(u.balance??u.points??u.coins??0)||0}
-function renderUsers(){const q=$('search').value.trim().toLowerCase(),list=$('userList');list.replaceChildren();const rows=users.filter(u=>[u.id,u.uid,u.publicId].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>balance(b)-balance(a));$('userMsg').textContent='عدد المستخدمين: '+users.length;if(!rows.length){list.append(el('div','لا توجد نتائج.','empty'));return}
-rows.forEach((u,i)=>{const c=el('article','', 'item');c.append(el('div',(i+1)+'. '+(u.publicId||'مستخدم')));c.append(el('div','Firebase UID: '+u.id));c.append(el('div','الرصيد: '+balance(u).toLocaleString('en-US')));let last='غير معروف';if(u.lastActiveAt){const d=u.lastActiveAt.toDate?u.lastActiveAt.toDate():new Date(u.lastActiveAt);if(!isNaN(d))last=d.toLocaleString('ar')}c.append(el('div','آخر نشاط: '+last));c.append(el('div',u.banned?'محظور':'غير محظور','badge'));const b=el('button',u.banned?'إلغاء الحظر':'حظر المستخدم','btn '+(u.banned?'':'danger'));b.onclick=async()=>{try{await updateDoc(doc(db,'users',u.id),{banned:!u.banned})}catch(e){alert('تعذّر تغيير الحظر: '+e.message)}};c.append(b);list.append(c)})}
-function displayDate(v){
- if(!v)return 'غير متوفر';
- const d=v.toDate?v.toDate():(v instanceof Date?v:new Date(v));
- return isNaN(d)?'غير معروف':d.toLocaleString('ar');
-}
-function detailLine(label,value){
- const row=el('div',label+': '+(value===undefined||value===null||value===''?'غير متوفر':String(value)));
- return row;
-}
-async function showWithdrawalDetails(w,box,button){
- button.disabled=true;button.textContent='جارٍ تحميل التفاصيل…';box.replaceChildren(el('div','جارٍ جلب سجل المعاملة من Firestore…','muted'));
+*{box-sizing:border-box}
+:root{--blue:#078af5;--dark:#123878;--muted:#829cba}
+body{margin:0;background:linear-gradient(145deg,#dcefff,#f2fcff,#d8f1ff);font-family:Arial,sans-serif;color:var(--dark);padding-bottom:100px}
+header{max-width:720px;margin:auto;padding:22px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:8px;font-size:30px;font-weight:900;color:#0878d7}
+.star{font-size:39px;filter:drop-shadow(1px 3px 2px #e9b900)}
+.balance{background:white;border-radius:35px;padding:12px 15px;display:flex;align-items:center;gap:10px;box-shadow:0 5px 18px #74bce833;font-size:20px;font-weight:bold}
+.coin{font-size:25px}button{cursor:pointer;font:inherit}
+main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{display:block}
+.banner{min-height:205px;border-radius:28px;padding:25px;background:linear-gradient(130deg,#04b9f0,#078af5 60%,#1266e9);color:white;display:flex;align-items:center;gap:16px;box-shadow:0 12px 25px #078af526}
+.wallet{font-size:90px}.banner-text{font-size:clamp(23px,5vw,34px);font-weight:800;line-height:1.25}
+.go{border:0;background:#ffffff38;color:white;border-radius:50%;width:55px;height:55px;font-size:30px;margin-top:15px}
+.section-title{font-size:30px;font-weight:900;margin:24px 0 4px}.subtitle{color:var(--muted);font-size:17px;margin:0 0 16px}
+.offers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.offer{background:white;border:1px solid #d5edff;border-radius:22px;padding:15px;box-shadow:0 5px 14px #74bce833;min-width:0}
+.offer-top{display:flex;align-items:center;gap:10px;min-height:86px}
+.provider-icon{width:58px;height:58px;flex-shrink:0;border-radius:16px;display:grid;place-items:center;font-size:22px;font-weight:bold;color:white;overflow:hidden}
+.provider-icon img{width:100%;height:100%;object-fit:contain;background:white;border-radius:12px}
+.offer h3{font-size:19px;margin:0 0 7px;overflow-wrap:anywhere}.offer p{font-size:14px;color:var(--muted);line-height:1.35;margin:0}
+.earn{margin-top:12px;width:100%;border:0;border-radius:30px;padding:13px 5px;background:var(--blue);color:white;font-weight:bold}
+.earn:disabled{background:#aabbd0;color:#fff;cursor:not-allowed}
+.empty-offers{grid-column:1/-1;background:#fff;border:1px dashed #b9d9ef;border-radius:18px;padding:20px;text-align:center;color:var(--muted);line-height:1.6}
+.panel{background:white;border-radius:28px;padding:22px;margin:18px 0;box-shadow:0 5px 20px #80c9f433}
+.panel h2{margin:0 0 20px;font-size:30px}.small{font-size:14px;color:var(--muted);line-height:1.6}
+.field-label{display:block;margin:16px 0 8px}input,select{width:100%;padding:15px;border:1px solid #cfe7f7;border-radius:14px;font-size:16px;background:white}
+.primary{width:100%;border:0;border-radius:14px;padding:15px;background:var(--blue);color:white;font-size:17px;font-weight:bold;margin-top:15px}
+.amounts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.amount{border:2px solid #d9efff;background:#f8fcff;color:#12366f;padding:15px;border-radius:18px;font-weight:bold}
+.amount.selected{border-color:var(--blue);background:#e3f4ff}
+.social{display:flex;align-items:center;gap:13px;padding:14px 12px;margin:10px 0;border:1px solid #d9efff;border-radius:15px;background:#f8fcff;color:var(--dark);text-decoration:none;font-weight:bold}
+.social-icon{font-size:24px;width:35px;text-align:center}
+.id-box{background:#eff7ff;border-radius:14px;padding:15px;display:flex;justify-content:space-between;align-items:center;gap:8px;overflow-wrap:anywhere}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(12px);border-radius:25px 25px 0 0;display:flex;justify-content:space-around;padding:12px 10px 18px;box-shadow:0 -5px 25px #74bce822}
+.nav{border:0;background:transparent;color:#829cba;font-size:16px;font-weight:bold;min-width:100px}.nav .ico{display:block;font-size:27px;margin-bottom:4px}.nav.active{color:var(--blue)}
+.notice{background:#fff7df;border:1px solid #ffe2a3;border-radius:14px;padding:12px;color:#765318;font-size:13px;line-height:1.5;margin-top:14px}
+.banned-screen{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(145deg,#dcefff,#f2fcff,#d8f1ff);text-align:center}
+.banned-screen[hidden]{display:none!important}.banned-card{width:100%;max-width:420px;padding:30px 22px;border-radius:28px;background:#fff;box-shadow:0 8px 30px #12387820}
+.banned-card h2{color:#d32f2f;margin:12px 0;font-size:27px}.banned-card p{color:#52657c;line-height:1.8;margin:0}
+@media(max-width:390px){header{padding:16px 10px}.brand{font-size:25px}.star{font-size:31px}.balance{padding:10px;font-size:17px}.wallet{font-size:67px}.banner{padding:17px;gap:9px}.offer{padding:10px}.provider-icon{width:45px;height:45px}.offer h3{font-size:16px}.offer p{font-size:12px}}
+</style>
+</head>
+<body>
+<section id="bannedScreen" class="banned-screen" hidden role="alert"><div class="banned-card"><div style="font-size:55px">🚫</div><h2>حسابك محظور</h2><p>تم إيقاف الوصول إلى YASJOY لهذا الحساب. يرجى التواصل مع إدارة التطبيق.</p></div></section>
+<header>
+  <div class="brand"><span class="star">⭐</span><span>YASJOY👑</span></div>
+  <div class="balance"><span class="coin">🪙</span><span id="balance">0</span><button onclick="refreshBalance()" style="border:0;background:none;color:#078af5;font-size:24px" aria-label="Refresh">⟳</button></div>
+</header>
+<main>
+<section id="home" class="page active">
+  <div class="banner"><div class="wallet">💰</div><div style="flex:1"><div class="banner-text">Withdraw your points</div><button class="go" onclick="showPage('withdraw')" aria-label="Withdraw">➜</button></div></div>
+  <div class="section-title">🔥 Offer Walls</div><p class="subtitle">Complete offers · Earn coins</p>
+  <div class="offers" id="offersList"><div class="empty-offers">Loading offer walls…</div></div>
+  <div class="notice">Offer wall connections are not enabled in this stage. A listed wall is not proof that its provider has approved YASJOY or that rewards are active.</div>
+</section>
+<section id="withdraw" class="page">
+  <div class="panel"><h2>Withdraw your points</h2><p class="small">Available Balance</p>
+    <div style="background:#1765ef;color:white;border-radius:22px;padding:25px;text-align:center;font-size:28px"><strong id="withdrawBalance">0</strong><div style="font-size:17px">Coins</div></div>
+    <h3>Choose withdrawal amount</h3><div class="amounts">
+      <button class="amount" onclick="selectAmount(this,100,0.10)">$0.10<br><small>100 coins</small></button>
+      <button class="amount" onclick="selectAmount(this,250,0.25)">$0.25<br><small>250 coins</small></button>
+      <button class="amount" onclick="selectAmount(this,1000,1)">$1.00<br><small>1,000 coins</small></button>
+      <button class="amount" onclick="selectAmount(this,2000,2)">$2.00<br><small>2,000 coins</small></button>
+      <button class="amount" onclick="selectAmount(this,3000,3)">$3.00<br><small>3,000 coins</small></button>
+    </div>
+    <label class="field-label" for="method">Withdrawal method</label><select id="method"><option value="Binance">Binance</option></select>
+    <label class="field-label" for="account">Binance account identifier</label><input id="account" autocomplete="off" placeholder="Enter your Binance Pay ID or details">
+    <button class="primary" onclick="submitRequest()">Submit withdrawal request</button>
+    <p class="small">Your points are deducted when the request is successfully submitted. The request will be reviewed by YASJOY administration. Submitting a request does not mean payment has been sent.</p>
+    <button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('home')">Back to Home</button>
+  </div>
+</section>
+<section id="profile" class="page">
+  <div class="panel"><h2>Profile</h2><p>Your YASJOY demo profile</p>
+    <label class="field-label">Your User ID</label><div class="id-box"><strong id="userId">Connecting...</strong><button onclick="copyId()" style="border:0;background:none;color:#078af5;font-size:20px" aria-label="Copy User ID">📋</button></div>
+    <p class="small" id="userIdNote">Your User ID will be linked to your Firebase account.</p>
+    <hr style="border:0;border-top:1px solid #d9efff;margin:24px 0"><h2 style="font-size:24px">🔗 My Social Links</h2><p class="small">Official YASJOY social links</p>
+    <a class="social" id="telegramLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">✈️</span>Telegram</a>
+    <a class="social" id="youtubeLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">▶️</span>YouTube</a>
+    <a class="social" id="tiktokLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">🎵</span>TikTok</a>
+    <a class="social" id="instagramLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">📸</span>Instagram</a>
+    <p id="socialStatus" class="small">Loading social links from Firebase…</p><button class="primary" onclick="showPage('home')">Back to Home</button>
+  </div>
+</section>
+</main>
+<nav class="bottom"><button class="nav active" id="navHome" onclick="showPage('home')"><span class="ico">⌂</span>Home</button><button class="nav" id="navProfile" onclick="showPage('profile')"><span class="ico">👤</span>Profile</button></nav>
+<script>
+let selectedCoins=0,selectedUSD=0,balance=0,userId="";
+function showPage(id){if(document.getElementById("bannedScreen")?.hidden===false)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id);if(page)page.classList.add('active');document.getElementById('navHome').classList.toggle('active',id==='home');document.getElementById('navProfile').classList.toggle('active',id==='profile');window.scrollTo(0,0);refreshBalance()}
+function refreshBalance(){document.getElementById('balance').textContent=balance.toLocaleString();document.getElementById('withdrawBalance').textContent=balance.toLocaleString()}
+function selectAmount(button,coins,usd){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins;selectedUSD=usd}
+function openOffer(url,name,enabled){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!enabled){alert(name+' is currently disabled by YASJOY administration.');return}if(!url||!/^https:\/\/\S+$/i.test(url)){alert('This offer wall has no valid HTTPS link.');return}window.open(url,'_blank','noopener,noreferrer')}
+let withdrawalSubmitting=false;
+async function submitRequest(){
+ if(document.getElementById("bannedScreen")?.hidden===false)return;
+ if(withdrawalSubmitting)return;
+ if(!selectedCoins){alert('Please choose a withdrawal amount.');return}
+ if(!Number.isSafeInteger(selectedCoins)||selectedCoins<=0){alert('Invalid withdrawal amount.');return}
+ if(balance<selectedCoins){alert('Insufficient coins.');return}
+ const walletAddress=document.getElementById('account').value.trim();
+ if(!walletAddress){alert('Please enter your Binance wallet address or Pay ID.');return}
+ if(walletAddress.length<6||walletAddress.length>180){alert('Please check your Binance wallet details.');return}
+ const button=document.querySelector('#withdraw .primary');
+ withdrawalSubmitting=true;
+ if(button){button.disabled=true;button.textContent='Submitting…'}
  try{
-  const uid=w.uid||w.userId||'';
-  const txSnap=await getDoc(doc(db,'transactions',w.id));
-  box.replaceChildren();
-  const title=el('strong','تفاصيل طلب السحب');box.append(title);
-  box.append(
-   detailLine('رقم الطلب',w.id),
-   detailLine('Firebase UID',uid),
-   detailLine('المعرّف العام',w.publicId),
-   detailLine('طريقة السحب',w.method),
-   detailLine('النقاط المخصومة',w.coins),
-   detailLine('المبلغ بالدولار',w.amountUSD===undefined?undefined:'$'+w.amountUSD),
-   detailLine('عنوان المحفظة',w.walletAddress||w.payoutAddress||w.binanceWallet),
-   detailLine('الحالة',w.status||'pending'),
-   detailLine('تاريخ الإنشاء',displayDate(w.createdAt)),
-   detailLine('آخر تحديث',displayDate(w.updatedAt))
-  );
-  if(!txSnap.exists()){
-   box.append(el('p','تحذير: لا يوجد مستند مطابق في مجموعة transactions بنفس رقم طلب السحب.','warn'));
-  }else{
-   const tx=txSnap.data();
-   const expected=-Number(w.coins);
-   const actual=Number(tx.coins??tx.amount??tx.points);
-   const checks=[
-    ['معرّف الطلب',String(tx.withdrawalId||'')===String(w.id)],
-    ['UID المستخدم',!!uid&&String(tx.uid||tx.userId||'')===String(uid)],
-    ['قيمة النقاط',Number.isFinite(expected)&&Number.isFinite(actual)&&actual===expected]
-   ];
-   const allOk=checks.every(x=>x[1]);
-   box.append(el('h4','التحقق من سجل المعاملة'));
-   checks.forEach(([label,ok])=>box.append(el('div',(ok?'✓ ':'✗ ')+label+(ok?' — مطابق':' — غير مطابق'),ok?'ok':'warn')));
-   box.append(el('div','معرّف سجل المعاملة: '+txSnap.id));
-   if(!allOk)box.append(el('p','تحذير: بيانات سجل المعاملة لا تتطابق بالكامل مع طلب السحب. راجع المستند قبل اعتماد الطلب.','warn'));
-   else box.append(el('p','تم العثور على سجل معاملة مطابق للطلب.','ok'));
-   box.append(el('details')).lastChild; 
-   const raw=el('pre',JSON.stringify(tx,(k,v)=>v&&typeof v.toDate==='function'?v.toDate().toISOString():v,2));
-   raw.style.cssText='white-space:pre-wrap;direction:ltr;text-align:left;overflow-wrap:anywhere;font-size:12px;background:#fff;padding:10px;border-radius:8px';
-   const det=box.querySelector('details');det.append(el('summary','عرض بيانات المعاملة الخام'),raw);
-  }
- }catch(e){
-  box.replaceChildren(el('p','تعذّر تحميل التفاصيل: '+e.message,'warn'));
+  const result=await window.createYasjoyWithdrawal({
+   coins:selectedCoins,
+   walletAddress,
+   method:document.getElementById('method').value
+  });
+  alert('Your withdrawal request was submitted for admin review. Coins deducted: '+result.deductedCoins+'. Remaining balance: '+result.remainingBalance+'.');
+  document.getElementById('account').value='';
+  selectedCoins=0;selectedUSD=0;
+  document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));
+ }catch(error){
+  console.error('Withdrawal request error:',error);
+  alert(error?.message||'Could not submit your request. Please try again.');
  }finally{
-  button.disabled=false;button.textContent='إخفاء/تحديث التفاصيل';
+  withdrawalSubmitting=false;
+  if(button){button.disabled=false;button.textContent='Submit withdrawal request'}
  }
 }
-function renderWithdrawals(){
- const list=$('withdrawList');list.replaceChildren();
- const rows=withdrawals.filter(w=>String(w.status||'pending').toLowerCase()===status);
- if(!rows.length){list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));return}
- rows.forEach(w=>{
-  const c=el('article','','item');
-  c.append(el('div','رقم الطلب: '+w.id),el('div','User ID: '+(w.uid||w.userId||'غير متوفر')));
-  ['method','amountUSD','coins','walletAddress','payoutAddress','binanceWallet'].forEach(k=>{if(w[k]!==undefined)c.append(el('div',k+': '+w[k]))});
-  c.append(el('div','الحالة: '+status));
-  const detailButton=el('button','عرض تفاصيل الطلب','btn');
-  const details=el('div','','details-box');details.classList.add('hidden');
-  detailButton.onclick=async()=>{
-   if(!details.classList.contains('hidden')){details.classList.add('hidden');detailButton.textContent='عرض تفاصيل الطلب';return}
-   details.classList.remove('hidden');await showWithdrawalDetails(w,details,detailButton);
-  };
-  c.append(detailButton,details);
-  if(status==='pending'){
-   const a=el('div','','actions');
-   [['paid','تأكيد الدفع'],['rejected','رفض الطلب']].forEach(([s,t])=>{
-    const b=el('button',t,'btn '+(s==='rejected'?'danger':''));
-    b.onclick=async()=>{
-     if(!confirm(s==='paid'?'هل دفعت المبلغ فعلًا؟':'هل تريد رفض الطلب؟'))return;
-     try{await updateDoc(doc(db,'withdrawals',w.id),{status:s,updatedAt:serverTimestamp()});alert(s==='paid'?'تم تحديث الطلب إلى مدفوع.':'تم رفض الطلب. لم تتم إعادة النقاط.')}
-     catch(e){alert('تعذّر تحديث الطلب: '+e.message)}
-    };
-    a.append(b);
-   });
-   c.append(a);
-  }
-  list.append(c);
+function copyId(){if(!userId){alert('Your User ID is still loading.');return}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(userId).then(()=>alert('User ID copied.')).catch(()=>alert('Your User ID is: '+userId))}else{alert('Your User ID is: '+userId)}}
+refreshBalance();
+</script>
+<script type="module">
+import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection,writeBatch} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+const firebaseConfig={apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",authDomain:"yasjoy.firebaseapp.com",projectId:"yasjoy",storageBucket:"yasjoy.firebasestorage.app",messagingSenderId:"967065409063",appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"};
+const app=getApps().length?getApp():initializeApp(firebaseConfig),db=getFirestore(app),auth=getAuth(app);
+let currentYasjoyUser=null;
+window.createYasjoyWithdrawal=async function(request){
+ const user=currentYasjoyUser;
+ if(!user)throw new Error('Your account is still connecting. Please try again.');
+ if(request.method!=='Binance')throw new Error('Unsupported withdrawal method.');
+ const coins=Number(request.coins);
+ const walletAddress=String(request.walletAddress||'').trim();
+ if(!Number.isSafeInteger(coins)||coins<=0)throw new Error('Invalid coin amount.');
+ if(walletAddress.length<6||walletAddress.length>180)throw new Error('Invalid Binance wallet details.');
+
+ const userRef=doc(db,'users',user.uid);
+ const userSnap=await getDoc(userRef);
+ if(!userSnap.exists())throw new Error('User account not found.');
+ const userData=userSnap.data();
+ if(userData.banned===true)throw new Error('This account cannot submit withdrawal requests.');
+ if(typeof userData.balance!=='number'||!Number.isFinite(userData.balance)) {
+  throw new Error('Your balance is not initialized. Please contact YASJOY administration.');
+ }
+ const oldBalance=userData.balance;
+ if(oldBalance<coins)throw new Error('Insufficient coins.');
+ const remainingBalance=oldBalance-coins;
+ const withdrawalId=doc(collection(db,'withdrawals')).id;
+ const withdrawalRef=doc(db,'withdrawals',withdrawalId);
+ const transactionRef=doc(db,'transactions',withdrawalId);
+ const batch=writeBatch(db);
+
+ // The three writes are committed atomically: all succeed or none do.
+ batch.update(userRef,{
+  balance:remainingBalance,
+  lastWithdrawalId:withdrawalId
  });
+ batch.set(withdrawalRef,{
+  uid:user.uid,
+  publicId:'YJ-'+user.uid.slice(0,8).toUpperCase(),
+  method:'Binance',
+  amountUSD:coins/1000,
+  coins:coins,
+  walletAddress:walletAddress,
+  status:'pending',
+  createdAt:serverTimestamp()
+ });
+ batch.set(transactionRef,{
+  uid:user.uid,
+  type:'withdrawal',
+  coins:-coins,
+  withdrawalId:withdrawalId,
+  createdAt:serverTimestamp()
+ });
+
+ await batch.commit();
+ return {
+  success:true,
+  withdrawalId,
+  deductedCoins:coins,
+  remainingBalance,
+  amountUSD:coins/1000,
+  status:'pending'
+ };
+};
+function setBannedView(banned){const screen=document.getElementById("bannedScreen");if(!screen)return;screen.hidden=!banned;const header=document.querySelector("header"),main=document.querySelector("main"),nav=document.querySelector("nav.bottom");if(header)header.style.display=banned?"none":"";if(main)main.style.display=banned?"none":"";if(nav)nav.style.display=banned?"none":""}
+async function loadSocialLinks(){const ids={telegram:"telegramLink",youtube:"youtubeLink",tiktok:"tiktokLink",instagram:"instagramLink"},status=document.getElementById("socialStatus");try{const snap=await getDoc(doc(db,"socialLinks","main"));if(!snap.exists()){status.textContent="Social links are not configured yet.";Object.values(ids).forEach(id=>document.getElementById(id).hidden=true);return}const links=snap.data();let count=0;for(const [key,id] of Object.entries(ids)){const el=document.getElementById(id),url=links[key];if(typeof url==="string"&&/^https:\/\/\S+$/i.test(url)){el.href=url;el.hidden=false;count++}else el.hidden=true}status.textContent=count?"Social links loaded from Firebase.":"No valid social links configured."}catch(error){console.error("Social links error:",error);status.textContent="Could not load social links. Check Firebase rules and socialLinks/main."}}
+/* Live offer-wall list: only visible records are rendered. */
+function renderOfferWalls(snapshot){
+ const host=document.getElementById("offersList");host.replaceChildren();
+ const walls=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(w=>w.visible!==false);
+ if(!walls.length){const empty=document.createElement("div");empty.className="empty-offers";empty.textContent="No offer walls are currently available.";host.appendChild(empty);return}
+ walls.sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
+ for(const wall of walls){
+  const name=typeof wall.name==="string"&&wall.name.trim()?wall.name.trim():"Offer wall";
+  const url=typeof wall.url==="string"&&/^https:\/\/\S+$/i.test(wall.url)?wall.url:"";
+  const enabled=wall.enabled===true&&!!url;
+  const card=document.createElement("article");card.className="offer";
+  const top=document.createElement("div");top.className="offer-top";
+  const icon=document.createElement("div");icon.className="provider-icon";icon.style.background="#dff4ff";icon.style.color="#0758a8";
+  if(typeof wall.logo==="string"&&/^https:\/\/\S+$/i.test(wall.logo)){const img=document.createElement("img");img.src=wall.logo;img.alt=name+" logo";img.loading="lazy";img.onerror=()=>{icon.textContent=name.charAt(0).toUpperCase()};icon.appendChild(img)}else icon.textContent=name.charAt(0).toUpperCase();
+  const info=document.createElement("div"),title=document.createElement("h3"),description=document.createElement("p");
+  title.textContent=name;description.textContent=typeof wall.description==="string"&&wall.description.trim()?wall.description.trim():"Complete offers and get rewards";
+  info.append(title,description);top.append(icon,info);
+  const button=document.createElement("button");button.className="earn";button.textContent=enabled?"🪙 Earn coins ›":"Currently unavailable";button.disabled=!enabled;
+  button.addEventListener("click",()=>window.open(url,"_blank","noopener,noreferrer"));
+  card.append(top,button);host.appendChild(card);
+ }
 }
-function validUrl(v){if(!v)return '';try{const u=new URL(v);return ['http:','https:'].includes(u.protocol)?u.href:''}catch{return ''}}
-function renderMethods(){const l=$('methodList');l.replaceChildren();if(!methods.length)l.append(el('div','لا توجد طرق سحب.','empty'));methods.forEach(m=>{const c=el('article','','item');const logo=validUrl(m.logo);if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;c.append(im)}c.append(el('div',m.name||m.id),el('div','الحد الأدنى: '+(m.minimumWithdrawal??'غير محدد')),el('div','التعليمات: '+(m.instructions||'—')),el('div',m.enabled?'مفعّلة':'متوقفة','badge'));const a=el('div','','actions');[['تعديل',()=>editMethod(m)], [m.enabled?'إيقاف':'تفعيل',()=>toggle('withdrawMethods',m.id,!m.enabled)],['حذف',()=>remove('withdrawMethods',m.id)]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});c.append(a);l.append(c)})}
-function editMethod(m){$('methodId').value=m.id;$('methodName').value=m.name||'';$('methodMin').value=m.minimumWithdrawal??'';$('methodInstructions').value=m.instructions||'';$('methodLogo').value=m.logo||'';$('methodEnabled').checked=!!m.enabled;$('methodTitle').textContent='تعديل طريقة سحب'}
-function resetMethod(){['methodId','methodName','methodMin','methodInstructions','methodLogo'].forEach(x=>$(x).value='');$('methodEnabled').checked=true;$('methodTitle').textContent='إضافة طريقة سحب';$('methodMsg').textContent=''}
-$('cancelMethod').onclick=resetMethod;
-$('saveMethod').onclick=async()=>{const id=$('methodId').value,name=$('methodName').value.trim(),min=$('methodMin').value,logoRaw=$('methodLogo').value.trim(),logo=validUrl(logoRaw);if(!name||min===''||!Number.isSafeInteger(Number(min))||Number(min)<0){$('methodMsg').textContent='أدخل اسمًا وحدًا أدنى صحيحًا.';$('methodMsg').className='error';return}if(logoRaw&&!logo){$('methodMsg').textContent='رابط الشعار غير صالح.';$('methodMsg').className='error';return}const data={name,minimumWithdrawal:Number(min),instructions:$('methodInstructions').value.trim(),enabled:$('methodEnabled').checked};if(logo)data.logo=logo;try{if(id)await updateDoc(doc(db,'withdrawMethods',id),data);else await addDoc(collection(db,'withdrawMethods'),data);$('methodMsg').textContent='تم الحفظ.';$('methodMsg').className='success';resetMethod()}catch(e){$('methodMsg').textContent='فشل الحفظ: '+e.message;$('methodMsg').className='error'}};
-function renderWalls(){const l=$('wallList');l.replaceChildren();if(!walls.length)l.append(el('div','لا توجد جدران عروض.','empty'));walls.forEach(w=>{const c=el('article','','item'),logo=validUrl(w.logo);if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;c.append(im)}c.append(el('div',w.name||w.id),el('div','الرابط: '+(typeof w.url==='string'?w.url:'غير مضبوط')),el('div',w.enabled?'مفعّل':'متوقف','badge'));const a=el('div','','actions');[['تعديل',()=>editWall(w)],[w.enabled?'إيقاف':'تفعيل',()=>toggle('offerWalls',w.id,!w.enabled)],['حذف',()=>remove('offerWalls',w.id)]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});c.append(a);l.append(c)})}
-function editWall(w){$('wallId').value=w.id;$('wallName').value=w.name||'';$('wallUrl').value=typeof w.url==='string'?w.url:'';$('wallLogo').value=w.logo||'';$('wallEnabled').checked=!!w.enabled;$('wallTitle').textContent='تعديل جدار عروض'}
-function resetWall(){['wallId','wallName','wallUrl','wallLogo'].forEach(x=>$(x).value='');$('wallEnabled').checked=false;$('wallTitle').textContent='إضافة جدار عروض';$('wallMsg').textContent=''}
-$('cancelWall').onclick=resetWall;
-$('saveWall').onclick=async()=>{const id=$('wallId').value,name=$('wallName').value.trim(),url=validUrl($('wallUrl').value.trim()),lr=$('wallLogo').value.trim(),logo=validUrl(lr);if(!name||!url){$('wallMsg').textContent='أدخل الاسم ورابطًا صحيحًا يبدأ بـ http أو https.';$('wallMsg').className='error';return}if(lr&&!logo){$('wallMsg').textContent='رابط الشعار غير صالح.';$('wallMsg').className='error';return}const data={name,url,enabled:$('wallEnabled').checked};if(logo)data.logo=logo;try{if(id)await updateDoc(doc(db,'offerWalls',id),data);else await addDoc(collection(db,'offerWalls'),data);$('wallMsg').textContent='تم الحفظ.';$('wallMsg').className='success';resetWall()}catch(e){$('wallMsg').textContent='فشل الحفظ: '+e.message;$('wallMsg').className='error'}};
-async function toggle(col,id,enabled){try{await updateDoc(doc(db,col,id),{enabled})}catch(e){alert('تعذّر تحديث الحالة: '+e.message)}}
-async function remove(col,id){if(!confirm('هل تريد حذف هذا السجل؟ لا يمكن التراجع.'))return;try{await deleteDoc(doc(db,col,id))}catch(e){alert('تعذّر الحذف: '+e.message)}}
-$('search').addEventListener('input',renderUsers);
-</script></body></html>
+let stopUserListener=null;
+async function setupUser(user){
+ const userRef=doc(db,"users",user.uid),snap=await getDoc(userRef),publicId="YJ-"+user.uid.slice(0,8).toUpperCase();
+ if(!snap.exists())await setDoc(userRef,{uid:user.uid,publicId,balance:0,createdAt:serverTimestamp(),lastActiveAt:serverTimestamp()});
+ else await updateDoc(userRef,{lastActiveAt:serverTimestamp(),publicId});
+ userId=publicId;document.getElementById("userId").textContent=publicId;document.getElementById("userIdNote").textContent="Your User ID is linked to your Firebase account.";
+ const profileText=document.querySelector("#profile .panel > p");if(profileText)profileText.textContent="Your YASJOY account";
+ if(stopUserListener)stopUserListener();
+ stopUserListener=onSnapshot(userRef,userSnap=>{const data=userSnap.data()||{};setBannedView(data.banned===true);balance=Number.isFinite(data.balance)?data.balance:0;refreshBalance()},error=>console.error("User data error:",error));
+}
+loadSocialLinks();
+onSnapshot(collection(db,"offerWalls"),renderOfferWalls,error=>{console.error("Offer walls listener error:",error);const host=document.getElementById("offersList");host.replaceChildren();const msg=document.createElement("div");msg.className="empty-offers";msg.textContent="Could not load offer walls. Please check your connection or Firebase rules.";host.appendChild(msg)});
+onAuthStateChanged(auth,async user=>{try{if(!user){currentYasjoyUser=null;await signInAnonymously(auth);return}currentYasjoyUser=user;await setupUser(user)}catch(error){console.error("Firebase account setup error:",error);document.getElementById("userId").textContent="Connection error — reload the page";document.getElementById("userIdNote").textContent="Could not connect. Check Anonymous Authentication and Firestore rules."}});
+</script>
+</body>
+</html>
