@@ -68,21 +68,18 @@ async function showWithdrawalDetails(w,box,button){
   const uid=w.uid||w.userId||'';
   const txSnap=await getDoc(doc(db,'transactions',w.id));
   box.replaceChildren();
-  const title=el('strong','تفاصيل طلب السحب');box.append(title);
+  box.append(el('strong','تفاصيل طلب السحب'));
   box.append(
-   detailLine('رقم الطلب',w.id),
-   detailLine('Firebase UID',uid),
    detailLine('المعرّف العام',w.publicId),
    detailLine('طريقة السحب',w.method),
    detailLine('النقاط المخصومة',w.coins),
    detailLine('المبلغ بالدولار',w.amountUSD===undefined?undefined:'$'+w.amountUSD),
    detailLine('عنوان المحفظة',w.walletAddress||w.payoutAddress||w.binanceWallet),
-   detailLine('الحالة',w.status||'pending'),
-   detailLine('تاريخ الإنشاء',displayDate(w.createdAt)),
-   detailLine('آخر تحديث',displayDate(w.updatedAt))
+   detailLine('التاريخ والوقت',displayDate(w.createdAt))
   );
+  box.append(el('h4','التحقق من سجل المعاملة'));
   if(!txSnap.exists()){
-   box.append(el('p','تحذير: لا يوجد مستند مطابق في مجموعة transactions بنفس رقم طلب السحب.','warn'));
+   box.append(el('p','لا يوجد سجل معاملة مطابق لهذا الطلب.','warn'));
   }else{
    const tx=txSnap.data();
    const expected=-Number(w.coins);
@@ -93,16 +90,8 @@ async function showWithdrawalDetails(w,box,button){
     ['قيمة النقاط',Number.isFinite(expected)&&Number.isFinite(actual)&&actual===expected]
    ];
    const allOk=checks.every(x=>x[1]);
-   box.append(el('h4','التحقق من سجل المعاملة'));
    checks.forEach(([label,ok])=>box.append(el('div',(ok?'✓ ':'✗ ')+label+(ok?' — مطابق':' — غير مطابق'),ok?'ok':'warn')));
-   box.append(el('div','معرّف سجل المعاملة: '+txSnap.id));
-   if(!allOk)box.append(el('p','تحذير: بيانات سجل المعاملة لا تتطابق بالكامل مع طلب السحب. راجع المستند قبل اعتماد الطلب.','warn'));
-   else box.append(el('p','تم العثور على سجل معاملة مطابق للطلب.','ok'));
-   const det=el('details');
-   box.append(det);
-   const raw=el('pre',JSON.stringify(tx,(k,v)=>v&&typeof v.toDate==='function'?v.toDate().toISOString():v,2));
-   raw.style.cssText='white-space:pre-wrap;direction:ltr;text-align:left;overflow-wrap:anywhere;font-size:12px;background:#fff;padding:10px;border-radius:8px';
-   det.append(el('summary','عرض بيانات المعاملة الخام'),raw);
+   box.append(el('p',allOk?'تم العثور على سجل معاملة مطابق للطلب.':'سجل المعاملة موجود، لكن بعض بياناته غير متطابقة.',allOk?'ok':'warn'));
   }
  }catch(e){
   box.replaceChildren(el('p','تعذّر تحميل التفاصيل: '+e.message,'warn'));
@@ -116,9 +105,7 @@ function renderWithdrawals(){
  if(!rows.length){list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));return}
  rows.forEach(w=>{
   const c=el('article','','item');
-  c.append(el('div','رقم الطلب: '+w.id),el('div','User ID: '+(w.uid||w.userId||'غير متوفر')));
-  ['method','amountUSD','coins','walletAddress','payoutAddress','binanceWallet'].forEach(k=>{if(w[k]!==undefined)c.append(el('div',k+': '+w[k]))});
-  c.append(el('div','الحالة: '+status));
+  c.append(el('div','طلب سحب',''));
   const detailButton=el('button','عرض تفاصيل الطلب','btn');
   const details=el('div','','details-box');details.classList.add('hidden');
   detailButton.onclick=async()=>{
