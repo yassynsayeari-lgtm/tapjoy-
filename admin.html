@@ -15,7 +15,7 @@
 <button class="menu" onclick="openPanel('walls')">🎁 جدران العروض<small>إضافة الروابط والشعارات وإدارتها</small></button>
 </div>
 <section id="withdraw" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2><div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div><div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p></section>
-<section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userList"></div></section>
+<section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><div class="form"><strong>إضافة حقل balance للمستخدمين</strong><p class="muted">سيتم إضافة الحقل للمستخدمين الذين لا يملكونه فقط. الرصيد الابتدائي صفر، أو تُحفظ قيمة points/coins القديمة إن وُجدت كرقم. لن يتم تغيير أي رصيد موجود، ولن يُمنح أي رصيد تجريبي.</p><button id="initBalances" class="primary">تهيئة حقل balance المفقود</button><p id="balanceInitMsg" class="muted"></p></div><p id="userMsg" class="muted"></p><div id="userList"></div></section>
 <section id="methods" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة طرق السحب</h2><div class="form"><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden"><label>الاسم</label><input id="methodName" placeholder="Binance"><label>الحد الأدنى (عدد صحيح)</label><input id="methodMin" type="number" min="0" step="1"><label>التعليمات</label><textarea id="methodInstructions"></textarea><label>رابط الشعار (اختياري)</label><input id="methodLogo" type="url" placeholder="https://..."><label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label><button id="saveMethod" class="primary">حفظ</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
 <section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2><p class="muted">يجب إدخال رابط صحيح ومعتمد من مزوّد الخدمة. حفظ الرابط لا يعني تفعيل حساب المزوّد أو توثيق المكافآت.</p><div class="form"><h3 id="wallTitle">إضافة جدار عروض</h3><input id="wallId" type="hidden"><label>الاسم</label><input id="wallName" placeholder="Tapjoy"><label>رابط الجدار</label><input id="wallUrl" type="url" placeholder="https://..."><label>رابط الشعار (اختياري)</label><input id="wallLogo" type="url" placeholder="https://..."><label class="check"><input id="wallEnabled" type="checkbox"> مفعّل</label><button id="saveWall" class="primary">حفظ</button><button id="cancelWall" class="btn">إلغاء</button><p id="wallMsg" class="muted"></p></div><div id="wallList"></div></section>
 </section></main><footer class="muted" style="text-align:center;padding:20px">YASJOY Admin • Firebase</footer>
@@ -39,6 +39,30 @@ unsubs.push(onSnapshot(collection(db,'offerWalls'),s=>{walls=s.docs.map(d=>({id:
 let current='home';function show(id){$('home').style.display=id==='home'?'block':'none';document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));if(id!=='home')$(id).classList.add('show');current=id}
 window.openPanel=show;window.goHome=()=>show('home');window.withdrawTab=(s,b)=>{status=s;document.querySelectorAll('#withdraw .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderWithdrawals()};
 function balance(u){return Number(u.balance??u.points??u.coins??0)||0}
+// يضيف balance للمستندات التي ينقصها الحقل فقط، دون لمس الأرصدة الموجودة.
+$('initBalances').onclick=async()=>{
+ const missing=users.filter(u=>!Object.prototype.hasOwnProperty.call(u,'balance'));
+ if(!missing.length){$('balanceInitMsg').textContent='كل المستخدمين لديهم حقل balance بالفعل.';$('balanceInitMsg').className='success';return}
+ if(!confirm('سيتم فحص '+missing.length+' مستخدمًا وإضافة balance للمفقود فقط. القيمة صفر، أو قيمة points/coins القديمة إن كانت رقمًا. لن يتم منح رصيد تجريبي. هل تريد المتابعة؟'))return;
+ const btn=$('initBalances'),msg=$('balanceInitMsg');btn.disabled=true;let done=0,skipped=0,failed=0;
+ msg.textContent='جارٍ التهيئة…';msg.className='muted';
+ for(const u of missing){
+  try{
+   const ref=doc(db,'users',u.id),fresh=await getDoc(ref);
+   if(!fresh.exists()){skipped++;continue}
+   const data=fresh.data();
+   if(Object.prototype.hasOwnProperty.call(data,'balance')){skipped++;continue}
+   let initial=0;
+   if(typeof data.points==='number'&&Number.isFinite(data.points)&&data.points>=0)initial=data.points;
+   else if(typeof data.coins==='number'&&Number.isFinite(data.coins)&&data.coins>=0)initial=data.coins;
+   await updateDoc(ref,{balance:initial});done++;
+   msg.textContent='تمت إضافة الحقل إلى '+done+' من '+missing.length+'…';
+  }catch(e){failed++;console.error('balance initialization failed for',u.id,e)}
+ }
+ btn.disabled=false;
+ msg.textContent='اكتملت العملية: أُضيف الحقل إلى '+done+' مستخدم، تم تجاوز '+skipped+'، وفشلت '+failed+'. لم يُضف أي رصيد تجريبي.';
+ msg.className=failed?'error':'success';
+};
 function el(tag,txt,cls){const n=document.createElement(tag);n.textContent=txt;if(cls)n.className=cls;return n}
 function renderUsers(){const q=$('search').value.trim().toLowerCase(),list=$('userList');list.replaceChildren();const rows=users.filter(u=>[u.id,u.uid,u.publicId].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>balance(b)-balance(a));$('userMsg').textContent='عدد المستخدمين: '+users.length;if(!rows.length){list.append(el('div','لا توجد نتائج.','empty'));return}
 rows.forEach((u,i)=>{const c=el('article','', 'item');c.append(el('div',(i+1)+'. '+(u.publicId||'مستخدم')));c.append(el('div','Firebase UID: '+u.id));c.append(el('div','الرصيد: '+balance(u).toLocaleString('en-US')));let last='غير معروف';if(u.lastActiveAt){const d=u.lastActiveAt.toDate?u.lastActiveAt.toDate():new Date(u.lastActiveAt);if(!isNaN(d))last=d.toLocaleString('ar')}c.append(el('div','آخر نشاط: '+last));c.append(el('div',u.banned?'محظور':'غير محظور','badge'));const b=el('button',u.banned?'إلغاء الحظر':'حظر المستخدم','btn '+(u.banned?'':'danger'));b.onclick=async()=>{try{await updateDoc(doc(db,'users',u.id),{banned:!u.banned})}catch(e){alert('تعذّر تغيير الحظر: '+e.message)}};c.append(b);list.append(c)})}
