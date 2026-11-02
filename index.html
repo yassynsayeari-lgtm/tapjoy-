@@ -57,7 +57,7 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
   <div class="banner"><div class="wallet">💰</div><div style="flex:1"><div class="banner-text">Withdraw your points</div><button class="go" onclick="showPage('withdraw')" aria-label="Withdraw">➜</button></div></div>
   <div class="section-title">🔥 Offer Walls</div><p class="subtitle">Complete offers · Earn coins</p>
   <div class="offers" id="offersList"><div class="empty-offers">Loading offer walls…</div></div>
-  <div class="notice">Offer walls are available only when enabled by YASJOY administration. A listed wall is not proof that its provider has approved YASJOY or that rewards are active.</div>
+  <div class="notice">Offer wall connections are not enabled in this stage. A listed wall is not proof that its provider has approved YASJOY or that rewards are active.</div>
 </section>
 <section id="withdraw" class="page">
   <div class="panel"><h2>Withdraw your points</h2><p class="small">Available Balance</p>
@@ -72,7 +72,7 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
     <label class="field-label" for="method">Withdrawal method</label><select id="method"><option value="Binance">Binance</option></select>
     <label class="field-label" for="account">Binance account identifier</label><input id="account" autocomplete="off" placeholder="Enter your Binance Pay ID or details">
     <button class="primary" onclick="submitRequest()">Submit withdrawal request</button>
-    <p class="small">Demo interface only: this request is not saved, coins are not deducted, and no payment is sent.</p>
+    <p class="small">Your points are deducted when the request is successfully submitted. The request will be reviewed by YASJOY administration. Submitting a request does not mean payment has been sent.</p>
     <button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('home')">Back to Home</button>
   </div>
 </section>
@@ -101,21 +101,21 @@ async function submitRequest(){
  if(document.getElementById("bannedScreen")?.hidden===false)return;
  if(withdrawalSubmitting)return;
  if(!selectedCoins){alert('Please choose a withdrawal amount.');return}
+ if(!Number.isSafeInteger(selectedCoins)||selectedCoins<=0){alert('Invalid withdrawal amount.');return}
  if(balance<selectedCoins){alert('Insufficient coins.');return}
- const payoutAddress=document.getElementById('account').value.trim();
- if(!payoutAddress){alert('Please enter your Binance payout details.');return}
- if(payoutAddress.length>180){alert('Payout details are too long.');return}
+ const walletAddress=document.getElementById('account').value.trim();
+ if(!walletAddress){alert('Please enter your Binance wallet address or Pay ID.');return}
+ if(walletAddress.length<6||walletAddress.length>180){alert('Please check your Binance wallet details.');return}
  const button=document.querySelector('#withdraw .primary');
  withdrawalSubmitting=true;
  if(button){button.disabled=true;button.textContent='Submitting…'}
  try{
-  await window.createYasjoyWithdrawal({
+  const result=await window.createYasjoyWithdrawal({
    coins:selectedCoins,
-   amountUSD:selectedUSD,
-   method:document.getElementById('method').value,
-   payoutAddress
+   walletAddress,
+   method:document.getElementById('method').value
   });
-  alert('Your withdrawal request was submitted and saved for admin review. No coins were deducted and no payment was sent.');
+  alert('Your withdrawal request was submitted for admin review. Coins deducted: '+result.deductedCoins+'. Remaining balance: '+result.remainingBalance+'.');
   document.getElementById('account').value='';
   selectedCoins=0;selectedUSD=0;
   document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));
@@ -132,7 +132,7 @@ refreshBalance();
 </script>
 <script type="module">
 import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection,addDoc} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection,writeBatch} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 const firebaseConfig={apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",authDomain:"yasjoy.firebaseapp.com",projectId:"yasjoy",storageBucket:"yasjoy.firebasestorage.app",messagingSenderId:"967065409063",appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"};
 const app=getApps().length?getApp():initializeApp(firebaseConfig),db=getFirestore(app),auth=getAuth(app);
@@ -140,24 +140,60 @@ let currentYasjoyUser=null;
 window.createYasjoyWithdrawal=async function(request){
  const user=currentYasjoyUser;
  if(!user)throw new Error('Your account is still connecting. Please try again.');
- if(!Number.isInteger(request.coins)||request.coins<=0)throw new Error('Invalid coin amount.');
- if(typeof request.amountUSD!=='number'||!Number.isFinite(request.amountUSD)||request.amountUSD<=0)throw new Error('Invalid withdrawal amount.');
  if(request.method!=='Binance')throw new Error('Unsupported withdrawal method.');
- if(typeof request.payoutAddress!=='string'||!request.payoutAddress.trim())throw new Error('Enter your Binance payout details.');
- const userSnap=await getDoc(doc(db,'users',user.uid));
- if(!userSnap.exists()||userSnap.data().banned===true)throw new Error('This account cannot submit withdrawal requests.');
- const currentBalance=Number(userSnap.data().balance||0);
- if(!Number.isFinite(currentBalance)||currentBalance<request.coins)throw new Error('Insufficient coins.');
- await addDoc(collection(db,'withdrawals'),{
+ const coins=Number(request.coins);
+ const walletAddress=String(request.walletAddress||'').trim();
+ if(!Number.isSafeInteger(coins)||coins<=0)throw new Error('Invalid coin amount.');
+ if(walletAddress.length<6||walletAddress.length>180)throw new Error('Invalid Binance wallet details.');
+
+ const userRef=doc(db,'users',user.uid);
+ const userSnap=await getDoc(userRef);
+ if(!userSnap.exists())throw new Error('User account not found.');
+ const userData=userSnap.data();
+ if(userData.banned===true)throw new Error('This account cannot submit withdrawal requests.');
+ if(typeof userData.balance!=='number'||!Number.isFinite(userData.balance)) {
+  throw new Error('Your balance is not initialized. Please contact YASJOY administration.');
+ }
+ const oldBalance=userData.balance;
+ if(oldBalance<coins)throw new Error('Insufficient coins.');
+ const remainingBalance=oldBalance-coins;
+ const withdrawalId=doc(collection(db,'withdrawals')).id;
+ const withdrawalRef=doc(db,'withdrawals',withdrawalId);
+ const transactionRef=doc(db,'transactions',withdrawalId);
+ const batch=writeBatch(db);
+
+ // The three writes are committed atomically: all succeed or none do.
+ batch.update(userRef,{
+  balance:remainingBalance,
+  lastWithdrawalId:withdrawalId
+ });
+ batch.set(withdrawalRef,{
   uid:user.uid,
   publicId:'YJ-'+user.uid.slice(0,8).toUpperCase(),
   method:'Binance',
-  amountUSD:request.amountUSD,
-  coins:request.coins,
-  payoutAddress:request.payoutAddress.trim(),
+  amountUSD:coins/1000,
+  coins:coins,
+  walletAddress:walletAddress,
   status:'pending',
   createdAt:serverTimestamp()
  });
+ batch.set(transactionRef,{
+  uid:user.uid,
+  type:'withdrawal',
+  coins:-coins,
+  withdrawalId:withdrawalId,
+  createdAt:serverTimestamp()
+ });
+
+ await batch.commit();
+ return {
+  success:true,
+  withdrawalId,
+  deductedCoins:coins,
+  remainingBalance,
+  amountUSD:coins/1000,
+  status:'pending'
+ };
 };
 function setBannedView(banned){const screen=document.getElementById("bannedScreen");if(!screen)return;screen.hidden=!banned;const header=document.querySelector("header"),main=document.querySelector("main"),nav=document.querySelector("nav.bottom");if(header)header.style.display=banned?"none":"";if(main)main.style.display=banned?"none":"";if(nav)nav.style.display=banned?"none":""}
 async function loadSocialLinks(){const ids={telegram:"telegramLink",youtube:"youtubeLink",tiktok:"tiktokLink",instagram:"instagramLink"},status=document.getElementById("socialStatus");try{const snap=await getDoc(doc(db,"socialLinks","main"));if(!snap.exists()){status.textContent="Social links are not configured yet.";Object.values(ids).forEach(id=>document.getElementById(id).hidden=true);return}const links=snap.data();let count=0;for(const [key,id] of Object.entries(ids)){const el=document.getElementById(id),url=links[key];if(typeof url==="string"&&/^https:\/\/\S+$/i.test(url)){el.href=url;el.hidden=false;count++}else el.hidden=true}status.textContent=count?"Social links loaded from Firebase.":"No valid social links configured."}catch(error){console.error("Social links error:",error);status.textContent="Could not load social links. Check Firebase rules and socialLinks/main."}}
@@ -186,7 +222,7 @@ function renderOfferWalls(snapshot){
 let stopUserListener=null;
 async function setupUser(user){
  const userRef=doc(db,"users",user.uid),snap=await getDoc(userRef),publicId="YJ-"+user.uid.slice(0,8).toUpperCase();
- if(!snap.exists())await setDoc(userRef,{uid:user.uid,publicId,createdAt:serverTimestamp(),lastActiveAt:serverTimestamp()});
+ if(!snap.exists())await setDoc(userRef,{uid:user.uid,publicId,balance:0,createdAt:serverTimestamp(),lastActiveAt:serverTimestamp()});
  else await updateDoc(userRef,{lastActiveAt:serverTimestamp(),publicId});
  userId=publicId;document.getElementById("userId").textContent=publicId;document.getElementById("userIdNote").textContent="Your User ID is linked to your Firebase account.";
  const profileText=document.querySelector("#profile .panel > p");if(profileText)profileText.textContent="Your YASJOY account";
