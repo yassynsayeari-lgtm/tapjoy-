@@ -125,7 +125,7 @@ async function submitRequest(){
   const result=await window.createYasjoyWithdrawal({
    coins:selectedCoins,
    walletAddress,
-   method:selectedMethod.name,methodId:selectedMethod.id,amountUSD:selectedUSD
+   method:selectedMethod.name,methodId:selectedMethod.id,amountUSD:selectedUSD,displayLabel:document.querySelector('.amount.selected strong')?.textContent||''
   });
   alert('Your withdrawal request was submitted for admin review. Coins deducted: '+result.deductedCoins+'. Remaining balance: '+result.remainingBalance+'.');
   document.getElementById('account').value='';
@@ -178,7 +178,7 @@ window.createYasjoyWithdrawal=async function(request){
    throw new Error('This withdrawal method is unavailable. Refresh and try again.');
 
   const tier=(Array.isArray(methodData.tiers)?methodData.tiers:[]).find(t=>
-   Number(t.coins)===coins&&Number(t.amountUSD)===Number(request.amountUSD)
+   Number(t.coins)===coins&&Number(t.amountUSD)===Number(request.amountUSD)&&String(t.displayLabel||('$'+Number(t.amountUSD).toFixed(2)))===String(request.displayLabel||('$'+Number(request.amountUSD).toFixed(2)))
   );
   if(!tier)throw new Error('This withdrawal amount is not available for the selected method.');
   if(userData.banned===true)throw new Error('This account cannot submit withdrawal requests.');
@@ -194,6 +194,7 @@ window.createYasjoyWithdrawal=async function(request){
    method:methodData.name,
    methodId:methodId,
    amountUSD:Number(tier.amountUSD),
+   displayLabel:String(tier.displayLabel||('$'+Number(tier.amountUSD).toFixed(2))),
    coins:coins,
    walletAddress:walletAddress,
    status:'pending',
@@ -206,7 +207,7 @@ window.createYasjoyWithdrawal=async function(request){
    withdrawalId:withdrawalId,
    createdAt:serverTimestamp()
   });
-  return {success:true,withdrawalId,deductedCoins:coins,remainingBalance,amountUSD:Number(tier.amountUSD),status:'pending'};
+  return {success:true,withdrawalId,deductedCoins:coins,remainingBalance,amountUSD:Number(tier.amountUSD),displayLabel:String(tier.displayLabel||('$'+Number(tier.amountUSD).toFixed(2))),status:'pending'};
  });
 };
 function setBannedView(banned){const screen=document.getElementById("bannedScreen");if(!screen)return;screen.hidden=!banned;const header=document.querySelector("header"),main=document.querySelector("main"),nav=document.querySelector("nav.bottom");if(header)header.style.display=banned?"none":"";if(main)main.style.display=banned?"none":"";if(nav)nav.style.display=banned?"none":""}
@@ -217,13 +218,13 @@ function renderWithdrawalMethods(snapshot){
  document.getElementById('withdrawalTiers').append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
  if(!withdrawalMethods.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal methods are currently available.'}));return}
  withdrawalMethods.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
- withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const icon=String(method.icon||'').trim();const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(icon){b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:icon}))}else if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b)});
+ withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const icon=String(method.icon||'').trim();const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:icon||'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b)});
 }
 function chooseWithdrawalMethod(method,button){
  selectedMethod=method;selectedCoins=0;selectedUSD=0;document.querySelectorAll('.withdraw-method').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');
  const host=document.getElementById('withdrawalTiers');host.replaceChildren();const tiers=Array.isArray(method.tiers)?method.tiers.filter(t=>Number.isSafeInteger(Number(t.coins))&&Number(t.coins)>0&&Number.isFinite(Number(t.amountUSD))&&Number(t.amountUSD)>0).sort((a,b)=>Number(a.coins)-Number(b.coins)):[];
  if(!tiers.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal amounts have been configured for this method.'}));return}
- tiers.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='amount';b.innerHTML='';const amount=document.createElement('strong');amount.textContent='$'+Number(t.amountUSD).toFixed(2);const points=document.createElement('small');points.textContent=Number(t.coins).toLocaleString('en-US')+' coins';b.append(amount,document.createElement('br'),points);b.onclick=()=>selectAmount(b,Number(t.coins),Number(t.amountUSD));host.append(b)});
+ tiers.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='amount';b.innerHTML='';const amount=document.createElement('strong');amount.textContent=String(t.displayLabel||('$'+Number(t.amountUSD).toFixed(2)));const points=document.createElement('small');points.textContent=Number(t.coins).toLocaleString('en-US')+' coins';b.append(amount,document.createElement('br'),points);b.onclick=()=>selectAmount(b,Number(t.coins),Number(t.amountUSD));host.append(b)});
 }
 async function loadSocialLinks(){const ids={telegram:"telegramLink",youtube:"youtubeLink",instagram:"instagramLink"},status=document.getElementById("socialStatus");const tik=document.getElementById("tiktokLink");tik.href="https://www.tiktok.com/@yasjoy71";tik.hidden=false;try{const snap=await getDoc(doc(db,"socialLinks","main"));if(!snap.exists()){status.textContent="Social links are not configured yet.";Object.values(ids).forEach(id=>document.getElementById(id).hidden=true);return}const links=snap.data();let count=0;for(const [key,id] of Object.entries(ids)){const el=document.getElementById(id),url=links[key];if(typeof url==="string"&&/^https:\/\/\S+$/i.test(url)){el.href=url;el.hidden=false;count++}else el.hidden=true}status.textContent=count?"Social links loaded from Firebase.":"No valid social links configured."}catch(error){console.error("Social links error:",error);status.textContent="Could not load social links. Check Firebase rules and socialLinks/main."}}
 /* Live offer-wall list: only visible records are rendered. */
