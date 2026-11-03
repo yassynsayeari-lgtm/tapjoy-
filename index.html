@@ -45,11 +45,16 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .banned-card h2{color:#d32f2f;margin:12px 0;font-size:27px}.banned-card p{color:#52657c;line-height:1.8;margin:0}
 @media(max-width:390px){header{padding:16px 10px}.brand{font-size:25px}.star{font-size:31px}.balance{padding:10px;font-size:17px}.wallet{font-size:67px}.banner{padding:17px;gap:9px}.offer{padding:10px}.provider-icon{width:45px;height:45px}.offer h3{font-size:16px}.offer p{font-size:12px}}
 
-/* Terms gate and larger payout method artwork */
+/* Terms gate and premium payout method cards */
 .terms-overlay{position:fixed;inset:0;z-index:100000;background:#071b35d9;display:flex;align-items:center;justify-content:center;padding:16px}
 .terms-overlay[hidden]{display:none!important}.terms-card{width:100%;max-width:520px;max-height:90vh;overflow:auto;background:#fff;border-radius:24px;padding:24px;box-shadow:0 18px 60px #0005;color:#183153}
 .terms-card h2{margin:0 0 12px;color:#0878d7}.terms-card p,.terms-card li{line-height:1.75;font-size:14px}.terms-actions{display:flex;gap:10px;align-items:center;margin-top:18px}.terms-actions button{flex:1;border:0;border-radius:13px;padding:14px;font-weight:bold}.terms-accept{background:#0878d7;color:white}.terms-decline{background:#edf2f7;color:#42536a}
-.withdraw-method img{width:76px;height:76px;padding:5px}.withdraw-method .method-fallback{width:76px;height:76px;font-size:30px;flex-shrink:0}
+.withdraw-method{min-height:132px;flex-direction:column;justify-content:center;gap:12px;padding:18px 12px;border-radius:22px;background:linear-gradient(145deg,#fff,#f2f9ff);box-shadow:0 7px 18px #277ab51a;transition:transform .18s,box-shadow .18s}
+.withdraw-method:active{transform:scale(.98)}.withdraw-method.selected{background:linear-gradient(145deg,#e8f6ff,#d9edff);box-shadow:0 0 0 2px #078af533,0 8px 20px #078af526}
+.withdraw-method img{width:96px;height:96px;padding:8px;object-fit:contain;border-radius:20px;background:#fff;box-shadow:0 4px 13px #12387812}
+.withdraw-method .method-fallback{width:96px;height:96px;font-size:36px;flex-shrink:0;border-radius:20px;background:linear-gradient(145deg,#e4f5ff,#cceaff);color:#0878d7;box-shadow:0 4px 13px #12387812}
+.withdraw-method span:last-child{font-size:16px;text-align:center;line-height:1.35;max-width:100%}
+@media(max-width:390px){.withdraw-method{min-height:120px;padding:14px 8px}.withdraw-method img,.withdraw-method .method-fallback{width:82px;height:82px}.withdraw-method .method-fallback{font-size:31px}}
 </style>
 </head>
 <body>
@@ -212,7 +217,7 @@ function renderWithdrawalMethods(snapshot){
  document.getElementById('withdrawalTiers').append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
  if(!withdrawalMethods.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal methods are currently available.'}));return}
  withdrawalMethods.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
- withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:method.icon||'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:method.icon||'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b)});
+ withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const icon=String(method.icon||'').trim();const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(icon){b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:icon}))}else if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b)});
 }
 function chooseWithdrawalMethod(method,button){
  selectedMethod=method;selectedCoins=0;selectedUSD=0;document.querySelectorAll('.withdraw-method').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');
