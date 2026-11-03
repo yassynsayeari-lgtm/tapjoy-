@@ -4,6 +4,37 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>YASJOY Admin</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f2f6fc;color:#183153;font-family:Arial,sans-serif}header{background:#1976d2;color:white;padding:20px 16px}main{max-width:900px;margin:auto;padding:15px}.box,.panel,.login{background:white;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #17365d0d}.menu{display:block;width:100%;text-align:right;background:white;border:1px solid #e0eafa;border-radius:12px;padding:16px;margin:10px 0;font-size:17px;font-weight:bold;color:#183153}.menu small{display:block;color:#718096;font-weight:normal;margin-top:5px}.panel{display:none}.panel.show{display:block}h2{font-size:20px}.tabs,.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tab,.btn,.primary{border:0;border-radius:9px;padding:11px 13px;font-weight:bold;cursor:pointer}.tab{background:#e4f1ff;color:#175ca4}.tab.active,.primary{background:#1976d2;color:white}.primary{width:100%}.btn{background:#e8f5e9;color:#176b37}.danger{background:#ffebee!important;color:#a51f2b!important}.item{border:1px solid #e0e8f0;border-radius:12px;padding:13px;margin:10px 0;overflow-wrap:anywhere}.muted{color:#718096;font-size:13px;line-height:1.7}.empty{text-align:center;padding:20px;color:#718096}.badge{display:inline-block;border-radius:20px;padding:5px 9px;background:#e8f5e9;color:#176b37;font-size:12px}input,textarea{width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px}textarea{min-height:75px}label{font-size:14px;font-weight:bold}.back{border:0;background:transparent;color:#1769aa;font-weight:bold;padding:8px 0 15px}.hidden{display:none!important}.error{color:#a51f2b}.success{color:#176b37}.form{border:1px solid #dce8f5;border-radius:12px;padding:13px;margin:12px 0;background:#fbfdff}.check{display:flex;align-items:center;gap:8px;margin:8px 0}.check input{width:auto;margin:0}.details-box{background:#f7faff;border:1px solid #cfe0f5;border-radius:10px;padding:12px;margin-top:10px;line-height:1.9}.details-box .ok{color:#176b37;font-weight:bold}.details-box .warn{color:#a51f2b;font-weight:bold}.details-box code{direction:ltr;unicode-bidi:break-all;overflow-wrap:anywhere}img.logo{width:42px;height:42px;object-fit:contain;vertical-align:middle;margin-left:8px}.tier-row{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;align-items:center;border:1px solid #e0e8f0;border-radius:10px;padding:9px;margin:8px 0;background:#fff}.tier-row input{margin:3px 0}.tier-row button{border:0;border-radius:8px;padding:10px;background:#ffebee;color:#a51f2b}.tier-head{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;color:#718096;font-size:12px;padding:0 9px}
+
+/* Crimson admin theme */
+:root{--admin-crimson:#b5123b;--admin-crimson-dark:#850d2b;--admin-crimson-soft:#fff0f4}
+body{background:linear-gradient(145deg,#fff4f6,#f8e9ee 55%,#f4dce4);color:#401322}
+header{background:linear-gradient(120deg,#850d2b,#b5123b 60%,#d12b52);box-shadow:0 8px 24px #850d2b25}
+.menu{border:1px solid #f0c4d0;box-shadow:0 5px 18px #850d2b0b;border-radius:16px}
+.menu:active,.menu:focus{border-color:var(--admin-crimson)}
+.tab.active,.primary{background:linear-gradient(120deg,#850d2b,#c01845);color:#fff}
+.back{color:var(--admin-crimson)}.form{border-color:#efc2ce;background:#fffafb;border-radius:16px}
+.details-box{background:#fff5f7;border-color:#efc2ce}
+.btn{background:#fce5eb;color:#8c1535}.danger{background:#ffe2e8!important;color:#9b102e!important}
+.item{border-color:#f0c4d0;border-radius:15px;background:#fff}
+.badge{background:#fce5eb;color:#8c1535}
+input,textarea,select{border-color:#edc0cd}input:focus,textarea:focus,select:focus{outline:2px solid #d94b70;outline-offset:1px}
+#walls .form{border:2px solid #d98aa1;box-shadow:0 8px 24px #a20e3a12}
+#walls h2,#walls h3{color:#971337}
+#wallProvider{background:#fff5f7!important;border-color:#d98aa1!important}
+#saveWall{background:linear-gradient(120deg,#850d2b,#d21e50);box-shadow:0 6px 15px #a20e3a30}
+#wallList .item{border-right:4px solid #b5123b}
+/* Refined user directory */
+#users h2{color:#941337;font-size:25px;margin:8px 0 18px}
+#users #search{border:2px solid #efc2ce;border-radius:14px;background:#fffafb;padding:14px 16px}
+#users #userMsg{background:#fff0f4;border:1px solid #f0c4d0;border-radius:12px;padding:10px 13px;color:#8c1535;font-weight:bold}
+#userList{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:12px;align-items:start}
+#userList .item{margin:0;padding:16px;border:1px solid #efc2ce;border-right:5px solid #b5123b;border-radius:18px;background:linear-gradient(145deg,#fff,#fff7f9);box-shadow:0 6px 18px #850d2b0b;line-height:1.8}
+#userList .item>div:first-child{font-size:17px;font-weight:900;color:#85102f;margin-bottom:8px}
+#userList .item>div:nth-child(2){font-size:11px;color:#718096;direction:ltr;text-align:right;overflow-wrap:anywhere}
+#userList .item>div:nth-child(3){display:inline-block;margin:8px 0;padding:7px 12px;border-radius:11px;background:#fff0f4;color:#941337;font-size:17px;font-weight:900}
+#userList .item .badge{margin:7px 0 10px}
+#userList .item button{width:100%;border:0;border-radius:12px;padding:12px;font-weight:bold}
+@media(max-width:520px){#userList{grid-template-columns:1fr}#users.panel{padding:14px}}
 </style></head><body>
 <header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header><main>
 <section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><p id="loginMsg" class="muted"></p></section>
@@ -16,7 +47,7 @@
 </div>
 <section id="withdraw" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2><div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div><div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p></section>
 <section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userList"></div></section>
-<section id="methods" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة طرق السحب</h2><div class="form"><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden"><label>اسم طريقة السحب</label><input id="methodName" placeholder="Binance أو PayPal"><label>رابط الشعار</label><input id="methodLogo" type="url" placeholder="رابط صورة الشعار https://..."><label>التعليمات (اختياري)</label><textarea id="methodInstructions"></textarea><h3>فئات السحب</h3><p class="muted">أدخل عدد النقاط والمبلغ بالدولار لكل فئة.</p><div id="tierRows"></div><button type="button" id="addTier" class="btn">＋ إضافة فئة</button><label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label><button id="saveMethod" class="primary">حفظ طريقة السحب والفئات</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
+<section id="methods" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة طرق السحب</h2><div class="form"><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden"><label>اسم طريقة السحب</label><input id="methodName" placeholder="Binance أو PayPal"><label>رابط الشعار</label><input id="methodLogo" type="url" placeholder="رابط صورة الشعار https://..."><label>رمز الطريقة (اختياري)</label><input id="methodIcon" maxlength="8" placeholder="$ أو UC أو 🎮 أو 💎"><h3>فئات السحب</h3><p class="muted">أدخل النقاط، والقيمة الداخلية بالدولار للنظام، والنص الذي سيظهر للمستخدم مثل 0.10$ أو 60 شدة. صورة الشعار تبقى منفصلة.</p><div id="tierRows"></div><button type="button" id="addTier" class="btn">＋ إضافة فئة</button><label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label><button id="saveMethod" class="primary">حفظ طريقة السحب والفئات</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
 <section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2><p class="muted">يجب إدخال رابط صحيح ومعتمد من مزوّد الخدمة. حفظ الرابط لا يعني تفعيل حساب المزوّد أو توثيق المكافآت.</p><div class="form"><h3 id="wallTitle">إضافة جدار عروض</h3><input id="wallId" type="hidden"><label>مزود جدار العروض</label><select id="wallProvider" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="">اختر المزوّد</option></select><label>الاسم الظاهر للمستخدم</label><input id="wallName" placeholder="اسم الجدار"><label>رابط الجدار أو صفحة العرض المعتمدة</label><input id="wallUrl" type="url" placeholder="https://..."><label>رابط الشعار (اختياري)</label><input id="wallLogo" type="url" placeholder="https://..."><div id="providerFields" class="details-box"></div><p class="muted">ملاحظة أمان: تُحفظ المعرّفات العامة فقط. مفاتيح API وSDK السرية لا تُحفظ في Firestore؛ يلزم خادم آمن للتحقق من المكافآت وربط الأسرار.</p><label class="check"><input id="wallEnabled" type="checkbox"> مفعّل</label><button id="saveWall" class="primary">حفظ</button><button id="cancelWall" class="btn">إلغاء</button><p id="wallMsg" class="muted"></p></div><div id="wallList"></div></section>
 </section></main><footer class="muted" style="text-align:center;padding:20px">YASJOY Admin • Firebase</footer>
 <script type="module">
@@ -73,7 +104,7 @@ async function showWithdrawalDetails(w,box,button){
    detailLine('المعرّف العام',w.publicId),
    detailLine('طريقة السحب',w.method),
    detailLine('النقاط المخصومة',w.coins),
-   detailLine('المبلغ بالدولار',w.amountUSD===undefined?undefined:'$'+w.amountUSD),
+   detailLine('قيمة المكافأة للمستخدم',w.displayLabel||(w.amountUSD===undefined?undefined:'$'+w.amountUSD)),
    detailLine('عنوان المحفظة',w.walletAddress||w.payoutAddress||w.binanceWallet),
    detailLine('التاريخ والوقت',displayDate(w.createdAt))
   );
@@ -130,30 +161,31 @@ function renderWithdrawals(){
  });
 }
 function validUrl(v){if(!v)return '';try{const u=new URL(v);return ['http:','https:'].includes(u.protocol)?u.href:''}catch{return ''}}
-function addTierRow(coins='',amountUSD=''){
+function addTierRow(coins='',amountUSD='',displayLabel=''){
  const wrap=el('div','','tier-row');
  const points=document.createElement('input');points.type='number';points.min='1';points.step='1';points.placeholder='النقاط';points.className='tier-coins';points.value=coins;
  const dollars=document.createElement('input');dollars.type='number';dollars.min='0.01';dollars.step='0.01';dollars.placeholder='الدولار';dollars.className='tier-usd';dollars.value=amountUSD;
+ const label=document.createElement('input');label.type='text';label.maxLength=32;label.placeholder='النص الظاهر: 0.10$ أو 60 شدة';label.className='tier-label';label.value=displayLabel;
  const del=el('button','حذف');del.type='button';del.onclick=()=>wrap.remove();
- wrap.append(points,dollars,del);$('tierRows').append(wrap);
+ wrap.append(points,dollars,label,del);$('tierRows').append(wrap);
 }
 function readTiers(){
  const rows=[...$('tierRows').querySelectorAll('.tier-row')];
- return rows.map(r=>({coins:Number(r.querySelector('.tier-coins').value),amountUSD:Number(r.querySelector('.tier-usd').value)}));
+ return rows.map(r=>({coins:Number(r.querySelector('.tier-coins').value),amountUSD:Number(r.querySelector('.tier-usd').value),displayLabel:r.querySelector('.tier-label').value.trim()}));
 }
-function renderMethods(){const l=$('methodList');l.replaceChildren();if(!methods.length)l.append(el('div','لا توجد طرق سحب.','empty'));methods.forEach(m=>{const c=el('article','','item');const logo=validUrl(m.logo);if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;im.alt=m.name||'logo';c.append(im)}c.append(el('div',m.name||m.id),el('div','فئات السحب:'));(Array.isArray(m.tiers)?m.tiers:[]).forEach(t=>c.append(el('div',Number(t.coins).toLocaleString('en-US')+' نقطة = $'+Number(t.amountUSD).toFixed(2))));c.append(el('div','التعليمات: '+(m.instructions||'—')),el('div',m.enabled?'مفعّلة':'متوقفة','badge'));const a=el('div','','actions');[['تعديل',()=>editMethod(m)], [m.enabled?'إيقاف':'تفعيل',()=>toggle('withdrawMethods',m.id,!m.enabled)],['حذف',()=>remove('withdrawMethods',m.id)]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});c.append(a);l.append(c)})}
-function editMethod(m){$('methodId').value=m.id;$('methodName').value=m.name||'';$('methodInstructions').value=m.instructions||'';$('methodLogo').value=m.logo||'';$('methodEnabled').checked=!!m.enabled;$('methodTitle').textContent='تعديل طريقة سحب';$('tierRows').replaceChildren();(Array.isArray(m.tiers)?m.tiers:[]).forEach(t=>addTierRow(t.coins,t.amountUSD));if(!m.tiers?.length)addTierRow(m.minimumWithdrawal||'',m.minimumWithdrawal?Number(m.minimumWithdrawal)/1000:'')}
-function resetMethod(){['methodId','methodName','methodInstructions','methodLogo'].forEach(x=>$(x).value='');$('methodEnabled').checked=true;$('methodTitle').textContent='إضافة طريقة سحب';$('methodMsg').textContent='';$('tierRows').replaceChildren();[[100,'0.10'],[250,'0.25'],[500,'0.50'],[1000,'1.00'],[2000,'2.00'],[5000,'5.00']].forEach(t=>addTierRow(t[0],t[1]))}
+function renderMethods(){const l=$('methodList');l.replaceChildren();if(!methods.length)l.append(el('div','لا توجد طرق سحب.','empty'));methods.forEach(m=>{const c=el('article','','item');const logo=validUrl(m.logo);if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;im.alt=m.name||'logo';c.append(im)}c.append(el('div',m.name||m.id),el('div','فئات السحب:'));(Array.isArray(m.tiers)?m.tiers:[]).forEach(t=>c.append(el('div',Number(t.coins).toLocaleString('en-US')+' نقطة = '+(t.displayLabel||('$'+Number(t.amountUSD).toFixed(2))))));c.append(el('div',m.enabled?'مفعّلة':'متوقفة','badge'));const a=el('div','','actions');[['تعديل',()=>editMethod(m)], [m.enabled?'إيقاف':'تفعيل',()=>toggle('withdrawMethods',m.id,!m.enabled)],['حذف',()=>remove('withdrawMethods',m.id)]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});c.append(a);l.append(c)})}
+function editMethod(m){$('methodId').value=m.id;$('methodName').value=m.name||'';$('methodLogo').value=m.logo||'';$('methodIcon').value=m.icon||'';$('methodEnabled').checked=!!m.enabled;$('methodTitle').textContent='تعديل طريقة سحب';$('tierRows').replaceChildren();(Array.isArray(m.tiers)?m.tiers:[]).forEach(t=>addTierRow(t.coins,t.amountUSD,t.displayLabel));if(!m.tiers?.length)addTierRow(m.minimumWithdrawal||'',m.minimumWithdrawal?Number(m.minimumWithdrawal)/1000:'')}
+function resetMethod(){['methodId','methodName','methodLogo','methodIcon'].forEach(x=>$(x).value='');$('methodEnabled').checked=true;$('methodTitle').textContent='إضافة طريقة سحب';$('methodMsg').textContent='';$('tierRows').replaceChildren();[[100,'0.10'],[250,'0.25'],[500,'0.50'],[1000,'1.00'],[2000,'2.00'],[5000,'5.00']].forEach(t=>addTierRow(t[0],t[1]))}
 $('addTier').onclick=()=>addTierRow();
 $('cancelMethod').onclick=resetMethod;
 $('saveMethod').onclick=async()=>{
  const id=$('methodId').value,name=$('methodName').value.trim(),logoRaw=$('methodLogo').value.trim(),logo=validUrl(logoRaw),tiers=readTiers();
  if(!name){$('methodMsg').textContent='أدخل اسم طريقة السحب.';$('methodMsg').className='error';return}
  if(logoRaw&&!logo){$('methodMsg').textContent='رابط الشعار غير صالح.';$('methodMsg').className='error';return}
- if(!tiers.length||tiers.some(t=>!Number.isSafeInteger(t.coins)||t.coins<=0||!Number.isFinite(t.amountUSD)||t.amountUSD<=0)){ $('methodMsg').textContent='أدخل نقاطًا صحيحة ومبلغًا بالدولار أكبر من صفر لكل فئة.';$('methodMsg').className='error';return }
+ if(!tiers.length||tiers.some(t=>!Number.isSafeInteger(t.coins)||t.coins<=0||!Number.isFinite(t.amountUSD)||t.amountUSD<=0||!t.displayLabel)){ $('methodMsg').textContent='أدخل النقاط والقيمة الداخلية والنص الظاهر لكل فئة.';$('methodMsg').className='error';return }
  if(new Set(tiers.map(t=>t.coins)).size!==tiers.length||new Set(tiers.map(t=>t.amountUSD)).size!==tiers.length){$('methodMsg').textContent='لا تكرر النقاط أو المبلغ في أكثر من فئة.';$('methodMsg').className='error';return}
  tiers.sort((a,b)=>a.coins-b.coins);
- const data={name,tiers,minimumWithdrawal:Math.min(...tiers.map(t=>t.coins)),instructions:$('methodInstructions').value.trim(),enabled:$('methodEnabled').checked};if(logo)data.logo=logo;
+ const data={name,icon:$('methodIcon').value.trim(),tiers,minimumWithdrawal:Math.min(...tiers.map(t=>t.coins)),enabled:$('methodEnabled').checked};if(logo)data.logo=logo;
  try{if(id)await updateDoc(doc(db,'withdrawMethods',id),data);else await addDoc(collection(db,'withdrawMethods'),data);$('methodMsg').textContent='تم حفظ طريقة السحب وفئاتها.';$('methodMsg').className='success';resetMethod()}catch(e){$('methodMsg').textContent='فشل الحفظ: '+e.message;$('methodMsg').className='error'}
 };
 resetMethod();
