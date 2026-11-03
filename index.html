@@ -7,15 +7,15 @@
 <title>YASJOY - Earn Rewards</title>
 <style>
 *{box-sizing:border-box}
-:root{--blue:#078af5;--dark:#123878;--muted:#829cba}
-body{margin:0;background:linear-gradient(145deg,#dcefff,#f2fcff,#d8f1ff);font-family:Arial,sans-serif;color:var(--dark);padding-bottom:100px}
+:root{--blue:#16bdf2;--dark:#17365f;--muted:#7892aa;--crimson:#dc143c;--sky:#16bdf2}
+body{margin:0;background:linear-gradient(145deg,#dff8ff,#fff5f7,#e6f7ff);font-family:Arial,sans-serif;color:var(--dark);padding-bottom:100px}
 header{max-width:720px;margin:auto;padding:22px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .brand{display:flex;align-items:center;gap:8px;font-size:30px;font-weight:900;color:#0878d7}
 .star{font-size:39px;filter:drop-shadow(1px 3px 2px #e9b900)}
 .balance{background:white;border-radius:35px;padding:12px 15px;display:flex;align-items:center;gap:10px;box-shadow:0 5px 18px #74bce833;font-size:20px;font-weight:bold}
 .coin{font-size:25px}button{cursor:pointer;font:inherit}
 main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{display:block}
-.banner{min-height:205px;border-radius:28px;padding:25px;background:linear-gradient(130deg,#04b9f0,#078af5 60%,#1266e9);color:white;display:flex;align-items:center;gap:16px;box-shadow:0 12px 25px #078af526}
+.banner{min-height:205px;border-radius:28px;padding:25px;background:linear-gradient(130deg,#16bdf2,#078fce 58%,#dc143c);color:white;display:flex;align-items:center;gap:16px;box-shadow:0 12px 25px #078af526}
 .wallet{font-size:90px}.banner-text{font-size:clamp(23px,5vw,34px);font-weight:800;line-height:1.25}
 .go{border:0;background:#ffffff38;color:white;border-radius:50%;width:55px;height:55px;font-size:30px;margin-top:15px}
 .section-title{font-size:30px;font-weight:900;margin:24px 0 4px}.subtitle{color:var(--muted);font-size:17px;margin:0 0 16px}
@@ -31,7 +31,7 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .panel{background:white;border-radius:28px;padding:22px;margin:18px 0;box-shadow:0 5px 20px #80c9f433}
 .panel h2{margin:0 0 20px;font-size:30px}.small{font-size:14px;color:var(--muted);line-height:1.6}
 .field-label{display:block;margin:16px 0 8px}input,select{width:100%;padding:15px;border:1px solid #cfe7f7;border-radius:14px;font-size:16px;background:white}
-.primary{width:100%;border:0;border-radius:14px;padding:15px;background:var(--blue);color:white;font-size:17px;font-weight:bold;margin-top:15px}
+.primary{width:100%;border:0;border-radius:14px;padding:15px;background:linear-gradient(110deg,var(--sky),var(--crimson));color:white;font-size:17px;font-weight:bold;margin-top:15px}
 .amounts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.amount{border:2px solid #d9efff;background:#f8fcff;color:#12366f;padding:15px;border-radius:18px;font-weight:bold}
 .amount.selected{border-color:var(--blue);background:#e3f4ff}.withdraw-methods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.withdraw-method{display:flex;align-items:center;gap:10px;text-align:right;border:2px solid #d9efff;background:#fff;color:var(--dark);padding:13px;border-radius:16px;font-weight:bold;min-width:0}.withdraw-method.selected{border-color:var(--blue);background:#eaf6ff}.withdraw-method img{width:42px;height:42px;object-fit:contain;border-radius:10px}.withdraw-method .method-fallback{width:42px;height:42px;display:grid;place-items:center;background:#e3f4ff;border-radius:10px;font-size:20px}.withdraw-method span:last-child{overflow-wrap:anywhere}.withdraw-status{grid-column:1/-1}
 .social{display:flex;align-items:center;gap:13px;padding:14px 12px;margin:10px 0;border:1px solid #d9efff;border-radius:15px;background:#f8fcff;color:var(--dark);text-decoration:none;font-weight:bold}
@@ -40,7 +40,7 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .bottom{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(12px);border-radius:25px 25px 0 0;display:flex;justify-content:space-around;padding:12px 10px 18px;box-shadow:0 -5px 25px #74bce822}
 .nav{border:0;background:transparent;color:#829cba;font-size:16px;font-weight:bold;min-width:100px}.nav .ico{display:block;font-size:27px;margin-bottom:4px}.nav.active{color:var(--blue)}
 .notice{background:#fff7df;border:1px solid #ffe2a3;border-radius:14px;padding:12px;color:#765318;font-size:13px;line-height:1.5;margin-top:14px}
-.banned-screen{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(145deg,#dcefff,#f2fcff,#d8f1ff);text-align:center}
+.banned-screen{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(145deg,#dff8ff,#fff5f7,#e6f7ff);text-align:center}
 .banned-screen[hidden]{display:none!important}.banned-card{width:100%;max-width:420px;padding:30px 22px;border-radius:28px;background:#fff;box-shadow:0 8px 30px #12387820}
 .banned-card h2{color:#d32f2f;margin:12px 0;font-size:27px}.banned-card p{color:#52657c;line-height:1.8;margin:0}
 @media(max-width:390px){header{padding:16px 10px}.brand{font-size:25px}.star{font-size:31px}.balance{padding:10px;font-size:17px}.wallet{font-size:67px}.banner{padding:17px;gap:9px}.offer{padding:10px}.provider-icon{width:45px;height:45px}.offer h3{font-size:16px}.offer p{font-size:12px}}
@@ -50,7 +50,9 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .terms-overlay[hidden]{display:none!important}.terms-card{width:100%;max-width:520px;max-height:90vh;overflow:auto;background:#fff;border-radius:24px;padding:24px;box-shadow:0 18px 60px #0005;color:#183153}
 .terms-card h2{margin:0 0 12px;color:#0878d7}.terms-card p,.terms-card li{line-height:1.75;font-size:14px}.terms-actions{display:flex;gap:10px;align-items:center;margin-top:18px}.terms-actions button{flex:1;border:0;border-radius:13px;padding:14px;font-weight:bold}.terms-accept{background:#0878d7;color:white}.terms-decline{background:#edf2f7;color:#42536a}
 .withdraw-method{min-height:132px;flex-direction:column;justify-content:center;gap:12px;padding:18px 12px;border-radius:22px;background:linear-gradient(145deg,#fff,#f2f9ff);box-shadow:0 7px 18px #277ab51a;transition:transform .18s,box-shadow .18s}
-.withdraw-method:active{transform:scale(.98)}.withdraw-method.selected{background:linear-gradient(145deg,#e8f6ff,#d9edff);box-shadow:0 0 0 2px #078af533,0 8px 20px #078af526}
+.withdraw-method:active{transform:scale(.985)}
+@media (prefers-reduced-motion:no-preference){.withdraw-method img{transition:transform .32s cubic-bezier(.2,.8,.2,1),filter .32s}.withdraw-method.selected img{transform:scale(1.12);filter:drop-shadow(0 5px 8px #16bdf255)}.withdraw-method{transition:transform .22s ease,background .22s ease,box-shadow .22s ease}}
+@media (prefers-reduced-motion:reduce){.withdraw-method,.withdraw-method img{transition:none!important}}.withdraw-method.selected{background:linear-gradient(145deg,#e5faff,#fff0f3);box-shadow:0 0 0 2px #16bdf255,0 8px 20px #dc143c20}
 .withdraw-method img{width:96px;height:96px;padding:8px;object-fit:contain;border-radius:20px;background:#fff;box-shadow:0 4px 13px #12387812}
 .withdraw-method .method-fallback{width:96px;height:96px;font-size:36px;flex-shrink:0;border-radius:20px;background:linear-gradient(145deg,#e4f5ff,#cceaff);color:#0878d7;box-shadow:0 4px 13px #12387812}
 .withdraw-method span:last-child{font-size:16px;text-align:center;line-height:1.35;max-width:100%}
@@ -58,7 +60,17 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 </style>
 </head>
 <body>
-<section id="termsGate" class="terms-overlay" hidden aria-modal="true" role="dialog" aria-labelledby="termsTitle"><div class="terms-card"><div style="font-size:42px">📜</div><h2 id="termsTitle">YASJOY – Terms & Conditions</h2><p>يرجى قراءة الشروط والموافقة عليها قبل استخدام التطبيق.</p><ol><li>يجب استخدام التطبيق بمعلومات صحيحة، ويُمنع إنشاء حسابات أو تنفيذ أنشطة احتيالية.</li><li>تُمنح النقاط فقط بعد تأكيد إتمام العرض من مزوّد الخدمة والتحقق منه.</li><li>قد تختلف العروض والمكافآت حسب البلد والجهاز وشروط المزوّد، ولا نضمن توفر عرض معين.</li><li>طلبات السحب تخضع لمراجعة الإدارة، وإرسال الطلب لا يعني أن الدفع تم.</li><li>يجب إدخال بيانات دفع صحيحة تخص المستخدم، وقد يُرفض الطلب عند وجود مخالفة أو بيانات غير صحيحة.</li><li>قد يتم إيقاف الحساب عند إساءة الاستخدام أو مخالفة الشروط.</li><li>قد تُحدّث هذه الشروط عند الحاجة، وسيُطلب منك الاطلاع على النسخة الجديدة.</li></ol><p class="small">باختيار «أوافق وأتابع» تؤكد أنك قرأت هذه الشروط وتقبلها.</p><div class="terms-actions"><button class="terms-decline" id="termsDecline">لا أوافق</button><button class="terms-accept" id="termsAccept">أوافق وأتابع</button></div></div></section>
+<section id="termsGate" class="terms-overlay" hidden aria-modal="true" role="dialog" aria-labelledby="termsTitle"><div class="terms-card"><div style="font-size:42px">📜</div><h2 id="termsTitle">YASJOY – Terms & Conditions</h2><p>Please read and accept these terms before using the app.</p><ol>
+<li>You must use accurate information. Fraud, abuse, and deceptive activity are prohibited.</li>
+<li>Coins are awarded only after the offer provider confirms and verifies completion.</li>
+<li>Offers and rewards may vary by country, device, and provider requirements. Availability is not guaranteed.</li>
+<li>Withdrawal requests are reviewed by YASJOY administration.</li>
+<li>Your points are deducted when the request is successfully submitted.</li>
+<li>Submitting a request does not mean payment has been sent. Payment is completed only after administration marks the request as paid.</li>
+<li>You must provide accurate payout details belonging to you.</li>
+<li>Accounts may be restricted for abuse or violation of these terms.</li>
+<li>These terms may be updated when necessary. You may be asked to review the updated version.</li>
+</ol><p class="small">By selecting “I Agree & Continue”, you confirm that you have read and accepted these terms.</p><div class="terms-actions"><button class="terms-decline" id="termsDecline">I Do Not Agree</button><button class="terms-accept" id="termsAccept">أوافق وأتابع</button></div></div></section>
 <section id="bannedScreen" class="banned-screen" hidden role="alert"><div class="banned-card"><div style="font-size:55px">🚫</div><h2>حسابك محظور</h2><p>تم إيقاف الوصول إلى YASJOY لهذا الحساب. يرجى التواصل مع إدارة التطبيق.</p></div></section>
 <header>
   <div class="brand"><span class="star">⭐</span><span>YASJOY👑</span></div>
@@ -75,10 +87,11 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
   <div class="panel"><h2>Withdraw your points</h2><p class="small">Available Balance</p>
     <div style="background:#1765ef;color:white;border-radius:22px;padding:25px;text-align:center;font-size:28px"><strong id="withdrawBalance">0</strong><div style="font-size:17px">Coins</div></div>
     <h3>Choose withdrawal method</h3><div class="withdraw-methods" id="withdrawMethodsList"><div class="empty-offers withdraw-status">Loading withdrawal methods…</div></div>
-    <h3>Choose withdrawal amount</h3><div class="amounts" id="withdrawalTiers"><div class="empty-offers withdraw-status">Choose a withdrawal method first.</div></div>
-    <label class="field-label" for="account">Payout account details</label><input id="account" autocomplete="off" placeholder="Enter your payout account details">
-    <button class="primary" onclick="submitRequest()">Submit withdrawal request</button>
-    <p class="small">Your points are deducted when the request is successfully submitted. The request will be reviewed by YASJOY administration. Submitting a request does not mean payment has been sent.</p>
+    <div id="withdrawFlow" hidden>
+      <h3 id="amountHeading">Select a points package</h3><div class="amounts" id="withdrawalTiers"></div>
+      <label class="field-label" for="account" id="accountLabel">Payout account details</label><input id="account" autocomplete="off" placeholder="Enter your payout account details">
+      <button class="primary" id="submitWithdrawal" onclick="submitRequest()">Submit withdrawal request</button>
+    </div>
     <button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('home')">Back to Home</button>
   </div>
 </section>
@@ -98,7 +111,7 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 <nav class="bottom"><button class="nav active" id="navHome" onclick="showPage('home')"><span class="ico">⌂</span>Home</button><button class="nav" id="navProfile" onclick="showPage('profile')"><span class="ico">👤</span>Profile</button></nav>
 <script>
 let selectedCoins=0,balance=0,userId="",selectedMethod=null,withdrawalMethods=[];
-const TERMS_VERSION='yasjoy-terms-2026-11-v1';
+const TERMS_VERSION='yasjoy-terms-2026-11-v2';
 function checkTerms(){const gate=document.getElementById('termsGate');if(localStorage.getItem('yasjoy_terms_accepted')===TERMS_VERSION){gate.hidden=true;return}gate.hidden=false;document.body.style.overflow='hidden'}
 document.getElementById('termsAccept').addEventListener('click',()=>{localStorage.setItem('yasjoy_terms_accepted',TERMS_VERSION);document.getElementById('termsGate').hidden=true;document.body.style.overflow=''});
 document.getElementById('termsDecline').addEventListener('click',()=>{alert('لا يمكن استخدام YASJOY دون الموافقة على الشروط.');});
@@ -213,7 +226,7 @@ function setBannedView(banned){const screen=document.getElementById("bannedScree
 function renderWithdrawalMethods(snapshot){
  withdrawalMethods=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(m=>m.enabled===true);
  const host=document.getElementById('withdrawMethodsList');host.replaceChildren();
- selectedMethod=null;selectedCoins=0;document.getElementById('withdrawalTiers').replaceChildren();
+ selectedMethod=null;selectedCoins=0;document.getElementById('withdrawFlow').hidden=true;document.getElementById('withdrawalTiers').replaceChildren();
  document.getElementById('withdrawalTiers').append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
  if(!withdrawalMethods.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal methods are currently available.'}));return}
  withdrawalMethods.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
@@ -221,6 +234,10 @@ function renderWithdrawalMethods(snapshot){
 }
 function chooseWithdrawalMethod(method,button){
  selectedMethod=method;selectedCoins=0;document.querySelectorAll('.withdraw-method').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');
+ const flow=document.getElementById('withdrawFlow');flow.hidden=false;
+ document.getElementById('accountLabel').textContent=method.accountLabel||'Payout account details';
+ document.getElementById('account').placeholder=method.accountPlaceholder||'Enter your payout account details';
+ document.getElementById('account').value='';
  const host=document.getElementById('withdrawalTiers');host.replaceChildren();const tiers=Array.isArray(method.tiers)?method.tiers.filter(t=>Number.isSafeInteger(Number(t.coins))&&Number(t.coins)>0).sort((a,b)=>Number(a.coins)-Number(b.coins)):[];
  if(!tiers.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal amounts have been configured for this method.'}));return}
  tiers.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='amount';b.innerHTML='';const amount=document.createElement('strong');amount.textContent=String(t.displayLabel||Number(t.coins).toLocaleString('en-US')+' coins');const points=document.createElement('small');points.textContent=Number(t.coins).toLocaleString('en-US')+' coins';b.append(amount,document.createElement('br'),points);b.onclick=()=>selectAmount(b,Number(t.coins));host.append(b)});
