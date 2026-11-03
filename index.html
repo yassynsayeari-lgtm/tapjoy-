@@ -97,7 +97,7 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 </main>
 <nav class="bottom"><button class="nav active" id="navHome" onclick="showPage('home')"><span class="ico">⌂</span>Home</button><button class="nav" id="navProfile" onclick="showPage('profile')"><span class="ico">👤</span>Profile</button></nav>
 <script>
-let selectedCoins=0,selectedUSD=0,balance=0,userId="",selectedMethod=null,withdrawalMethods=[];
+let selectedCoins=0,balance=0,userId="",selectedMethod=null,withdrawalMethods=[];
 const TERMS_VERSION='yasjoy-terms-2026-11-v1';
 function checkTerms(){const gate=document.getElementById('termsGate');if(localStorage.getItem('yasjoy_terms_accepted')===TERMS_VERSION){gate.hidden=true;return}gate.hidden=false;document.body.style.overflow='hidden'}
 document.getElementById('termsAccept').addEventListener('click',()=>{localStorage.setItem('yasjoy_terms_accepted',TERMS_VERSION);document.getElementById('termsGate').hidden=true;document.body.style.overflow=''});
@@ -105,7 +105,7 @@ document.getElementById('termsDecline').addEventListener('click',()=>{alert('ل�
 checkTerms();
 function showPage(id){if(document.getElementById("termsGate")?.hidden===false)return;if(document.getElementById("bannedScreen")?.hidden===false)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id);if(page)page.classList.add('active');document.getElementById('navHome').classList.toggle('active',id==='home');document.getElementById('navProfile').classList.toggle('active',id==='profile');window.scrollTo(0,0);refreshBalance()}
 function refreshBalance(){document.getElementById('balance').textContent=balance.toLocaleString();document.getElementById('withdrawBalance').textContent=balance.toLocaleString()}
-function selectAmount(button,coins,usd){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins;selectedUSD=usd}
+function selectAmount(button,coins){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins}
 function openOffer(url,name,enabled){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!enabled){alert(name+' is currently disabled by YASJOY administration.');return}if(!url||!/^https:\/\/\S+$/i.test(url)){alert('This offer wall has no valid HTTPS link.');return}window.open(url,'_blank','noopener,noreferrer')}
 let withdrawalSubmitting=false;
 async function submitRequest(){
@@ -125,11 +125,11 @@ async function submitRequest(){
   const result=await window.createYasjoyWithdrawal({
    coins:selectedCoins,
    walletAddress,
-   method:selectedMethod.name,methodId:selectedMethod.id,amountUSD:selectedUSD,displayLabel:document.querySelector('.amount.selected strong')?.textContent||''
+   method:selectedMethod.name,methodId:selectedMethod.id,displayLabel:document.querySelector('.amount.selected strong')?.textContent||''
   });
   alert('Your withdrawal request was submitted for admin review. Coins deducted: '+result.deductedCoins+'. Remaining balance: '+result.remainingBalance+'.');
   document.getElementById('account').value='';
-  selectedCoins=0;selectedUSD=0;
+  selectedCoins=0;
   document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));
  }catch(error){
   console.error('Withdrawal request error:',error);
@@ -178,7 +178,7 @@ window.createYasjoyWithdrawal=async function(request){
    throw new Error('This withdrawal method is unavailable. Refresh and try again.');
 
   const tier=(Array.isArray(methodData.tiers)?methodData.tiers:[]).find(t=>
-   Number(t.coins)===coins&&Number(t.amountUSD)===Number(request.amountUSD)&&String(t.displayLabel||('$'+Number(t.amountUSD).toFixed(2)))===String(request.displayLabel||('$'+Number(request.amountUSD).toFixed(2)))
+   Number(t.coins)===coins
   );
   if(!tier)throw new Error('This withdrawal amount is not available for the selected method.');
   if(userData.banned===true)throw new Error('This account cannot submit withdrawal requests.');
@@ -193,8 +193,7 @@ window.createYasjoyWithdrawal=async function(request){
    publicId:'YJ-'+user.uid.slice(0,8).toUpperCase(),
    method:methodData.name,
    methodId:methodId,
-   amountUSD:Number(tier.amountUSD),
-   displayLabel:String(tier.displayLabel||('$'+Number(tier.amountUSD).toFixed(2))),
+   displayLabel:String(tier.displayLabel||''),
    coins:coins,
    walletAddress:walletAddress,
    status:'pending',
@@ -207,24 +206,24 @@ window.createYasjoyWithdrawal=async function(request){
    withdrawalId:withdrawalId,
    createdAt:serverTimestamp()
   });
-  return {success:true,withdrawalId,deductedCoins:coins,remainingBalance,amountUSD:Number(tier.amountUSD),displayLabel:String(tier.displayLabel||('$'+Number(tier.amountUSD).toFixed(2))),status:'pending'};
+  return {success:true,withdrawalId,deductedCoins:coins,remainingBalance,status:'pending'};
  });
 };
 function setBannedView(banned){const screen=document.getElementById("bannedScreen");if(!screen)return;screen.hidden=!banned;const header=document.querySelector("header"),main=document.querySelector("main"),nav=document.querySelector("nav.bottom");if(header)header.style.display=banned?"none":"";if(main)main.style.display=banned?"none":"";if(nav)nav.style.display=banned?"none":""}
 function renderWithdrawalMethods(snapshot){
  withdrawalMethods=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(m=>m.enabled===true);
  const host=document.getElementById('withdrawMethodsList');host.replaceChildren();
- selectedMethod=null;selectedCoins=0;selectedUSD=0;document.getElementById('withdrawalTiers').replaceChildren();
+ selectedMethod=null;selectedCoins=0;document.getElementById('withdrawalTiers').replaceChildren();
  document.getElementById('withdrawalTiers').append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
  if(!withdrawalMethods.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal methods are currently available.'}));return}
  withdrawalMethods.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
- withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const icon=String(method.icon||'').trim();const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:icon||'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b)});
+ withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b)});
 }
 function chooseWithdrawalMethod(method,button){
- selectedMethod=method;selectedCoins=0;selectedUSD=0;document.querySelectorAll('.withdraw-method').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');
- const host=document.getElementById('withdrawalTiers');host.replaceChildren();const tiers=Array.isArray(method.tiers)?method.tiers.filter(t=>Number.isSafeInteger(Number(t.coins))&&Number(t.coins)>0&&Number.isFinite(Number(t.amountUSD))&&Number(t.amountUSD)>0).sort((a,b)=>Number(a.coins)-Number(b.coins)):[];
+ selectedMethod=method;selectedCoins=0;document.querySelectorAll('.withdraw-method').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');
+ const host=document.getElementById('withdrawalTiers');host.replaceChildren();const tiers=Array.isArray(method.tiers)?method.tiers.filter(t=>Number.isSafeInteger(Number(t.coins))&&Number(t.coins)>0).sort((a,b)=>Number(a.coins)-Number(b.coins)):[];
  if(!tiers.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal amounts have been configured for this method.'}));return}
- tiers.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='amount';b.innerHTML='';const amount=document.createElement('strong');amount.textContent=String(t.displayLabel||('$'+Number(t.amountUSD).toFixed(2)));const points=document.createElement('small');points.textContent=Number(t.coins).toLocaleString('en-US')+' coins';b.append(amount,document.createElement('br'),points);b.onclick=()=>selectAmount(b,Number(t.coins),Number(t.amountUSD));host.append(b)});
+ tiers.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='amount';b.innerHTML='';const amount=document.createElement('strong');amount.textContent=String(t.displayLabel||Number(t.coins).toLocaleString('en-US')+' coins');const points=document.createElement('small');points.textContent=Number(t.coins).toLocaleString('en-US')+' coins';b.append(amount,document.createElement('br'),points);b.onclick=()=>selectAmount(b,Number(t.coins));host.append(b)});
 }
 async function loadSocialLinks(){const ids={telegram:"telegramLink",youtube:"youtubeLink",instagram:"instagramLink"},status=document.getElementById("socialStatus");const tik=document.getElementById("tiktokLink");tik.href="https://www.tiktok.com/@yasjoy71";tik.hidden=false;try{const snap=await getDoc(doc(db,"socialLinks","main"));if(!snap.exists()){status.textContent="Social links are not configured yet.";Object.values(ids).forEach(id=>document.getElementById(id).hidden=true);return}const links=snap.data();let count=0;for(const [key,id] of Object.entries(ids)){const el=document.getElementById(id),url=links[key];if(typeof url==="string"&&/^https:\/\/\S+$/i.test(url)){el.href=url;el.hidden=false;count++}else el.hidden=true}status.textContent=count?"Social links loaded from Firebase.":"No valid social links configured."}catch(error){console.error("Social links error:",error);status.textContent="Could not load social links. Check Firebase rules and socialLinks/main."}}
 /* Live offer-wall list: only visible records are rendered. */
