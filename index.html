@@ -255,8 +255,20 @@ function showMethodImage(method){const url=typeof method.logo==='string'&&/^http
 document.getElementById('methodImageView').addEventListener('click',()=>{document.getElementById('methodImageView').hidden=true});
 function hostScrollToSelected(button){button.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest',inline:'center'});}
 function chooseWithdrawalMethod(method,button){
+ const host=document.getElementById('withdrawMethodsList');
+ const flow=document.getElementById('withdrawFlow');
+ // Tapping the already-selected method again collapses it and restores the horizontal list.
+ if(selectedMethod && selectedMethod.id===method.id && button.classList.contains('selected')){
+  selectedMethod=null;selectedCoins=0;
+  document.querySelectorAll('.withdraw-method').forEach(x=>{x.classList.remove('selected');x.hidden=false});
+  flow.hidden=true;
+  document.getElementById('account').value='';
+  document.getElementById('withdrawalTiers').replaceChildren(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
+  host.scrollTo({left:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  return;
+ }
  selectedMethod=method;selectedCoins=0;document.querySelectorAll('.withdraw-method').forEach(x=>{x.classList.remove('selected');x.hidden=x!==button});button.classList.add('selected');hostScrollToSelected(button);
- const flow=document.getElementById('withdrawFlow');flow.hidden=false;
+ flow.hidden=false;
  document.getElementById('accountLabel').textContent=method.accountLabel||'Payout account details';
  document.getElementById('account').placeholder=method.accountPlaceholder||'Enter your payout account details';
  document.getElementById('account').value='';
