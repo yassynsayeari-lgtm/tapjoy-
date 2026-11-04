@@ -221,10 +221,25 @@ function renderWithdrawalMethods(snapshot){
  withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const icon=String(method.icon||'').trim();const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:icon||'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b)});
 }
 function chooseWithdrawalMethod(method,button){
- selectedMethod=method;selectedCoins=0;selectedUSD=0;
- document.querySelectorAll('.withdraw-method').forEach(x=>x.classList.remove('selected'));
- button.classList.add('selected');
+ const allMethods=[...document.querySelectorAll('.withdraw-method')];
+ const flow=document.getElementById('withdrawFlow');
  const tiersHost=document.getElementById('withdrawalTiers');
+ // الضغط على الطريقة المختارة مرة ثانية يغلق تفاصيلها ويعيد القائمة كاملة.
+ if(selectedMethod?.id===method.id){
+  selectedMethod=null;selectedCoins=0;selectedUSD=0;
+  allMethods.forEach(x=>{x.classList.remove('selected');x.hidden=false});
+  flow.hidden=true;tiersHost.replaceChildren();
+  tiersHost.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
+  document.getElementById('account').value='';
+  return;
+ }
+ selectedMethod=method;selectedCoins=0;selectedUSD=0;
+ allMethods.forEach(x=>{x.classList.remove('selected');x.hidden=x!==button});
+ button.classList.add('selected');
+ flow.hidden=false;
+ document.getElementById('accountLabel').textContent=method.accountLabel||'Payout account details';
+ document.getElementById('account').placeholder=method.accountPlaceholder||'Enter your payout account details';
+ document.getElementById('account').value='';
  tiersHost.replaceChildren();
  const tiers=Array.isArray(method.tiers)?method.tiers.filter(t=>Number.isSafeInteger(Number(t.coins))&&Number(t.coins)>0&&Number.isFinite(Number(t.amountUSD))&&Number(t.amountUSD)>0).sort((a,b)=>Number(a.coins)-Number(b.coins)):[];
  if(!tiers.length){tiersHost.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal amounts have been configured for this method.'}));return}
