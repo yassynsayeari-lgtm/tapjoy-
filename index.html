@@ -7,19 +7,19 @@
 <title>YASJOY - Earn Rewards</title>
 <style>
 *{box-sizing:border-box}
-:root{--blue:#078af5;--dark:#123878;--muted:#829cba}
-body{margin:0;background:linear-gradient(145deg,#dcefff,#f2fcff,#d8f1ff);font-family:Arial,sans-serif;color:var(--dark);padding-bottom:100px}
+:root{--blue:#16bdf2;--dark:#17365f;--muted:#7892aa;--crimson:#dc143c;--sky:#16bdf2}
+body{margin:0;background:linear-gradient(145deg,#dff8ff,#fff5f7,#e6f7ff);font-family:Arial,sans-serif;color:var(--dark);padding-bottom:100px}
 header{max-width:720px;margin:auto;padding:22px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .brand{display:flex;align-items:center;gap:8px;font-size:30px;font-weight:900;color:#0878d7}
 .star{font-size:39px;filter:drop-shadow(1px 3px 2px #e9b900)}
 .balance{background:white;border-radius:35px;padding:12px 15px;display:flex;align-items:center;gap:10px;box-shadow:0 5px 18px #74bce833;font-size:20px;font-weight:bold}
 .coin{font-size:25px}button{cursor:pointer;font:inherit}
 main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{display:block}
-.banner{min-height:205px;border-radius:28px;padding:25px;background:linear-gradient(130deg,#04b9f0,#078af5 60%,#1266e9);color:white;display:flex;align-items:center;gap:16px;box-shadow:0 12px 25px #078af526}
+.banner{min-height:205px;border-radius:28px;padding:25px;background:linear-gradient(130deg,#16bdf2,#078fce 58%,#dc143c);color:white;display:flex;align-items:center;gap:16px;box-shadow:0 12px 25px #078af526}
 .wallet{font-size:90px}.banner-text{font-size:clamp(23px,5vw,34px);font-weight:800;line-height:1.25}
 .go{border:0;background:#ffffff38;color:white;border-radius:50%;width:55px;height:55px;font-size:30px;margin-top:15px}
 .section-title{font-size:30px;font-weight:900;margin:24px 0 4px}.subtitle{color:var(--muted);font-size:17px;margin:0 0 16px}
-.offers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.offers{display:flex;gap:13px;overflow-x:auto;overflow-y:hidden;padding:4px 2px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}.offers>.offer,.offers>.empty-offers{flex:0 0 min(78vw,270px);scroll-snap-align:start}
 .offer{background:white;border:1px solid #d5edff;border-radius:22px;padding:15px;box-shadow:0 5px 14px #74bce833;min-width:0}
 .offer-top{display:flex;align-items:center;gap:10px;min-height:86px}
 .provider-icon{width:58px;height:58px;flex-shrink:0;border-radius:16px;display:grid;place-items:center;font-size:22px;font-weight:bold;color:white;overflow:hidden}
@@ -31,16 +31,16 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .panel{background:white;border-radius:28px;padding:22px;margin:18px 0;box-shadow:0 5px 20px #80c9f433}
 .panel h2{margin:0 0 20px;font-size:30px}.small{font-size:14px;color:var(--muted);line-height:1.6}
 .field-label{display:block;margin:16px 0 8px}input,select{width:100%;padding:15px;border:1px solid #cfe7f7;border-radius:14px;font-size:16px;background:white}
-.primary{width:100%;border:0;border-radius:14px;padding:15px;background:var(--blue);color:white;font-size:17px;font-weight:bold;margin-top:15px}
+.primary{width:100%;border:0;border-radius:14px;padding:15px;background:linear-gradient(110deg,var(--sky),var(--crimson));color:white;font-size:17px;font-weight:bold;margin-top:15px}
 .amounts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.amount{border:2px solid #d9efff;background:#f8fcff;color:#12366f;padding:15px;border-radius:18px;font-weight:bold}
-.amount.selected{border-color:var(--blue);background:#e3f4ff}.withdraw-methods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.withdraw-method{display:flex;align-items:center;gap:10px;text-align:right;border:2px solid #d9efff;background:#fff;color:var(--dark);padding:13px;border-radius:16px;font-weight:bold;min-width:0}.withdraw-method.selected{border-color:var(--blue);background:#eaf6ff}.withdraw-method img{width:42px;height:42px;object-fit:contain;border-radius:10px}.withdraw-method .method-fallback{width:42px;height:42px;display:grid;place-items:center;background:#e3f4ff;border-radius:10px;font-size:20px}.withdraw-method span:last-child{overflow-wrap:anywhere}.withdraw-status{grid-column:1/-1}
+.amount.selected{border-color:var(--blue);background:#e3f4ff}.withdraw-methods{display:flex;flex-direction:row;flex-wrap:nowrap;gap:12px;overflow-x:auto;overflow-y:hidden;padding:6px 2px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}.withdraw-methods::-webkit-scrollbar{height:5px}.withdraw-methods::-webkit-scrollbar-thumb{background:#c7e6fa;border-radius:8px}.withdraw-method{display:flex;align-items:center;gap:10px;text-align:right;border:2px solid #d9efff;background:#fff;color:var(--dark);padding:13px;border-radius:16px;font-weight:bold;min-width:0}.withdraw-method.selected{border-color:var(--blue);background:#eaf6ff}.withdraw-method img{width:42px;height:42px;object-fit:contain;border-radius:10px}.withdraw-method .method-fallback{width:42px;height:42px;display:grid;place-items:center;background:#e3f4ff;border-radius:10px;font-size:20px}.withdraw-method span:last-child{overflow-wrap:anywhere}.withdraw-status{grid-column:1/-1}
 .social{display:flex;align-items:center;gap:13px;padding:14px 12px;margin:10px 0;border:1px solid #d9efff;border-radius:15px;background:#f8fcff;color:var(--dark);text-decoration:none;font-weight:bold}
 .social-icon{font-size:24px;width:35px;text-align:center}
 .id-box{background:#eff7ff;border-radius:14px;padding:15px;display:flex;justify-content:space-between;align-items:center;gap:8px;overflow-wrap:anywhere}
 .bottom{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(12px);border-radius:25px 25px 0 0;display:flex;justify-content:space-around;padding:12px 10px 18px;box-shadow:0 -5px 25px #74bce822}
 .nav{border:0;background:transparent;color:#829cba;font-size:16px;font-weight:bold;min-width:100px}.nav .ico{display:block;font-size:27px;margin-bottom:4px}.nav.active{color:var(--blue)}
-.notice{background:#fff7df;border:1px solid #ffe2a3;border-radius:14px;padding:12px;color:#765318;font-size:13px;line-height:1.5;margin-top:14px}
-.banned-screen{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(145deg,#dcefff,#f2fcff,#d8f1ff);text-align:center}
+.notice{display:none!important}
+.banned-screen{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(145deg,#dff8ff,#fff5f7,#e6f7ff);text-align:center}
 .banned-screen[hidden]{display:none!important}.banned-card{width:100%;max-width:420px;padding:30px 22px;border-radius:28px;background:#fff;box-shadow:0 8px 30px #12387820}
 .banned-card h2{color:#d32f2f;margin:12px 0;font-size:27px}.banned-card p{color:#52657c;line-height:1.8;margin:0}
 @media(max-width:390px){header{padding:16px 10px}.brand{font-size:25px}.star{font-size:31px}.balance{padding:10px;font-size:17px}.wallet{font-size:67px}.banner{padding:17px;gap:9px}.offer{padding:10px}.provider-icon{width:45px;height:45px}.offer h3{font-size:16px}.offer p{font-size:12px}}
@@ -50,15 +50,41 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .terms-overlay[hidden]{display:none!important}.terms-card{width:100%;max-width:520px;max-height:90vh;overflow:auto;background:#fff;border-radius:24px;padding:24px;box-shadow:0 18px 60px #0005;color:#183153}
 .terms-card h2{margin:0 0 12px;color:#0878d7}.terms-card p,.terms-card li{line-height:1.75;font-size:14px}.terms-actions{display:flex;gap:10px;align-items:center;margin-top:18px}.terms-actions button{flex:1;border:0;border-radius:13px;padding:14px;font-weight:bold}.terms-accept{background:#0878d7;color:white}.terms-decline{background:#edf2f7;color:#42536a}
 .withdraw-method{min-height:132px;flex-direction:column;justify-content:center;gap:12px;padding:18px 12px;border-radius:22px;background:linear-gradient(145deg,#fff,#f2f9ff);box-shadow:0 7px 18px #277ab51a;transition:transform .18s,box-shadow .18s}
-.withdraw-method:active{transform:scale(.98)}.withdraw-method.selected{background:linear-gradient(145deg,#e8f6ff,#d9edff);box-shadow:0 0 0 2px #078af533,0 8px 20px #078af526}
+.withdraw-method:active{transform:scale(.985)}
+.method-image-view{position:fixed;inset:0;z-index:100001;background:#06182dcc;display:flex;align-items:center;justify-content:center;padding:24px}.method-image-view[hidden]{display:none!important}.method-image-view img{max-width:min(82vw,360px);max-height:70vh;object-fit:contain;background:#fff;border-radius:28px;padding:18px;box-shadow:0 18px 55px #0007;animation:popIn .28s ease-out}@keyframes popIn{from{transform:scale(.72);opacity:.3}to{transform:scale(1);opacity:1}}.notify-btn{width:100%;border:1px solid #cfe7f7;border-radius:14px;background:#eef8ff;color:#0758a8;padding:14px;font-weight:bold;margin-top:12px}
+@media (prefers-reduced-motion:no-preference){.withdraw-method img{transition:transform .32s cubic-bezier(.2,.8,.2,1),filter .32s}.withdraw-method.selected img{transform:scale(1.12);filter:drop-shadow(0 5px 8px #16bdf255)}.withdraw-method{transition:transform .22s ease,background .22s ease,box-shadow .22s ease}}
+@media (prefers-reduced-motion:reduce){.withdraw-method,.withdraw-method img{transition:none!important}}.withdraw-method.selected{background:linear-gradient(145deg,#e5faff,#fff0f3);box-shadow:0 0 0 2px #16bdf255,0 8px 20px #dc143c20}
 .withdraw-method img{width:96px;height:96px;padding:8px;object-fit:contain;border-radius:20px;background:#fff;box-shadow:0 4px 13px #12387812}
 .withdraw-method .method-fallback{width:96px;height:96px;font-size:36px;flex-shrink:0;border-radius:20px;background:linear-gradient(145deg,#e4f5ff,#cceaff);color:#0878d7;box-shadow:0 4px 13px #12387812}
 .withdraw-method span:last-child{font-size:16px;text-align:center;line-height:1.35;max-width:100%}
 @media(max-width:390px){.withdraw-method{min-height:120px;padding:14px 8px}.withdraw-method img,.withdraw-method .method-fallback{width:82px;height:82px}.withdraw-method .method-fallback{font-size:31px}}
+
+/* Horizontal withdrawal picker; selected method expands into a wide detail card */
+.withdraw-method{flex:0 0 148px;width:148px;min-height:154px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:14px 10px;border:2px solid #d9efff;border-radius:22px;}
+.withdraw-method img,.withdraw-method .method-fallback{width:88px;height:88px;object-fit:contain;border-radius:18px;flex-shrink:0;}
+.withdraw-method span:last-child{font-size:16px;text-align:center;}
+.withdraw-method.selected{flex:0 0 100%;width:100%;min-height:170px;flex-direction:row;justify-content:flex-start;gap:24px;padding:20px 24px;scroll-snap-align:center;}
+.withdraw-method.selected img,.withdraw-method.selected .method-fallback{width:132px;height:132px;border-radius:24px;}
+.withdraw-method.selected span:last-child{font-size:24px;text-align:start;}
+.withdraw-method[hidden]{display:none!important}
+@media(max-width:390px){.withdraw-method{flex-basis:140px;width:140px;min-height:145px}.withdraw-method img,.withdraw-method .method-fallback{width:80px;height:80px}.withdraw-method.selected{flex-basis:100%;width:100%;min-height:150px;gap:18px;padding:16px}.withdraw-method.selected img,.withdraw-method.selected .method-fallback{width:112px;height:112px}.withdraw-method.selected span:last-child{font-size:22px}}
+
 </style>
 </head>
 <body>
-<section id="termsGate" class="terms-overlay" hidden aria-modal="true" role="dialog" aria-labelledby="termsTitle"><div class="terms-card"><div style="font-size:42px">📜</div><h2 id="termsTitle">YASJOY – Terms & Conditions</h2><p>يرجى قراءة الشروط والموافقة عليها قبل استخدام التطبيق.</p><ol><li>يجب استخدام التطبيق بمعلومات صحيحة، ويُمنع إنشاء حسابات أو تنفيذ أنشطة احتيالية.</li><li>تُمنح النقاط فقط بعد تأكيد إتمام العرض من مزوّد الخدمة والتحقق منه.</li><li>قد تختلف العروض والمكافآت حسب البلد والجهاز وشروط المزوّد، ولا نضمن توفر عرض معين.</li><li>طلبات السحب تخضع لمراجعة الإدارة، وإرسال الطلب لا يعني أن الدفع تم.</li><li>يجب إدخال بيانات دفع صحيحة تخص المستخدم، وقد يُرفض الطلب عند وجود مخالفة أو بيانات غير صحيحة.</li><li>قد يتم إيقاف الحساب عند إساءة الاستخدام أو مخالفة الشروط.</li><li>قد تُحدّث هذه الشروط عند الحاجة، وسيُطلب منك الاطلاع على النسخة الجديدة.</li></ol><p class="small">باختيار «أوافق وأتابع» تؤكد أنك قرأت هذه الشروط وتقبلها.</p><div class="terms-actions"><button class="terms-decline" id="termsDecline">لا أوافق</button><button class="terms-accept" id="termsAccept">أوافق وأتابع</button></div></div></section>
+<section id="termsGate" class="terms-overlay" hidden aria-modal="true" role="dialog" aria-labelledby="termsTitle"><div class="terms-card"><div style="font-size:42px">📜</div><h2 id="termsTitle">YASJOY – Terms & Conditions</h2><p>Please read and accept these terms before using the app.</p><ol>
+<li>You must use accurate information. Fraud, abuse, and deceptive activity are prohibited.</li>
+<li>Coins are awarded only after the offer provider confirms and verifies completion.</li>
+<li>Offers and rewards may vary by country, device, and provider requirements. Availability is not guaranteed.</li>
+<li>Withdrawal requests are reviewed by YASJOY administration.</li>
+<li>Your points are deducted when the request is successfully submitted.</li>
+<li>Submitting a request does not mean payment has been sent. Payment is completed only after administration marks the request as paid.</li>
+<li>You must provide accurate payout details belonging to you.</li>
+<li>Accounts may be restricted for abuse or violation of these terms.</li>
+<li>These terms may be updated when necessary. You may be asked to review the updated version.</li>
+</ol><p class="small">By selecting “I Agree & Continue”, you confirm that you have read and accepted these terms.</p><div class="terms-actions"><button class="terms-decline" id="termsDecline">I Do Not Agree</button><button class="terms-accept" id="termsAccept">أوافق وأتابع</button></div></div></section>
+<div id="methodImageView" class="method-image-view" hidden role="dialog" aria-modal="true"><img id="methodImageLarge" alt="Withdrawal method logo"></div>
+<section id="offerTermsGate" class="terms-overlay" hidden aria-modal="true" role="dialog" aria-labelledby="offerTermsTitle"><div class="terms-card"><h2 id="offerTermsTitle">Offer Wall Terms</h2><p>Before continuing, please read and accept these conditions:</p><ol><li>Offer availability depends on your country, device, and provider rules.</li><li>Complete each offer honestly on your own device.</li><li>Do not use VPNs, proxies, multiple accounts, or misleading information to bypass provider restrictions.</li><li>Rewards are credited only after the offer provider verifies completion.</li><li>YASJOY cannot guarantee approval or reward tracking by an external provider.</li></ol><label style="display:flex;gap:9px;align-items:flex-start;margin-top:14px;font-size:14px"><input id="offerTermsCheck" type="checkbox" style="width:auto;margin-top:3px"> I have read and agree to these terms.</label><div class="terms-actions"><button class="terms-decline" id="offerTermsCancel">Cancel</button><button class="terms-accept" id="offerTermsContinue" disabled>Agree &amp; Continue</button></div></div></section>
 <section id="bannedScreen" class="banned-screen" hidden role="alert"><div class="banned-card"><div style="font-size:55px">🚫</div><h2>حسابك محظور</h2><p>تم إيقاف الوصول إلى YASJOY لهذا الحساب. يرجى التواصل مع إدارة التطبيق.</p></div></section>
 <header>
   <div class="brand"><span class="star">⭐</span><span>YASJOY👑</span></div>
@@ -69,16 +95,16 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
   <div class="banner"><div class="wallet">💰</div><div style="flex:1"><div class="banner-text">Withdraw your points</div><button class="go" onclick="showPage('withdraw')" aria-label="Withdraw">➜</button></div></div>
   <div class="section-title">🔥 Offer Walls</div><p class="subtitle">Complete offers · Earn coins</p>
   <div class="offers" id="offersList"><div class="empty-offers">Loading offer walls…</div></div>
-  <div class="notice">Offer wall connections are not enabled in this stage. A listed wall is not proof that its provider has approved YASJOY or that rewards are active.</div>
 </section>
 <section id="withdraw" class="page">
   <div class="panel"><h2>Withdraw your points</h2><p class="small">Available Balance</p>
     <div style="background:#1765ef;color:white;border-radius:22px;padding:25px;text-align:center;font-size:28px"><strong id="withdrawBalance">0</strong><div style="font-size:17px">Coins</div></div>
     <h3>Choose withdrawal method</h3><div class="withdraw-methods" id="withdrawMethodsList"><div class="empty-offers withdraw-status">Loading withdrawal methods…</div></div>
-    <h3>Choose withdrawal amount</h3><div class="amounts" id="withdrawalTiers"><div class="empty-offers withdraw-status">Choose a withdrawal method first.</div></div>
-    <label class="field-label" for="account">Payout account details</label><input id="account" autocomplete="off" placeholder="Enter your payout account details">
-    <button class="primary" onclick="submitRequest()">Submit withdrawal request</button>
-    <p class="small">Your points are deducted when the request is successfully submitted. The request will be reviewed by YASJOY administration. Submitting a request does not mean payment has been sent.</p>
+    <div id="withdrawFlow" hidden>
+      <h3 id="amountHeading">Select a points package</h3><div class="amounts" id="withdrawalTiers"></div>
+      <label class="field-label" for="account" id="accountLabel">Payout account details</label><input id="account" autocomplete="off" placeholder="Enter your payout account details">
+      <button class="primary" id="submitWithdrawal" onclick="submitRequest()">Submit withdrawal request</button>
+    </div>
     <button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('home')">Back to Home</button>
   </div>
 </section>
@@ -91,22 +117,28 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
     <a class="social" id="youtubeLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">▶️</span>YouTube</a>
     <a class="social" id="tiktokLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">🎵</span>TikTok</a>
     <a class="social" id="instagramLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">📸</span>Instagram</a>
-    <p id="socialStatus" class="small">Loading social links from Firebase…</p><button class="primary" onclick="showPage('home')">Back to Home</button>
+    <p id="socialStatus" class="small">Loading social links from Firebase…</p><button class="notify-btn" id="enableNotifications">🔔 Enable notifications</button><p class="small" id="notificationStatus">Notifications are optional.</p><button class="primary" onclick="showPage('home')">Back to Home</button>
   </div>
 </section>
 </main>
 <nav class="bottom"><button class="nav active" id="navHome" onclick="showPage('home')"><span class="ico">⌂</span>Home</button><button class="nav" id="navProfile" onclick="showPage('profile')"><span class="ico">👤</span>Profile</button></nav>
 <script>
-let selectedCoins=0,selectedUSD=0,balance=0,userId="",selectedMethod=null,withdrawalMethods=[];
-const TERMS_VERSION='yasjoy-terms-2026-11-v1';
+let selectedCoins=0,balance=0,userId="",selectedMethod=null,withdrawalMethods=[];
+const TERMS_VERSION='yasjoy-terms-2026-11-v2';
 function checkTerms(){const gate=document.getElementById('termsGate');if(localStorage.getItem('yasjoy_terms_accepted')===TERMS_VERSION){gate.hidden=true;return}gate.hidden=false;document.body.style.overflow='hidden'}
 document.getElementById('termsAccept').addEventListener('click',()=>{localStorage.setItem('yasjoy_terms_accepted',TERMS_VERSION);document.getElementById('termsGate').hidden=true;document.body.style.overflow=''});
 document.getElementById('termsDecline').addEventListener('click',()=>{alert('لا يمكن استخدام YASJOY دون الموافقة على الشروط.');});
 checkTerms();
 function showPage(id){if(document.getElementById("termsGate")?.hidden===false)return;if(document.getElementById("bannedScreen")?.hidden===false)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id);if(page)page.classList.add('active');document.getElementById('navHome').classList.toggle('active',id==='home');document.getElementById('navProfile').classList.toggle('active',id==='profile');window.scrollTo(0,0);refreshBalance()}
 function refreshBalance(){document.getElementById('balance').textContent=balance.toLocaleString();document.getElementById('withdrawBalance').textContent=balance.toLocaleString()}
-function selectAmount(button,coins,usd){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins;selectedUSD=usd}
-function openOffer(url,name,enabled){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!enabled){alert(name+' is currently disabled by YASJOY administration.');return}if(!url||!/^https:\/\/\S+$/i.test(url)){alert('This offer wall has no valid HTTPS link.');return}window.open(url,'_blank','noopener,noreferrer')}
+function selectAmount(button,coins){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins}
+let pendingOffer=null;
+function openOffer(url,name,enabled){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!enabled){alert(name+' is currently disabled by YASJOY administration.');return}if(!url||!/^https:\/\/\S+$/i.test(url)){alert('This offer wall has no valid HTTPS link.');return}pendingOffer={url,name};document.getElementById('offerTermsCheck').checked=false;document.getElementById('offerTermsContinue').disabled=true;document.getElementById('offerTermsGate').hidden=false;document.body.style.overflow='hidden'}
+document.getElementById('offerTermsCheck').addEventListener('change',e=>document.getElementById('offerTermsContinue').disabled=!e.target.checked);
+document.getElementById('offerTermsCancel').addEventListener('click',()=>{pendingOffer=null;document.getElementById('offerTermsGate').hidden=true;document.body.style.overflow=''});
+document.getElementById('offerTermsContinue').addEventListener('click',()=>{if(!pendingOffer||!document.getElementById('offerTermsCheck').checked)return;const target=pendingOffer;pendingOffer=null;document.getElementById('offerTermsGate').hidden=true;document.body.style.overflow='';window.open(target.url,'_blank','noopener,noreferrer')});
+document.getElementById('enableNotifications').addEventListener('click',async()=>{const status=document.getElementById('notificationStatus');if(!('Notification' in window)){status.textContent='This browser does not support notifications.';return}if(!window.isSecureContext){status.textContent='Notifications require a secure HTTPS connection.';return}try{const permission=await Notification.requestPermission();status.textContent=permission==='granted'?'Notifications permission enabled.':'Notifications permission: '+permission+'.'}catch(e){status.textContent='Could not request notification permission.'}});
+
 let withdrawalSubmitting=false;
 async function submitRequest(){
  if(document.getElementById("bannedScreen")?.hidden===false)return;
@@ -125,11 +157,11 @@ async function submitRequest(){
   const result=await window.createYasjoyWithdrawal({
    coins:selectedCoins,
    walletAddress,
-   method:selectedMethod.name,methodId:selectedMethod.id,amountUSD:selectedUSD,displayLabel:document.querySelector('.amount.selected strong')?.textContent||''
+   method:selectedMethod.name,methodId:selectedMethod.id,displayLabel:document.querySelector('.amount.selected strong')?.textContent||''
   });
   alert('Your withdrawal request was submitted for admin review. Coins deducted: '+result.deductedCoins+'. Remaining balance: '+result.remainingBalance+'.');
   document.getElementById('account').value='';
-  selectedCoins=0;selectedUSD=0;
+  selectedCoins=0;
   document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));
  }catch(error){
   console.error('Withdrawal request error:',error);
@@ -178,7 +210,7 @@ window.createYasjoyWithdrawal=async function(request){
    throw new Error('This withdrawal method is unavailable. Refresh and try again.');
 
   const tier=(Array.isArray(methodData.tiers)?methodData.tiers:[]).find(t=>
-   Number(t.coins)===coins&&Number(t.amountUSD)===Number(request.amountUSD)&&String(t.displayLabel||('$'+Number(t.amountUSD).toFixed(2)))===String(request.displayLabel||('$'+Number(request.amountUSD).toFixed(2)))
+   Number(t.coins)===coins
   );
   if(!tier)throw new Error('This withdrawal amount is not available for the selected method.');
   if(userData.banned===true)throw new Error('This account cannot submit withdrawal requests.');
@@ -193,8 +225,7 @@ window.createYasjoyWithdrawal=async function(request){
    publicId:'YJ-'+user.uid.slice(0,8).toUpperCase(),
    method:methodData.name,
    methodId:methodId,
-   amountUSD:Number(tier.amountUSD),
-   displayLabel:String(tier.displayLabel||('$'+Number(tier.amountUSD).toFixed(2))),
+   displayLabel:String(tier.displayLabel||''),
    coins:coins,
    walletAddress:walletAddress,
    status:'pending',
@@ -207,28 +238,43 @@ window.createYasjoyWithdrawal=async function(request){
    withdrawalId:withdrawalId,
    createdAt:serverTimestamp()
   });
-  return {success:true,withdrawalId,deductedCoins:coins,remainingBalance,amountUSD:Number(tier.amountUSD),displayLabel:String(tier.displayLabel||('$'+Number(tier.amountUSD).toFixed(2))),status:'pending'};
+  return {success:true,withdrawalId,deductedCoins:coins,remainingBalance,status:'pending'};
  });
 };
 function setBannedView(banned){const screen=document.getElementById("bannedScreen");if(!screen)return;screen.hidden=!banned;const header=document.querySelector("header"),main=document.querySelector("main"),nav=document.querySelector("nav.bottom");if(header)header.style.display=banned?"none":"";if(main)main.style.display=banned?"none":"";if(nav)nav.style.display=banned?"none":""}
 function renderWithdrawalMethods(snapshot){
  withdrawalMethods=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(m=>m.enabled===true);
  const host=document.getElementById('withdrawMethodsList');host.replaceChildren();
- selectedMethod=null;selectedCoins=0;selectedUSD=0;document.getElementById('withdrawalTiers').replaceChildren();
+ selectedMethod=null;selectedCoins=0;document.getElementById('withdrawFlow').hidden=true;document.getElementById('withdrawalTiers').replaceChildren();
  document.getElementById('withdrawalTiers').append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
  if(!withdrawalMethods.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal methods are currently available.'}));return}
  withdrawalMethods.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
- withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const icon=String(method.icon||'').trim();const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:icon||'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b)});
+ withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b)});
 }
+function showMethodImage(method){const url=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo)?method.logo:'';if(!url)return;const view=document.getElementById('methodImageView'),img=document.getElementById('methodImageLarge');img.src=url;img.alt=(method.name||'Withdrawal method')+' logo';view.hidden=false}
+document.getElementById('methodImageView').addEventListener('click',()=>{document.getElementById('methodImageView').hidden=true});
+function hostScrollToSelected(button){button.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest',inline:'center'});}
 function chooseWithdrawalMethod(method,button){
- selectedMethod=method;selectedCoins=0;selectedUSD=0;
- document.querySelectorAll('.withdraw-method').forEach(x=>x.classList.remove('selected'));
- button.classList.add('selected');
- const tiersHost=document.getElementById('withdrawalTiers');
- tiersHost.replaceChildren();
- const tiers=Array.isArray(method.tiers)?method.tiers.filter(t=>Number.isSafeInteger(Number(t.coins))&&Number(t.coins)>0&&Number.isFinite(Number(t.amountUSD))&&Number(t.amountUSD)>0).sort((a,b)=>Number(a.coins)-Number(b.coins)):[];
- if(!tiers.length){tiersHost.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal amounts have been configured for this method.'}));return}
- tiers.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='amount';const amount=document.createElement('strong');amount.textContent=String(t.displayLabel||('$'+Number(t.amountUSD).toFixed(2)));const points=document.createElement('small');points.textContent=Number(t.coins).toLocaleString('en-US')+' coins';b.append(amount,document.createElement('br'),points);b.onclick=()=>selectAmount(b,Number(t.coins),Number(t.amountUSD));tiersHost.append(b)});
+ const host=document.getElementById('withdrawMethodsList');
+ const flow=document.getElementById('withdrawFlow');
+ // Tapping the already-selected method again collapses it and restores the horizontal list.
+ if(selectedMethod && selectedMethod.id===method.id && button.classList.contains('selected')){
+  selectedMethod=null;selectedCoins=0;
+  document.querySelectorAll('.withdraw-method').forEach(x=>{x.classList.remove('selected');x.hidden=false});
+  flow.hidden=true;
+  document.getElementById('account').value='';
+  document.getElementById('withdrawalTiers').replaceChildren(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
+  host.scrollTo({left:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  return;
+ }
+ selectedMethod=method;selectedCoins=0;document.querySelectorAll('.withdraw-method').forEach(x=>{x.classList.remove('selected');x.hidden=x!==button});button.classList.add('selected');hostScrollToSelected(button);
+ flow.hidden=false;
+ document.getElementById('accountLabel').textContent=method.accountLabel||'Payout account details';
+ document.getElementById('account').placeholder=method.accountPlaceholder||'Enter your payout account details';
+ document.getElementById('account').value='';
+ const host=document.getElementById('withdrawalTiers');host.replaceChildren();const tiers=Array.isArray(method.tiers)?method.tiers.filter(t=>Number.isSafeInteger(Number(t.coins))&&Number(t.coins)>0).sort((a,b)=>Number(a.coins)-Number(b.coins)):[];
+ if(!tiers.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal amounts have been configured for this method.'}));return}
+ tiers.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='amount';b.innerHTML='';const amount=document.createElement('strong');amount.textContent=String(t.displayLabel||Number(t.coins).toLocaleString('en-US')+' coins');const points=document.createElement('small');points.textContent=Number(t.coins).toLocaleString('en-US')+' coins';b.append(amount,document.createElement('br'),points);b.onclick=()=>selectAmount(b,Number(t.coins));host.append(b)});
 }
 async function loadSocialLinks(){const ids={telegram:"telegramLink",youtube:"youtubeLink",instagram:"instagramLink"},status=document.getElementById("socialStatus");const tik=document.getElementById("tiktokLink");tik.href="https://www.tiktok.com/@yasjoy71";tik.hidden=false;try{const snap=await getDoc(doc(db,"socialLinks","main"));if(!snap.exists()){status.textContent="Social links are not configured yet.";Object.values(ids).forEach(id=>document.getElementById(id).hidden=true);return}const links=snap.data();let count=0;for(const [key,id] of Object.entries(ids)){const el=document.getElementById(id),url=links[key];if(typeof url==="string"&&/^https:\/\/\S+$/i.test(url)){el.href=url;el.hidden=false;count++}else el.hidden=true}status.textContent=count?"Social links loaded from Firebase.":"No valid social links configured."}catch(error){console.error("Social links error:",error);status.textContent="Could not load social links. Check Firebase rules and socialLinks/main."}}
 /* Live offer-wall list: only visible records are rendered. */
@@ -249,7 +295,7 @@ function renderOfferWalls(snapshot){
   title.textContent=name;description.textContent=typeof wall.description==="string"&&wall.description.trim()?wall.description.trim():"Complete offers and get rewards";
   info.append(title,description);top.append(icon,info);
   const button=document.createElement("button");button.className="earn";button.textContent=enabled?"🪙 Earn coins ›":"Currently unavailable";button.disabled=!enabled;
-  button.addEventListener("click",()=>window.open(url,"_blank","noopener,noreferrer"));
+  button.addEventListener("click",()=>openOffer(url,name,enabled));
   card.append(top,button);host.appendChild(card);
  }
 }
