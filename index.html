@@ -33,7 +33,7 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .field-label{display:block;margin:16px 0 8px}input,select{width:100%;padding:15px;border:1px solid #cfe7f7;border-radius:14px;font-size:16px;background:white}
 .primary{width:100%;border:0;border-radius:14px;padding:15px;background:linear-gradient(110deg,var(--sky),var(--crimson));color:white;font-size:17px;font-weight:bold;margin-top:15px}
 .amounts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.amount{border:2px solid #d9efff;background:#f8fcff;color:#12366f;padding:15px;border-radius:18px;font-weight:bold}
-.amount.selected{border-color:var(--blue);background:#e3f4ff}.withdraw-methods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.withdraw-method{display:flex;align-items:center;gap:10px;text-align:right;border:2px solid #d9efff;background:#fff;color:var(--dark);padding:13px;border-radius:16px;font-weight:bold;min-width:0}.withdraw-method.selected{border-color:var(--blue);background:#eaf6ff}.withdraw-method img{width:42px;height:42px;object-fit:contain;border-radius:10px}.withdraw-method .method-fallback{width:42px;height:42px;display:grid;place-items:center;background:#e3f4ff;border-radius:10px;font-size:20px}.withdraw-method span:last-child{overflow-wrap:anywhere}.withdraw-status{grid-column:1/-1}
+.amount.selected{border-color:var(--blue);background:#e3f4ff}.withdraw-methods{display:flex;flex-direction:row;flex-wrap:nowrap;gap:12px;overflow-x:auto;overflow-y:hidden;padding:6px 2px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}.withdraw-methods::-webkit-scrollbar{height:5px}.withdraw-methods::-webkit-scrollbar-thumb{background:#c7e6fa;border-radius:8px}.withdraw-method{display:flex;align-items:center;gap:10px;text-align:right;border:2px solid #d9efff;background:#fff;color:var(--dark);padding:13px;border-radius:16px;font-weight:bold;min-width:0}.withdraw-method.selected{border-color:var(--blue);background:#eaf6ff}.withdraw-method img{width:42px;height:42px;object-fit:contain;border-radius:10px}.withdraw-method .method-fallback{width:42px;height:42px;display:grid;place-items:center;background:#e3f4ff;border-radius:10px;font-size:20px}.withdraw-method span:last-child{overflow-wrap:anywhere}.withdraw-status{grid-column:1/-1}
 .social{display:flex;align-items:center;gap:13px;padding:14px 12px;margin:10px 0;border:1px solid #d9efff;border-radius:15px;background:#f8fcff;color:var(--dark);text-decoration:none;font-weight:bold}
 .social-icon{font-size:24px;width:35px;text-align:center}
 .id-box{background:#eff7ff;border-radius:14px;padding:15px;display:flex;justify-content:space-between;align-items:center;gap:8px;overflow-wrap:anywhere}
@@ -58,6 +58,17 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .withdraw-method .method-fallback{width:96px;height:96px;font-size:36px;flex-shrink:0;border-radius:20px;background:linear-gradient(145deg,#e4f5ff,#cceaff);color:#0878d7;box-shadow:0 4px 13px #12387812}
 .withdraw-method span:last-child{font-size:16px;text-align:center;line-height:1.35;max-width:100%}
 @media(max-width:390px){.withdraw-method{min-height:120px;padding:14px 8px}.withdraw-method img,.withdraw-method .method-fallback{width:82px;height:82px}.withdraw-method .method-fallback{font-size:31px}}
+
+/* Horizontal withdrawal picker; selected method expands into a wide detail card */
+.withdraw-method{flex:0 0 148px;width:148px;min-height:154px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:14px 10px;border:2px solid #d9efff;border-radius:22px;}
+.withdraw-method img,.withdraw-method .method-fallback{width:88px;height:88px;object-fit:contain;border-radius:18px;flex-shrink:0;}
+.withdraw-method span:last-child{font-size:16px;text-align:center;}
+.withdraw-method.selected{flex:0 0 100%;width:100%;min-height:170px;flex-direction:row;justify-content:flex-start;gap:24px;padding:20px 24px;scroll-snap-align:center;}
+.withdraw-method.selected img,.withdraw-method.selected .method-fallback{width:132px;height:132px;border-radius:24px;}
+.withdraw-method.selected span:last-child{font-size:24px;text-align:start;}
+.withdraw-method[hidden]{display:none!important}
+@media(max-width:390px){.withdraw-method{flex-basis:140px;width:140px;min-height:145px}.withdraw-method img,.withdraw-method .method-fallback{width:80px;height:80px}.withdraw-method.selected{flex-basis:100%;width:100%;min-height:150px;gap:18px;padding:16px}.withdraw-method.selected img,.withdraw-method.selected .method-fallback{width:112px;height:112px}.withdraw-method.selected span:last-child{font-size:22px}}
+
 </style>
 </head>
 <body>
@@ -238,13 +249,26 @@ function renderWithdrawalMethods(snapshot){
  document.getElementById('withdrawalTiers').append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
  if(!withdrawalMethods.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal methods are currently available.'}));return}
  withdrawalMethods.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
- withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.addEventListener('click',e=>{e.stopPropagation();showMethodImage(method)});img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);b.addEventListener('dblclick',()=>showMethodImage(method));host.append(b)});
+ withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b)});
 }
 function showMethodImage(method){const url=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo)?method.logo:'';if(!url)return;const view=document.getElementById('methodImageView'),img=document.getElementById('methodImageLarge');img.src=url;img.alt=(method.name||'Withdrawal method')+' logo';view.hidden=false}
 document.getElementById('methodImageView').addEventListener('click',()=>{document.getElementById('methodImageView').hidden=true});
+function hostScrollToSelected(button){button.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest',inline:'center'});}
 function chooseWithdrawalMethod(method,button){
- selectedMethod=method;selectedCoins=0;document.querySelectorAll('.withdraw-method').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');
- const flow=document.getElementById('withdrawFlow');flow.hidden=false;
+ const host=document.getElementById('withdrawMethodsList');
+ const flow=document.getElementById('withdrawFlow');
+ // Tapping the already-selected method again collapses it and restores the horizontal list.
+ if(selectedMethod && selectedMethod.id===method.id && button.classList.contains('selected')){
+  selectedMethod=null;selectedCoins=0;
+  document.querySelectorAll('.withdraw-method').forEach(x=>{x.classList.remove('selected');x.hidden=false});
+  flow.hidden=true;
+  document.getElementById('account').value='';
+  document.getElementById('withdrawalTiers').replaceChildren(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
+  host.scrollTo({left:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  return;
+ }
+ selectedMethod=method;selectedCoins=0;document.querySelectorAll('.withdraw-method').forEach(x=>{x.classList.remove('selected');x.hidden=x!==button});button.classList.add('selected');hostScrollToSelected(button);
+ flow.hidden=false;
  document.getElementById('accountLabel').textContent=method.accountLabel||'Payout account details';
  document.getElementById('account').placeholder=method.accountPlaceholder||'Enter your payout account details';
  document.getElementById('account').value='';
