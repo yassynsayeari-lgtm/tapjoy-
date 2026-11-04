@@ -5,314 +5,1287 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#dff4ff">
 <title>YASJOY - Earn Rewards</title>
+
 <style>
 *{box-sizing:border-box}
-:root{--blue:#16bdf2;--dark:#17365f;--muted:#7892aa;--crimson:#dc143c;--sky:#16bdf2}
-body{margin:0;background:linear-gradient(145deg,#dff8ff,#fff5f7,#e6f7ff);font-family:Arial,sans-serif;color:var(--dark);padding-bottom:100px}
-header{max-width:720px;margin:auto;padding:22px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.brand{display:flex;align-items:center;gap:8px;font-size:30px;font-weight:900;color:#0878d7}
-.star{font-size:39px;filter:drop-shadow(1px 3px 2px #e9b900)}
-.balance{background:white;border-radius:35px;padding:12px 15px;display:flex;align-items:center;gap:10px;box-shadow:0 5px 18px #74bce833;font-size:20px;font-weight:bold}
-.coin{font-size:25px}button{cursor:pointer;font:inherit}
-main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{display:block}
-.banner{min-height:205px;border-radius:28px;padding:25px;background:linear-gradient(130deg,#16bdf2,#078fce 58%,#dc143c);color:white;display:flex;align-items:center;gap:16px;box-shadow:0 12px 25px #078af526}
-.wallet{font-size:90px}.banner-text{font-size:clamp(23px,5vw,34px);font-weight:800;line-height:1.25}
-.go{border:0;background:#ffffff38;color:white;border-radius:50%;width:55px;height:55px;font-size:30px;margin-top:15px}
-.section-title{font-size:30px;font-weight:900;margin:24px 0 4px}.subtitle{color:var(--muted);font-size:17px;margin:0 0 16px}
-.offers{display:flex;gap:13px;overflow-x:auto;overflow-y:hidden;padding:4px 2px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}.offers>.offer,.offers>.empty-offers{flex:0 0 min(78vw,270px);scroll-snap-align:start}
-.offer{background:white;border:1px solid #d5edff;border-radius:22px;padding:15px;box-shadow:0 5px 14px #74bce833;min-width:0}
-.offer-top{display:flex;align-items:center;gap:10px;min-height:86px}
-.provider-icon{width:58px;height:58px;flex-shrink:0;border-radius:16px;display:grid;place-items:center;font-size:22px;font-weight:bold;color:white;overflow:hidden}
-.provider-icon img{width:100%;height:100%;object-fit:contain;background:white;border-radius:12px}
-.offer h3{font-size:19px;margin:0 0 7px;overflow-wrap:anywhere}.offer p{font-size:14px;color:var(--muted);line-height:1.35;margin:0}
-.earn{margin-top:12px;width:100%;border:0;border-radius:30px;padding:13px 5px;background:var(--blue);color:white;font-weight:bold}
-.earn:disabled{background:#aabbd0;color:#fff;cursor:not-allowed}
-.empty-offers{grid-column:1/-1;background:#fff;border:1px dashed #b9d9ef;border-radius:18px;padding:20px;text-align:center;color:var(--muted);line-height:1.6}
-.panel{background:white;border-radius:28px;padding:22px;margin:18px 0;box-shadow:0 5px 20px #80c9f433}
-.panel h2{margin:0 0 20px;font-size:30px}.small{font-size:14px;color:var(--muted);line-height:1.6}
-.field-label{display:block;margin:16px 0 8px}input,select{width:100%;padding:15px;border:1px solid #cfe7f7;border-radius:14px;font-size:16px;background:white}
-.primary{width:100%;border:0;border-radius:14px;padding:15px;background:linear-gradient(110deg,var(--sky),var(--crimson));color:white;font-size:17px;font-weight:bold;margin-top:15px}
-.amounts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.amount{border:2px solid #d9efff;background:#f8fcff;color:#12366f;padding:15px;border-radius:18px;font-weight:bold}
-.amount.selected{border-color:var(--blue);background:#e3f4ff}.withdraw-methods{display:flex;flex-direction:row;flex-wrap:nowrap;gap:12px;overflow-x:auto;overflow-y:hidden;padding:6px 2px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}.withdraw-methods::-webkit-scrollbar{height:5px}.withdraw-methods::-webkit-scrollbar-thumb{background:#c7e6fa;border-radius:8px}.withdraw-method{display:flex;align-items:center;gap:10px;text-align:right;border:2px solid #d9efff;background:#fff;color:var(--dark);padding:13px;border-radius:16px;font-weight:bold;min-width:0}.withdraw-method.selected{border-color:var(--blue);background:#eaf6ff}.withdraw-method img{width:42px;height:42px;object-fit:contain;border-radius:10px}.withdraw-method .method-fallback{width:42px;height:42px;display:grid;place-items:center;background:#e3f4ff;border-radius:10px;font-size:20px}.withdraw-method span:last-child{overflow-wrap:anywhere}.withdraw-status{grid-column:1/-1}
-.social{display:flex;align-items:center;gap:13px;padding:14px 12px;margin:10px 0;border:1px solid #d9efff;border-radius:15px;background:#f8fcff;color:var(--dark);text-decoration:none;font-weight:bold}
-.social-icon{font-size:24px;width:35px;text-align:center}
-.id-box{background:#eff7ff;border-radius:14px;padding:15px;display:flex;justify-content:space-between;align-items:center;gap:8px;overflow-wrap:anywhere}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(12px);border-radius:25px 25px 0 0;display:flex;justify-content:space-around;padding:12px 10px 18px;box-shadow:0 -5px 25px #74bce822}
-.nav{border:0;background:transparent;color:#829cba;font-size:16px;font-weight:bold;min-width:100px}.nav .ico{display:block;font-size:27px;margin-bottom:4px}.nav.active{color:var(--blue)}
-.notice{display:none!important}
-.banned-screen{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(145deg,#dff8ff,#fff5f7,#e6f7ff);text-align:center}
-.banned-screen[hidden]{display:none!important}.banned-card{width:100%;max-width:420px;padding:30px 22px;border-radius:28px;background:#fff;box-shadow:0 8px 30px #12387820}
-.banned-card h2{color:#d32f2f;margin:12px 0;font-size:27px}.banned-card p{color:#52657c;line-height:1.8;margin:0}
-@media(max-width:390px){header{padding:16px 10px}.brand{font-size:25px}.star{font-size:31px}.balance{padding:10px;font-size:17px}.wallet{font-size:67px}.banner{padding:17px;gap:9px}.offer{padding:10px}.provider-icon{width:45px;height:45px}.offer h3{font-size:16px}.offer p{font-size:12px}}
-
-/* Terms gate and premium payout method cards */
-.terms-overlay{position:fixed;inset:0;z-index:100000;background:#071b35d9;display:flex;align-items:center;justify-content:center;padding:16px}
-.terms-overlay[hidden]{display:none!important}.terms-card{width:100%;max-width:520px;max-height:90vh;overflow:auto;background:#fff;border-radius:24px;padding:24px;box-shadow:0 18px 60px #0005;color:#183153}
-.terms-card h2{margin:0 0 12px;color:#0878d7}.terms-card p,.terms-card li{line-height:1.75;font-size:14px}.terms-actions{display:flex;gap:10px;align-items:center;margin-top:18px}.terms-actions button{flex:1;border:0;border-radius:13px;padding:14px;font-weight:bold}.terms-accept{background:#0878d7;color:white}.terms-decline{background:#edf2f7;color:#42536a}
-.withdraw-method{min-height:132px;flex-direction:column;justify-content:center;gap:12px;padding:18px 12px;border-radius:22px;background:linear-gradient(145deg,#fff,#f2f9ff);box-shadow:0 7px 18px #277ab51a;transition:transform .18s,box-shadow .18s}
-.withdraw-method:active{transform:scale(.985)}
-.method-image-view{position:fixed;inset:0;z-index:100001;background:#06182dcc;display:flex;align-items:center;justify-content:center;padding:24px}.method-image-view[hidden]{display:none!important}.method-image-view img{max-width:min(82vw,360px);max-height:70vh;object-fit:contain;background:#fff;border-radius:28px;padding:18px;box-shadow:0 18px 55px #0007;animation:popIn .28s ease-out}@keyframes popIn{from{transform:scale(.72);opacity:.3}to{transform:scale(1);opacity:1}}.notify-btn{width:100%;border:1px solid #cfe7f7;border-radius:14px;background:#eef8ff;color:#0758a8;padding:14px;font-weight:bold;margin-top:12px}
-@media (prefers-reduced-motion:no-preference){.withdraw-method img{transition:transform .32s cubic-bezier(.2,.8,.2,1),filter .32s}.withdraw-method.selected img{transform:scale(1.12);filter:drop-shadow(0 5px 8px #16bdf255)}.withdraw-method{transition:transform .22s ease,background .22s ease,box-shadow .22s ease}}
-@media (prefers-reduced-motion:reduce){.withdraw-method,.withdraw-method img{transition:none!important}}.withdraw-method.selected{background:linear-gradient(145deg,#e5faff,#fff0f3);box-shadow:0 0 0 2px #16bdf255,0 8px 20px #dc143c20}
-.withdraw-method img{width:96px;height:96px;padding:8px;object-fit:contain;border-radius:20px;background:#fff;box-shadow:0 4px 13px #12387812}
-.withdraw-method .method-fallback{width:96px;height:96px;font-size:36px;flex-shrink:0;border-radius:20px;background:linear-gradient(145deg,#e4f5ff,#cceaff);color:#0878d7;box-shadow:0 4px 13px #12387812}
-.withdraw-method span:last-child{font-size:16px;text-align:center;line-height:1.35;max-width:100%}
-@media(max-width:390px){.withdraw-method{min-height:120px;padding:14px 8px}.withdraw-method img,.withdraw-method .method-fallback{width:82px;height:82px}.withdraw-method .method-fallback{font-size:31px}}
-
-/* Horizontal withdrawal picker; selected method expands into a wide detail card */
-.withdraw-method{flex:0 0 148px;width:148px;min-height:154px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:14px 10px;border:2px solid #d9efff;border-radius:22px;}
-.withdraw-method img,.withdraw-method .method-fallback{width:88px;height:88px;object-fit:contain;border-radius:18px;flex-shrink:0;}
-.withdraw-method span:last-child{font-size:16px;text-align:center;}
-.withdraw-method.selected{flex:0 0 100%;width:100%;min-height:170px;flex-direction:row;justify-content:flex-start;gap:24px;padding:20px 24px;scroll-snap-align:center;}
-.withdraw-method.selected img,.withdraw-method.selected .method-fallback{width:132px;height:132px;border-radius:24px;}
-.withdraw-method.selected span:last-child{font-size:24px;text-align:start;}
+:root{
+ --blue:#16bdf2;
+ --dark:#17365f;
+ --muted:#7892aa;
+ --red:#dc143c;
+ --white:#fff;
+}
+body{
+ margin:0;
+ background:linear-gradient(145deg,#dff8ff,#fff5f7,#e6f7ff);
+ font-family:Arial,sans-serif;
+ color:var(--dark);
+ padding-bottom:95px;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+header{
+ max-width:720px;
+ margin:auto;
+ padding:20px 16px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+}
+.brand{
+ display:flex;
+ align-items:center;
+ gap:7px;
+ font-size:29px;
+ font-weight:900;
+ color:#0878d7;
+}
+.star{font-size:35px}
+.balance{
+ background:white;
+ border-radius:30px;
+ padding:11px 14px;
+ display:flex;
+ align-items:center;
+ gap:8px;
+ box-shadow:0 5px 18px #74bce833;
+ font-size:19px;
+ font-weight:bold;
+}
+main{max-width:720px;margin:auto;padding:0 16px}
+.page{display:none}
+.page.active{display:block}
+.banner{
+ min-height:195px;
+ border-radius:26px;
+ padding:22px;
+ background:linear-gradient(130deg,#16bdf2,#078fce 58%,#dc143c);
+ color:white;
+ display:flex;
+ align-items:center;
+ gap:15px;
+ box-shadow:0 12px 25px #078af526;
+}
+.wallet{font-size:76px}
+.banner-text{
+ font-size:clamp(22px,5vw,32px);
+ font-weight:800;
+ line-height:1.3;
+}
+.go{
+ border:0;
+ background:#ffffff38;
+ color:white;
+ border-radius:50%;
+ width:48px;
+ height:48px;
+ font-size:27px;
+ margin-top:13px;
+}
+.section-title{
+ font-size:27px;
+ font-weight:900;
+ margin:24px 0 5px;
+}
+.subtitle{
+ color:var(--muted);
+ font-size:15px;
+ margin:0 0 15px;
+}
+.offers{
+ display:flex;
+ gap:13px;
+ overflow-x:auto;
+ padding:4px 2px 14px;
+}
+.offer{
+ flex:0 0 min(78vw,270px);
+ background:white;
+ border:1px solid #d5edff;
+ border-radius:22px;
+ padding:15px;
+ box-shadow:0 5px 14px #74bce833;
+}
+.offer-top{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ min-height:75px;
+}
+.provider-icon{
+ width:55px;
+ height:55px;
+ flex-shrink:0;
+ border-radius:15px;
+ display:grid;
+ place-items:center;
+ font-size:21px;
+ font-weight:bold;
+ background:#dff4ff;
+ color:#0758a8;
+ overflow:hidden;
+}
+.provider-icon img{
+ width:100%;
+ height:100%;
+ object-fit:contain;
+}
+.offer h3{font-size:19px;margin:0 0 6px}
+.offer p{
+ font-size:14px;
+ color:var(--muted);
+ line-height:1.4;
+}
+.earn{
+ margin-top:10px;
+ width:100%;
+ border:0;
+ border-radius:30px;
+ padding:13px;
+ background:var(--blue);
+ color:white;
+ font-weight:bold;
+}
+.earn:disabled{background:#aabbd0}
+.empty{
+ background:white;
+ border:1px dashed #b9d9ef;
+ border-radius:18px;
+ padding:20px;
+ text-align:center;
+ color:var(--muted);
+ line-height:1.6;
+}
+.panel{
+ background:white;
+ border-radius:25px;
+ padding:20px;
+ margin:17px 0;
+ box-shadow:0 5px 20px #80c9f433;
+}
+.panel h2{margin:0 0 17px;font-size:26px}
+.small{
+ font-size:14px;
+ color:var(--muted);
+ line-height:1.6;
+}
+.field-label{
+ display:block;
+ margin:16px 0 8px;
+ font-weight:bold;
+}
+input{
+ width:100%;
+ padding:14px;
+ border:1px solid #cfe7f7;
+ border-radius:13px;
+ font-size:16px;
+ outline:none;
+}
+input:focus{border-color:var(--blue)}
+.primary{
+ width:100%;
+ border:0;
+ border-radius:14px;
+ padding:15px;
+ background:linear-gradient(110deg,var(--blue),var(--red));
+ color:white;
+ font-size:17px;
+ font-weight:bold;
+ margin-top:15px;
+}
+.primary:disabled{opacity:.6;cursor:not-allowed}
+.amounts{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:10px;
+}
+.amount{
+ border:2px solid #d9efff;
+ background:#f8fcff;
+ color:#12366f;
+ padding:15px 8px;
+ border-radius:17px;
+ font-weight:bold;
+}
+.amount.selected{
+ border-color:var(--blue);
+ background:#e3f4ff;
+}
+.withdraw-methods{
+ display:flex;
+ gap:12px;
+ overflow-x:auto;
+ padding:6px 2px 14px;
+}
+.withdraw-method{
+ flex:0 0 135px;
+ min-height:135px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ gap:9px;
+ padding:12px;
+ border:2px solid #d9efff;
+ border-radius:20px;
+ background:white;
+ color:var(--dark);
+ font-weight:bold;
+}
+.withdraw-method img,.method-fallback{
+ width:70px;
+ height:70px;
+ object-fit:contain;
+ border-radius:15px;
+}
+.method-fallback{
+ display:grid;
+ place-items:center;
+ background:#e3f4ff;
+ font-size:30px;
+}
+.withdraw-method.selected{
+ border-color:var(--blue);
+ background:#eaf6ff;
+}
 .withdraw-method[hidden]{display:none!important}
-@media(max-width:390px){.withdraw-method{flex-basis:140px;width:140px;min-height:145px}.withdraw-method img,.withdraw-method .method-fallback{width:80px;height:80px}.withdraw-method.selected{flex-basis:100%;width:100%;min-height:150px;gap:18px;padding:16px}.withdraw-method.selected img,.withdraw-method.selected .method-fallback{width:112px;height:112px}.withdraw-method.selected span:last-child{font-size:22px}}
-
+.social{
+ display:flex;
+ align-items:center;
+ gap:13px;
+ padding:14px 12px;
+ margin:10px 0;
+ border:1px solid #d9efff;
+ border-radius:15px;
+ background:#f8fcff;
+ color:var(--dark);
+ text-decoration:none;
+ font-weight:bold;
+}
+.id-box{
+ background:#eff7ff;
+ border-radius:14px;
+ padding:14px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+ overflow-wrap:anywhere;
+}
+.copy-btn{
+ border:0;
+ border-radius:10px;
+ padding:9px 12px;
+ background:#d8efff;
+ color:#0758a8;
+}
+.bottom{
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ background:#ffffffed;
+ display:flex;
+ justify-content:space-around;
+ padding:11px 10px 16px;
+ box-shadow:0 -5px 25px #74bce822;
+ z-index:20;
+}
+.nav{
+ border:0;
+ background:transparent;
+ color:#829cba;
+ font-size:15px;
+ font-weight:bold;
+ min-width:90px;
+}
+.nav .ico{display:block;font-size:25px;margin-bottom:3px}
+.nav.active{color:var(--blue)}
+.notice{
+ padding:13px;
+ border-radius:13px;
+ margin-top:12px;
+ background:#eef8ff;
+ color:#285477;
+ font-size:14px;
+ line-height:1.5;
+}
+.notice.error{background:#fff0f0;color:#a52121}
+.notice.success{background:#eafff0;color:#176a36}
+.terms-overlay{
+ position:fixed;
+ inset:0;
+ z-index:100000;
+ background:#071b35d9;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:16px;
+}
+.terms-overlay[hidden]{display:none!important}
+.terms-card{
+ width:100%;
+ max-width:520px;
+ max-height:90vh;
+ overflow:auto;
+ background:white;
+ border-radius:24px;
+ padding:23px;
+ color:#183153;
+}
+.terms-actions{display:flex;gap:10px;margin-top:18px}
+.terms-actions button{
+ flex:1;
+ border:0;
+ border-radius:13px;
+ padding:14px;
+ font-weight:bold;
+}
+.terms-accept{background:#0878d7;color:white}
+.terms-decline{background:#edf2f7;color:#42536a}
+.banned-screen{
+ position:fixed;
+ inset:0;
+ z-index:99999;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:#eaf6ff;
+ text-align:center;
+ padding:20px;
+}
+.banned-screen[hidden]{display:none!important}
+@media(max-width:390px){
+ header{padding:15px 10px}
+ .brand{font-size:24px}
+ .balance{padding:9px;font-size:16px}
+ .wallet{font-size:60px}
+ .banner{padding:16px}
+}
 </style>
 </head>
-<body>
-<section id="termsGate" class="terms-overlay" hidden aria-modal="true" role="dialog" aria-labelledby="termsTitle"><div class="terms-card"><div style="font-size:42px">📜</div><h2 id="termsTitle">YASJOY – Terms & Conditions</h2><p>Please read and accept these terms before using the app.</p><ol>
-<li>You must use accurate information. Fraud, abuse, and deceptive activity are prohibited.</li>
-<li>Coins are awarded only after the offer provider confirms and verifies completion.</li>
-<li>Offers and rewards may vary by country, device, and provider requirements. Availability is not guaranteed.</li>
-<li>Withdrawal requests are reviewed by YASJOY administration.</li>
-<li>Your points are deducted when the request is successfully submitted.</li>
-<li>Submitting a request does not mean payment has been sent. Payment is completed only after administration marks the request as paid.</li>
-<li>You must provide accurate payout details belonging to you.</li>
-<li>Accounts may be restricted for abuse or violation of these terms.</li>
-<li>These terms may be updated when necessary. You may be asked to review the updated version.</li>
-</ol><p class="small">By selecting “I Agree & Continue”, you confirm that you have read and accepted these terms.</p><div class="terms-actions"><button class="terms-decline" id="termsDecline">I Do Not Agree</button><button class="terms-accept" id="termsAccept">أوافق وأتابع</button></div></div></section>
-<div id="methodImageView" class="method-image-view" hidden role="dialog" aria-modal="true"><img id="methodImageLarge" alt="Withdrawal method logo"></div>
-<section id="offerTermsGate" class="terms-overlay" hidden aria-modal="true" role="dialog" aria-labelledby="offerTermsTitle"><div class="terms-card"><h2 id="offerTermsTitle">Offer Wall Terms</h2><p>Before continuing, please read and accept these conditions:</p><ol><li>Offer availability depends on your country, device, and provider rules.</li><li>Complete each offer honestly on your own device.</li><li>Do not use VPNs, proxies, multiple accounts, or misleading information to bypass provider restrictions.</li><li>Rewards are credited only after the offer provider verifies completion.</li><li>YASJOY cannot guarantee approval or reward tracking by an external provider.</li></ol><label style="display:flex;gap:9px;align-items:flex-start;margin-top:14px;font-size:14px"><input id="offerTermsCheck" type="checkbox" style="width:auto;margin-top:3px"> I have read and agree to these terms.</label><div class="terms-actions"><button class="terms-decline" id="offerTermsCancel">Cancel</button><button class="terms-accept" id="offerTermsContinue" disabled>Agree &amp; Continue</button></div></div></section>
-<section id="bannedScreen" class="banned-screen" hidden role="alert"><div class="banned-card"><div style="font-size:55px">🚫</div><h2>حسابك محظور</h2><p>تم إيقاف الوصول إلى YASJOY لهذا الحساب. يرجى التواصل مع إدارة التطبيق.</p></div></section>
-<header>
-  <div class="brand"><span class="star">⭐</span><span>YASJOY👑</span></div>
-  <div class="balance"><span class="coin">🪙</span><span id="balance">0</span><button onclick="refreshBalance()" style="border:0;background:none;color:#078af5;font-size:24px" aria-label="Refresh">⟳</button></div>
-</header>
-<main>
-<section id="home" class="page active">
-  <div class="banner"><div class="wallet">💰</div><div style="flex:1"><div class="banner-text">Withdraw your points</div><button class="go" onclick="showPage('withdraw')" aria-label="Withdraw">➜</button></div></div>
-  <div class="section-title">🔥 Offer Walls</div><p class="subtitle">Complete offers · Earn coins</p>
-  <div class="offers" id="offersList"><div class="empty-offers">Loading offer walls…</div></div>
-</section>
-<section id="withdraw" class="page">
-  <div class="panel"><h2>Withdraw your points</h2><p class="small">Available Balance</p>
-    <div style="background:#1765ef;color:white;border-radius:22px;padding:25px;text-align:center;font-size:28px"><strong id="withdrawBalance">0</strong><div style="font-size:17px">Coins</div></div>
-    <h3>Choose withdrawal method</h3><div class="withdraw-methods" id="withdrawMethodsList"><div class="empty-offers withdraw-status">Loading withdrawal methods…</div></div>
-    <div id="withdrawFlow" hidden>
-      <h3 id="amountHeading">Select a points package</h3><div class="amounts" id="withdrawalTiers"></div>
-      <label class="field-label" for="account" id="accountLabel">Payout account details</label><input id="account" autocomplete="off" placeholder="Enter your payout account details">
-      <button class="primary" id="submitWithdrawal" onclick="submitRequest()">Submit withdrawal request</button>
-    </div>
-    <button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('home')">Back to Home</button>
-  </div>
-</section>
-<section id="profile" class="page">
-  <div class="panel"><h2>Profile</h2><p>Your YASJOY demo profile</p>
-    <label class="field-label">Your User ID</label><div class="id-box"><strong id="userId">Connecting...</strong><button onclick="copyId()" style="border:0;background:none;color:#078af5;font-size:20px" aria-label="Copy User ID">📋</button></div>
-    <p class="small" id="userIdNote">Your User ID will be linked to your Firebase account.</p>
-    <hr style="border:0;border-top:1px solid #d9efff;margin:24px 0"><h2 style="font-size:24px">🔗 My Social Links</h2><p class="small">Official YASJOY social links</p>
-    <a class="social" id="telegramLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">✈️</span>Telegram</a>
-    <a class="social" id="youtubeLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">▶️</span>YouTube</a>
-    <a class="social" id="tiktokLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">🎵</span>TikTok</a>
-    <a class="social" id="instagramLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">📸</span>Instagram</a>
-    <p id="socialStatus" class="small">Loading social links from Firebase…</p><button class="notify-btn" id="enableNotifications">🔔 Enable notifications</button><p class="small" id="notificationStatus">Notifications are optional.</p><button class="primary" onclick="showPage('home')">Back to Home</button>
-  </div>
-</section>
-</main>
-<nav class="bottom"><button class="nav active" id="navHome" onclick="showPage('home')"><span class="ico">⌂</span>Home</button><button class="nav" id="navProfile" onclick="showPage('profile')"><span class="ico">👤</span>Profile</button></nav>
-<script>
-let selectedCoins=0,balance=0,userId="",selectedMethod=null,withdrawalMethods=[];
-const TERMS_VERSION='yasjoy-terms-2026-11-v2';
-function checkTerms(){const gate=document.getElementById('termsGate');if(localStorage.getItem('yasjoy_terms_accepted')===TERMS_VERSION){gate.hidden=true;return}gate.hidden=false;document.body.style.overflow='hidden'}
-document.getElementById('termsAccept').addEventListener('click',()=>{localStorage.setItem('yasjoy_terms_accepted',TERMS_VERSION);document.getElementById('termsGate').hidden=true;document.body.style.overflow=''});
-document.getElementById('termsDecline').addEventListener('click',()=>{alert('لا يمكن استخدام YASJOY دون الموافقة على الشروط.');});
-checkTerms();
-function showPage(id){if(document.getElementById("termsGate")?.hidden===false)return;if(document.getElementById("bannedScreen")?.hidden===false)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id);if(page)page.classList.add('active');document.getElementById('navHome').classList.toggle('active',id==='home');document.getElementById('navProfile').classList.toggle('active',id==='profile');window.scrollTo(0,0);refreshBalance()}
-function refreshBalance(){document.getElementById('balance').textContent=balance.toLocaleString();document.getElementById('withdrawBalance').textContent=balance.toLocaleString()}
-function selectAmount(button,coins){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins}
-let pendingOffer=null;
-function openOffer(url,name,enabled){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!enabled){alert(name+' is currently disabled by YASJOY administration.');return}if(!url||!/^https:\/\/\S+$/i.test(url)){alert('This offer wall has no valid HTTPS link.');return}pendingOffer={url,name};document.getElementById('offerTermsCheck').checked=false;document.getElementById('offerTermsContinue').disabled=true;document.getElementById('offerTermsGate').hidden=false;document.body.style.overflow='hidden'}
-document.getElementById('offerTermsCheck').addEventListener('change',e=>document.getElementById('offerTermsContinue').disabled=!e.target.checked);
-document.getElementById('offerTermsCancel').addEventListener('click',()=>{pendingOffer=null;document.getElementById('offerTermsGate').hidden=true;document.body.style.overflow=''});
-document.getElementById('offerTermsContinue').addEventListener('click',()=>{if(!pendingOffer||!document.getElementById('offerTermsCheck').checked)return;const target=pendingOffer;pendingOffer=null;document.getElementById('offerTermsGate').hidden=true;document.body.style.overflow='';window.open(target.url,'_blank','noopener,noreferrer')});
-document.getElementById('enableNotifications').addEventListener('click',async()=>{const status=document.getElementById('notificationStatus');if(!('Notification' in window)){status.textContent='This browser does not support notifications.';return}if(!window.isSecureContext){status.textContent='Notifications require a secure HTTPS connection.';return}try{const permission=await Notification.requestPermission();status.textContent=permission==='granted'?'Notifications permission enabled.':'Notifications permission: '+permission+'.'}catch(e){status.textContent='Could not request notification permission.'}});
 
-let withdrawalSubmitting=false;
-async function submitRequest(){
- if(document.getElementById("bannedScreen")?.hidden===false)return;
- if(withdrawalSubmitting)return;
- if(!selectedMethod){alert('Please choose a withdrawal method.');return}
- if(!selectedCoins){alert('Please choose a withdrawal amount.');return}
- if(!Number.isSafeInteger(selectedCoins)||selectedCoins<=0){alert('Invalid withdrawal amount.');return}
- if(balance<selectedCoins){alert('Insufficient coins.');return}
- const walletAddress=document.getElementById('account').value.trim();
- if(!walletAddress){alert('Please enter your Binance wallet address or Pay ID.');return}
- if(walletAddress.length<6||walletAddress.length>180){alert('Please check your payout account details.');return}
- const button=document.querySelector('#withdraw .primary');
- withdrawalSubmitting=true;
- if(button){button.disabled=true;button.textContent='Submitting…'}
+<body>
+
+<header>
+ <div class="brand">
+  <span class="star">⭐</span>
+  <span>YASJOY</span>
+ </div>
+ <div class="balance">
+  <span>🪙</span>
+  <span id="headerBalance">0</span>
+ </div>
+</header>
+
+<main>
+
+<!-- HOME -->
+<section id="home" class="page active">
+
+ <div class="banner">
+  <div class="wallet">👛</div>
+  <div>
+   <div class="banner-text">Withdraw your points</div>
+   <button class="go" onclick="showPage('withdraw')">➜</button>
+  </div>
+ </div>
+
+ <h2 class="section-title">Offer Walls</h2>
+ <p class="subtitle">Complete offers and earn points.</p>
+
+ <div id="offerList" class="offers">
+  <div class="empty">Loading offers...</div>
+ </div>
+
+ <div id="homeMessage"></div>
+
+</section>
+
+<!-- WITHDRAW -->
+<section id="withdraw" class="page">
+
+ <div class="panel">
+  <h2>Withdraw your points</h2>
+
+  <p class="small">
+   Your available balance
+  </p>
+
+  <div style="font-size:30px;font-weight:bold;color:#0878d7">
+   <span id="withdrawBalance">0</span> 🪙
+  </div>
+
+  <label class="field-label">Choose payment method</label>
+
+  <div id="methodList" class="withdraw-methods">
+   <div class="empty">Loading payment methods...</div>
+  </div>
+
+  <label class="field-label">Choose withdrawal amount</label>
+
+  <div id="amountList" class="amounts">
+   <div class="empty">Select a payment method first.</div>
+  </div>
+
+  <label class="field-label" for="walletAddress">
+   Payment account
+  </label>
+
+  <input
+   id="walletAddress"
+   type="text"
+   maxlength="180"
+   placeholder="Enter your payment account"
+   autocomplete="off"
+  >
+
+  <button id="submitWithdrawal" class="primary" onclick="submitWithdrawal()">
+   Send withdrawal request
+  </button>
+
+  <div id="withdrawMessage"></div>
+
+  <p class="small">
+   Your points will be deducted when your withdrawal request is submitted.
+  </p>
+ </div>
+
+</section>
+
+<!-- PROFILE -->
+<section id="profile" class="page">
+
+ <div class="panel">
+  <h2>My Profile</h2>
+
+  <p class="small">Your User ID</p>
+
+  <div class="id-box">
+   <span id="userId">Loading...</span>
+   <button class="copy-btn" onclick="copyUserId()">Copy</button>
+  </div>
+
+  <h3 style="margin-top:25px">Follow YASJOY</h3>
+
+  <div id="socialList">
+   <p class="small">Loading social links...</p>
+  </div>
+ </div>
+
+ <div class="panel">
+  <h3>About YASJOY</h3>
+  <p class="small">
+   YASJOY is a rewards application. Complete available offers
+   and submit withdrawal requests using supported payment methods.
+  </p>
+ </div>
+
+</section>
+
+</main>
+
+<nav class="bottom">
+ <button class="nav active" id="navHome" onclick="showPage('home')">
+  <span class="ico">🏠</span>Home
+ </button>
+
+ <button class="nav" id="navProfile" onclick="showPage('profile')">
+  <span class="ico">👤</span>Profile
+ </button>
+</nav>
+
+<!-- TERMS -->
+<div id="termsGate" class="terms-overlay" hidden>
+ <div class="terms-card">
+  <h2>YASJOY Terms</h2>
+
+  <p>
+   By using YASJOY, you agree to follow the application rules.
+  </p>
+
+  <ul class="small">
+   <li>Use only your own payment account.</li>
+   <li>Do not submit false or fraudulent offer completions.</li>
+   <li>Withdrawal requests are reviewed by the administration.</li>
+   <li>Available payment methods and amounts may change.</li>
+  </ul>
+
+  <div class="terms-actions">
+   <button class="terms-decline" onclick="declineTerms()">Decline</button>
+   <button class="terms-accept" onclick="acceptTerms()">Accept</button>
+  </div>
+ </div>
+</div>
+
+<!-- OFFER TERMS -->
+<div id="offerTerms" class="terms-overlay" hidden>
+ <div class="terms-card">
+  <h2>Offer Information</h2>
+  <p class="small">
+   You will be redirected to an external offer provider.
+   The provider's terms and eligibility rules apply.
+  </p>
+  <div class="terms-actions">
+   <button class="terms-decline" onclick="closeOfferTerms()">Cancel</button>
+   <button class="terms-accept" onclick="continueOffer()">Continue</button>
+  </div>
+ </div>
+</div>
+
+<!-- BANNED -->
+<div id="bannedScreen" class="banned-screen" hidden>
+ <div class="panel">
+  <div style="font-size:55px">🚫</div>
+  <h2>Account Restricted</h2>
+  <p class="small">
+   Your account has been restricted. Please contact support.
+  </p>
+ </div>
+</div>
+
+<script type="module">
+
+import {initializeApp}
+from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+
+import {
+ getFirestore,
+ doc,
+ getDoc,
+ setDoc,
+ updateDoc,
+ onSnapshot,
+ serverTimestamp,
+ collection,
+ runTransaction
+}
+from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+import {
+ getAuth,
+ signInAnonymously,
+ onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+/* FIREBASE CONFIG */
+
+const firebaseConfig = {
+ apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",
+ authDomain:"yasjoy.firebaseapp.com",
+ projectId:"yasjoy",
+ storageBucket:"yasjoy.firebasestorage.app",
+ messagingSenderId:"967065409063",
+ appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+/* APP STATE */
+
+let currentUser = null;
+let userId = "";
+let publicId = "";
+let balance = 0;
+
+let withdrawalMethods = [];
+let selectedMethod = null;
+let selectedTier = null;
+
+let pendingOfferUrl = "";
+let listenersStarted = false;
+let accountReady = false;
+
+/* HELPERS */
+
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value){
+ return String(value ?? "").replace(/[&<>"']/g, char => ({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+ }[char]));
+}
+
+function validHttpsUrl(value){
  try{
-  const result=await window.createYasjoyWithdrawal({
-   coins:selectedCoins,
-   walletAddress,
-   method:selectedMethod.name,methodId:selectedMethod.id,displayLabel:document.querySelector('.amount.selected strong')?.textContent||''
-  });
-  alert('Your withdrawal request was submitted for admin review. Coins deducted: '+result.deductedCoins+'. Remaining balance: '+result.remainingBalance+'.');
-  document.getElementById('account').value='';
-  selectedCoins=0;
-  document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));
- }catch(error){
-  console.error('Withdrawal request error:',error);
-  alert(error?.message||'Could not submit your request. Please try again.');
- }finally{
-  withdrawalSubmitting=false;
-  if(button){button.disabled=false;button.textContent='Submit withdrawal request'}
+  const url = new URL(value);
+  return url.protocol === "https:";
+ }catch{
+  return false;
  }
 }
-function copyId(){if(!userId){alert('Your User ID is still loading.');return}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(userId).then(()=>alert('User ID copied.')).catch(()=>alert('Your User ID is: '+userId))}else{alert('Your User ID is: '+userId)}}
-refreshBalance();
-</script>
-<script type="module">
-import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection,runTransaction} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-const firebaseConfig={apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",authDomain:"yasjoy.firebaseapp.com",projectId:"yasjoy",storageBucket:"yasjoy.firebasestorage.app",messagingSenderId:"967065409063",appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"};
-const app=getApps().length?getApp():initializeApp(firebaseConfig),db=getFirestore(app),auth=getAuth(app);
-let currentYasjoyUser=null;
-window.createYasjoyWithdrawal=async function(request){
- const user=currentYasjoyUser;
- if(!user)throw new Error('Your account is still connecting. Please try again.');
- const coins=Number(request.coins);
- const walletAddress=String(request.walletAddress||'').trim();
- const methodId=String(request.methodId||'');
- if(!Number.isSafeInteger(coins)||coins<=0)throw new Error('Invalid coin amount.');
- if(walletAddress.length<6||walletAddress.length>180)throw new Error('Invalid payout account details.');
- if(!methodId)throw new Error('Please choose a withdrawal method.');
 
- const methodRef=doc(db,'withdrawMethods',methodId);
- const userRef=doc(db,'users',user.uid);
- const withdrawalId=doc(collection(db,'withdrawals')).id;
- const withdrawalRef=doc(db,'withdrawals',withdrawalId);
- const transactionRef=doc(db,'transactions',withdrawalId);
+function showMessage(id,message,type="notice"){
+ const element = $(id);
+ if(!element) return;
 
- return await runTransaction(db,async transaction=>{
-  // All reads happen before writes. Firestore retries if a read document changes.
-  const methodSnap=await transaction.get(methodRef);
-  const userSnap=await transaction.get(userRef);
-  if(!methodSnap.exists())throw new Error('This withdrawal method is no longer available.');
-  if(!userSnap.exists())throw new Error('User account not found.');
-
-  const methodData=methodSnap.data();
-  const userData=userSnap.data();
-  if(methodData.enabled!==true||methodData.name!==request.method)
-   throw new Error('This withdrawal method is unavailable. Refresh and try again.');
-
-  const tier=(Array.isArray(methodData.tiers)?methodData.tiers:[]).find(t=>
-   Number(t.coins)===coins
-  );
-  if(!tier)throw new Error('This withdrawal amount is not available for the selected method.');
-  if(userData.banned===true)throw new Error('This account cannot submit withdrawal requests.');
-  if(typeof userData.balance!=='number'||!Number.isFinite(userData.balance))
-   throw new Error('Your balance is not initialized. Please contact YASJOY administration.');
-  if(userData.balance<coins)throw new Error('Insufficient coins.');
-
-  const remainingBalance=userData.balance-coins;
-  transaction.update(userRef,{balance:remainingBalance,lastWithdrawalId:withdrawalId});
-  transaction.set(withdrawalRef,{
-   uid:user.uid,
-   publicId:'YJ-'+user.uid.slice(0,8).toUpperCase(),
-   method:methodData.name,
-   methodId:methodId,
-   displayLabel:String(tier.displayLabel||''),
-   coins:coins,
-   walletAddress:walletAddress,
-   status:'pending',
-   createdAt:serverTimestamp()
-  });
-  transaction.set(transactionRef,{
-   uid:user.uid,
-   type:'withdrawal',
-   coins:-coins,
-   withdrawalId:withdrawalId,
-   createdAt:serverTimestamp()
-  });
-  return {success:true,withdrawalId,deductedCoins:coins,remainingBalance,status:'pending'};
- });
-};
-function setBannedView(banned){const screen=document.getElementById("bannedScreen");if(!screen)return;screen.hidden=!banned;const header=document.querySelector("header"),main=document.querySelector("main"),nav=document.querySelector("nav.bottom");if(header)header.style.display=banned?"none":"";if(main)main.style.display=banned?"none":"";if(nav)nav.style.display=banned?"none":""}
-function renderWithdrawalMethods(snapshot){
- withdrawalMethods=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(m=>m.enabled===true);
- const host=document.getElementById('withdrawMethodsList');host.replaceChildren();
- selectedMethod=null;selectedCoins=0;document.getElementById('withdrawFlow').hidden=true;document.getElementById('withdrawalTiers').replaceChildren();
- document.getElementById('withdrawalTiers').append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
- if(!withdrawalMethods.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal methods are currently available.'}));return}
- withdrawalMethods.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
- withdrawalMethods.forEach(method=>{const b=document.createElement('button');b.type='button';b.className='withdraw-method';const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}))};b.append(img)}else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}));b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b)});
+ element.className = "notice " + type;
+ element.textContent = message;
 }
-function showMethodImage(method){const url=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo)?method.logo:'';if(!url)return;const view=document.getElementById('methodImageView'),img=document.getElementById('methodImageLarge');img.src=url;img.alt=(method.name||'Withdrawal method')+' logo';view.hidden=false}
-document.getElementById('methodImageView').addEventListener('click',()=>{document.getElementById('methodImageView').hidden=true});
-function hostScrollToSelected(button){button.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest',inline:'center'});}
-function chooseWithdrawalMethod(method,button){
- const host=document.getElementById('withdrawMethodsList');
- const flow=document.getElementById('withdrawFlow');
- // Tapping the already-selected method again collapses it and restores the horizontal list.
- if(selectedMethod && selectedMethod.id===method.id && button.classList.contains('selected')){
-  selectedMethod=null;selectedCoins=0;
-  document.querySelectorAll('.withdraw-method').forEach(x=>{x.classList.remove('selected');x.hidden=false});
-  flow.hidden=true;
-  document.getElementById('account').value='';
-  document.getElementById('withdrawalTiers').replaceChildren(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
-  host.scrollTo({left:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+
+function clearMessage(id){
+ const element = $(id);
+ if(element){
+  element.className = "";
+  element.textContent = "";
+ }
+}
+
+function showPage(page){
+ if(!["home","withdraw","profile"].includes(page)) return;
+
+ document.querySelectorAll(".page").forEach(element=>{
+  element.classList.remove("active");
+ });
+
+ $(page).classList.add("active");
+
+ $("navHome").classList.toggle("active",page==="home");
+ $("navProfile").classList.toggle("active",page==="profile");
+}
+
+window.showPage = showPage;
+
+/* TERMS */
+
+function checkTerms(){
+ try{
+  $("termsGate").hidden = localStorage.getItem("yasjoy_terms") === "accepted";
+ }catch{
+  $("termsGate").hidden = false;
+ }
+}
+
+window.acceptTerms = function(){
+ try{
+  localStorage.setItem("yasjoy_terms","accepted");
+ }catch{}
+
+ $("termsGate").hidden = true;
+};
+
+window.declineTerms = function(){
+ $("termsGate").hidden = true;
+ showMessage("homeMessage","You must accept the terms to use YASJOY.","error");
+};
+
+/* OFFER TERMS */
+
+window.closeOfferTerms = function(){
+ $("offerTerms").hidden = true;
+ pendingOfferUrl = "";
+};
+
+window.continueOffer = function(){
+ const url = pendingOfferUrl;
+ $("offerTerms").hidden = true;
+ pendingOfferUrl = "";
+
+ if(validHttpsUrl(url)){
+  window.open(url,"_blank","noopener,noreferrer");
+ }
+};
+
+/* USER BALANCE */
+
+function renderBalance(){
+ $("headerBalance").textContent = balance.toLocaleString("en-US");
+ $("withdrawBalance").textContent = balance.toLocaleString("en-US");
+}
+
+async function setupUser(user){
+
+ currentUser = user;
+ userId = user.uid;
+
+ const userRef = doc(db,"users",user.uid);
+ const snapshot = await getDoc(userRef);
+
+ if(!snapshot.exists()){
+
+  publicId = "YJ-" + user.uid.substring(0,10).toUpperCase();
+
+  await setDoc(userRef,{
+   uid:user.uid,
+   publicId:publicId,
+   balance:0,
+   createdAt:serverTimestamp(),
+   lastActiveAt:serverTimestamp()
+  });
+
+  balance = 0;
+
+ }else{
+
+  const data = snapshot.data();
+
+  publicId = data.publicId || ("YJ-" + user.uid.substring(0,10).toUpperCase());
+
+  if(typeof data.balance !== "number"){
+   accountReady = false;
+
+   $("userId").textContent = publicId;
+
+   showMessage(
+    "homeMessage",
+    "Your balance has not been initialized. Please contact the administrator.",
+    "error"
+   );
+
+   return;
+  }
+
+  balance = data.balance;
+
+  if(data.banned === true){
+   $("bannedScreen").hidden = false;
+   accountReady = false;
+   return;
+  }
+
+  await updateDoc(userRef,{
+   publicId:publicId,
+   lastActiveAt:serverTimestamp()
+  });
+ }
+
+ $("userId").textContent = publicId;
+
+ accountReady = true;
+
+ renderBalance();
+
+ startListeners();
+}
+
+/* FIRESTORE LISTENERS */
+
+function startListeners(){
+
+ if(listenersStarted) return;
+ listenersStarted = true;
+
+ /* PAYMENT METHODS */
+
+ onSnapshot(
+  collection(db,"withdrawMethods"),
+  snapshot=>{
+
+   withdrawalMethods = [];
+
+   snapshot.forEach(item=>{
+    const data = item.data();
+
+    if(data.enabled === true){
+     withdrawalMethods.push({
+      id:item.id,
+      ...data
+     });
+    }
+   });
+
+   renderWithdrawalMethods();
+
+  },
+  error=>{
+   console.error("Payment methods:",error);
+   showMessage("withdrawMessage","Could not load payment methods.","error");
+  }
+ );
+
+ /* OFFER WALLS */
+
+ onSnapshot(
+  collection(db,"offerWalls"),
+  snapshot=>{
+
+   const walls = [];
+
+   snapshot.forEach(item=>{
+    walls.push({
+     id:item.id,
+     ...item.data()
+    });
+   });
+
+   renderOfferWalls(walls);
+
+  },
+  error=>{
+   console.error("Offer walls:",error);
+   $("offerList").innerHTML =
+    '<div class="empty">Could not load offers.</div>';
+  }
+ );
+
+ /* SOCIAL LINKS */
+
+ onSnapshot(
+  doc(db,"socialLinks","main"),
+  snapshot=>{
+
+   if(snapshot.exists()){
+    renderSocialLinks(snapshot.data());
+   }else{
+    $("socialList").innerHTML =
+     '<p class="small">No social links available.</p>';
+   }
+
+  },
+  error=>{
+   console.error("Social links:",error);
+   $("socialList").textContent = "Could not load social links.";
+  }
+ );
+
+}
+
+/* RENDER PAYMENT METHODS */
+
+function renderWithdrawalMethods(){
+
+ const container = $("methodList");
+ container.innerHTML = "";
+
+ if(!withdrawalMethods.length){
+  container.innerHTML =
+   '<div class="empty">No payment methods available right now.</div>';
+
+  selectedMethod = null;
+  selectedTier = null;
+  renderAmounts();
   return;
  }
- selectedMethod=method;selectedCoins=0;document.querySelectorAll('.withdraw-method').forEach(x=>{x.classList.remove('selected');x.hidden=x!==button});button.classList.add('selected');hostScrollToSelected(button);
- flow.hidden=false;
- document.getElementById('accountLabel').textContent=method.accountLabel||'Payout account details';
- document.getElementById('account').placeholder=method.accountPlaceholder||'Enter your payout account details';
- document.getElementById('account').value='';
- const host=document.getElementById('withdrawalTiers');host.replaceChildren();const tiers=Array.isArray(method.tiers)?method.tiers.filter(t=>Number.isSafeInteger(Number(t.coins))&&Number(t.coins)>0).sort((a,b)=>Number(a.coins)-Number(b.coins)):[];
- if(!tiers.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal amounts have been configured for this method.'}));return}
- tiers.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='amount';b.innerHTML='';const amount=document.createElement('strong');amount.textContent=String(t.displayLabel||Number(t.coins).toLocaleString('en-US')+' coins');const points=document.createElement('small');points.textContent=Number(t.coins).toLocaleString('en-US')+' coins';b.append(amount,document.createElement('br'),points);b.onclick=()=>selectAmount(b,Number(t.coins));host.append(b)});
+
+ if(
+  selectedMethod &&
+  !withdrawalMethods.some(method=>method.id===selectedMethod.id)
+ ){
+  selectedMethod = null;
+  selectedTier = null;
+ }
+
+ withdrawalMethods.forEach(method=>{
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "withdraw-method";
+
+  if(selectedMethod && selectedMethod.id===method.id){
+   button.classList.add("selected");
+  }
+
+  const logo = validHttpsUrl(method.logo)
+   ? `<img src="${escapeHTML(method.logo)}" alt="">`
+   : '<div class="method-fallback">💳</div>';
+
+  button.innerHTML =
+   logo + `<span>${escapeHTML(method.name)}</span>`;
+
+  button.onclick = ()=>selectMethod(method.id);
+
+  container.appendChild(button);
+ });
+
+ renderAmounts();
 }
-async function loadSocialLinks(){const ids={telegram:"telegramLink",youtube:"youtubeLink",instagram:"instagramLink"},status=document.getElementById("socialStatus");const tik=document.getElementById("tiktokLink");tik.href="https://www.tiktok.com/@yasjoy71";tik.hidden=false;try{const snap=await getDoc(doc(db,"socialLinks","main"));if(!snap.exists()){status.textContent="Social links are not configured yet.";Object.values(ids).forEach(id=>document.getElementById(id).hidden=true);return}const links=snap.data();let count=0;for(const [key,id] of Object.entries(ids)){const el=document.getElementById(id),url=links[key];if(typeof url==="string"&&/^https:\/\/\S+$/i.test(url)){el.href=url;el.hidden=false;count++}else el.hidden=true}status.textContent=count?"Social links loaded from Firebase.":"No valid social links configured."}catch(error){console.error("Social links error:",error);status.textContent="Could not load social links. Check Firebase rules and socialLinks/main."}}
-/* Live offer-wall list: only visible records are rendered. */
-function renderOfferWalls(snapshot){
- const host=document.getElementById("offersList");host.replaceChildren();
- const walls=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(w=>w.visible!==false);
- if(!walls.length){const empty=document.createElement("div");empty.className="empty-offers";empty.textContent="No offer walls are currently available.";host.appendChild(empty);return}
- walls.sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
- for(const wall of walls){
-  const name=typeof wall.name==="string"&&wall.name.trim()?wall.name.trim():"Offer wall";
-  const url=typeof wall.url==="string"&&/^https:\/\/\S+$/i.test(wall.url)?wall.url:"";
-  const enabled=wall.enabled===true&&!!url;
-  const card=document.createElement("article");card.className="offer";
-  const top=document.createElement("div");top.className="offer-top";
-  const icon=document.createElement("div");icon.className="provider-icon";icon.style.background="#dff4ff";icon.style.color="#0758a8";
-  if(typeof wall.logo==="string"&&/^https:\/\/\S+$/i.test(wall.logo)){const img=document.createElement("img");img.src=wall.logo;img.alt=name+" logo";img.loading="lazy";img.onerror=()=>{icon.textContent=name.charAt(0).toUpperCase()};icon.appendChild(img)}else icon.textContent=name.charAt(0).toUpperCase();
-  const info=document.createElement("div"),title=document.createElement("h3"),description=document.createElement("p");
-  title.textContent=name;description.textContent=typeof wall.description==="string"&&wall.description.trim()?wall.description.trim():"Complete offers and get rewards";
-  info.append(title,description);top.append(icon,info);
-  const button=document.createElement("button");button.className="earn";button.textContent=enabled?"🪙 Earn coins ›":"Currently unavailable";button.disabled=!enabled;
-  button.addEventListener("click",()=>openOffer(url,name,enabled));
-  card.append(top,button);host.appendChild(card);
+
+/* SELECT PAYMENT METHOD */
+
+function selectMethod(id){
+
+ const method = withdrawalMethods.find(item=>item.id===id);
+
+ if(!method) return;
+
+ selectedMethod = method;
+ selectedTier = null;
+
+ renderWithdrawalMethods();
+}
+
+/* RENDER AMOUNTS */
+
+function renderAmounts(){
+
+ const container = $("amountList");
+ container.innerHTML = "";
+
+ if(!selectedMethod){
+  container.innerHTML =
+   '<div class="empty">Select a payment method first.</div>';
+  return;
+ }
+
+ const tiers = Array.isArray(selectedMethod.tiers)
+  ? selectedMethod.tiers
+  : [];
+
+ const validTiers = tiers.filter(tier=>
+  Number.isSafeInteger(tier.coins) &&
+  tier.coins>0 &&
+  typeof tier.displayLabel==="string" &&
+  tier.displayLabel.length>0
+ );
+
+ if(!validTiers.length){
+  container.innerHTML =
+   '<div class="empty">No withdrawal amounts configured.</div>';
+  return;
+ }
+
+ validTiers.forEach(tier=>{
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "amount";
+
+  if(selectedTier &&
+     selectedTier.coins===tier.coins &&
+     selectedTier.displayLabel===tier.displayLabel){
+   button.classList.add("selected");
+  }
+
+  button.textContent = tier.displayLabel;
+
+  button.onclick = ()=>{
+   selectedTier = tier;
+   renderAmounts();
+  };
+
+  container.appendChild(button);
+ });
+}
+
+/* SUBMIT WITHDRAWAL */
+
+window.submitWithdrawal = async function(){
+
+ if(!currentUser || !accountReady){
+  showMessage("withdrawMessage","Your account is not ready yet.","error");
+  return;
+ }
+
+ if(!selectedMethod){
+  showMessage("withdrawMessage","Please choose a payment method.","error");
+  return;
+ }
+
+ if(!selectedTier){
+  showMessage("withdrawMessage","Please choose a withdrawal amount.","error");
+  return;
+ }
+
+ const walletAddress = $("walletAddress").value.trim();
+
+ if(walletAddress.length<6 || walletAddress.length>180){
+  showMessage("withdrawMessage","Enter a valid payment account.","error");
+  return;
+ }
+
+ const coins = selectedTier.coins;
+ const displayLabel = selectedTier.displayLabel;
+ const methodId = selectedMethod.id;
+ const button = $("submitWithdrawal");
+
+ if(!Number.isSafeInteger(coins) || coins<=0){
+  showMessage("withdrawMessage","Invalid withdrawal amount.","error");
+  return;
+ }
+
+ if(balance<coins){
+  showMessage("withdrawMessage","Your balance is not enough.","error");
+  return;
+ }
+
+ button.disabled = true;
+ button.textContent = "Submitting...";
+
+ try{
+
+  const withdrawalRef = doc(collection(db,"withdrawals"));
+  const transactionRef = doc(db,"transactions",withdrawalRef.id);
+  const userRef = doc(db,"users",currentUser.uid);
+  const methodRef = doc(db,"withdrawMethods",methodId);
+
+  await runTransaction(db,async transaction=>{
+
+   const userSnapshot = await transaction.get(userRef);
+   const methodSnapshot = await transaction.get(methodRef);
+
+   if(!userSnapshot.exists()){
+    throw new Error("USER_NOT_FOUND");
+   }
+
+   if(!methodSnapshot.exists()){
+    throw new Error("METHOD_NOT_FOUND");
+   }
+
+   const userData = userSnapshot.data();
+   const methodData = methodSnapshot.data();
+
+   if(typeof userData.balance !== "number"){
+    throw new Error("BALANCE_NOT_INITIALIZED");
+   }
+
+   if(userData.balance<coins){
+    throw new Error("INSUFFICIENT_BALANCE");
+   }
+
+   if(methodData.enabled!==true){
+    throw new Error("METHOD_DISABLED");
+   }
+
+   const currentTiers = Array.isArray(methodData.tiers)
+    ? methodData.tiers
+    : [];
+
+   const tierExists = currentTiers.some(tier=>
+    tier.coins===coins &&
+    tier.displayLabel===displayLabel
+   );
+
+   if(!tierExists){
+    throw new Error("TIER_UNAVAILABLE");
+   }
+
+   const newBalance = userData.balance-coins;
+
+   transaction.update(userRef,{
+    balance:newBalance,
+    lastWithdrawalId:withdrawalRef.id
+   });
+
+   transaction.set(withdrawalRef,{
+    uid:currentUser.uid,
+    publicId:publicId,
+    method:methodData.name,
+    methodId:methodId,
+    displayLabel:displayLabel,
+    coins:coins,
+    walletAddress:walletAddress,
+    status:"pending",
+    createdAt:serverTimestamp()
+   });
+
+   transaction.set(transactionRef,{
+    uid:currentUser.uid,
+    type:"withdrawal",
+    coins:-coins,
+    withdrawalId:withdrawalRef.id,
+    createdAt:serverTimestamp()
+   });
+
+  });
+
+  balance -= coins;
+  renderBalance();
+
+  $("walletAddress").value = "";
+  selectedTier = null;
+
+  renderAmounts();
+
+  showMessage(
+   "withdrawMessage",
+   "Your withdrawal request was submitted successfully. Status: Pending.",
+   "success"
+  );
+
+ }catch(error){
+
+  console.error("Withdrawal error:",error);
+
+  const messages = {
+   USER_NOT_FOUND:"User account not found.",
+   METHOD_NOT_FOUND:"Payment method not found.",
+   BALANCE_NOT_INITIALIZED:"Your balance needs administrator setup.",
+   INSUFFICIENT_BALANCE:"Your balance is not enough.",
+   METHOD_DISABLED:"This payment method is unavailable.",
+   TIER_UNAVAILABLE:"This withdrawal amount is no longer available."
+  };
+
+  const message = messages[error.message] ||
+   "Unable to submit your request. Please try again.";
+
+  showMessage("withdrawMessage",message,"error");
+
+ }finally{
+
+  button.disabled = false;
+  button.textContent = "Send withdrawal request";
+
+ }
+};
+
+/* OFFER WALLS */
+
+function renderOfferWalls(walls){
+
+ const container = $("offerList");
+ container.innerHTML = "";
+
+ const visibleWalls = walls.filter(wall=>
+  wall.visible!==false
+ );
+
+ if(!visibleWalls.length){
+  container.innerHTML =
+   '<div class="empty">No offer walls are available right now.</div>';
+  return;
+ }
+
+ visibleWalls.forEach(wall=>{
+
+  const enabled =
+   wall.enabled===true &&
+   validHttpsUrl(wall.url);
+
+  const card = document.createElement("div");
+  card.className = "offer";
+
+  const icon = validHttpsUrl(wall.logo)
+   ? `<img src="${escapeHTML(wall.logo)}" alt="">`
+   : '<span>🎮</span>';
+
+  card.innerHTML = `
+   <div class="offer-top">
+    <div class="provider-icon">${icon}</div>
+    <div>
+     <h3>${escapeHTML(wall.name || "Offer Wall")}</h3>
+     <p>${escapeHTML(wall.description || "Complete offers and earn rewards.")}</p>
+    </div>
+   </div>
+   <button class="earn" ${enabled?"":"disabled"}>
+    ${enabled?"Start Earning":"Unavailable"}
+   </button>
+  `;
+
+  const button = card.querySelector("button");
+
+  if(enabled){
+   button.onclick = ()=>openOffer(wall.url);
+  }
+
+  container.appendChild(card);
+ });
+}
+
+function openOffer(url){
+
+ if(!$("bannedScreen").hidden) return;
+ if(!validHttpsUrl(url)) return;
+
+ pendingOfferUrl = url;
+ $("offerTerms").hidden = false;
+}
+
+/* SOCIAL LINKS */
+
+function renderSocialLinks(data){
+
+ const container = $("socialList");
+ container.innerHTML = "";
+
+ const links = [
+  {name:"Telegram",icon:"✈️",key:"telegram"},
+  {name:"YouTube",icon:"▶️",key:"youtube"},
+  {name:"Instagram",icon:"📷",key:"instagram"},
+  {name:"TikTok",icon:"🎵",key:"tiktok"}
+ ];
+
+ let count = 0;
+
+ links.forEach(item=>{
+
+  const url = data[item.key];
+
+  if(!validHttpsUrl(url)) return;
+
+  count++;
+
+  const anchor = document.createElement("a");
+  anchor.className = "social";
+  anchor.href = url;
+  anchor.target = "_blank";
+  anchor.rel = "noopener noreferrer";
+
+  anchor.innerHTML =
+   `<span>${item.icon}</span><span>${item.name}</span><span style="margin-left:auto">↗</span>`;
+
+  container.appendChild(anchor);
+ });
+
+ if(!count){
+  container.innerHTML =
+   '<p class="small">No social links available.</p>';
  }
 }
-let stopUserListener=null;
-async function setupUser(user){
- const userRef=doc(db,"users",user.uid),snap=await getDoc(userRef),publicId="YJ-"+user.uid.slice(0,8).toUpperCase();
- if(!snap.exists())await setDoc(userRef,{uid:user.uid,publicId,balance:0,createdAt:serverTimestamp(),lastActiveAt:serverTimestamp()});
- else await updateDoc(userRef,{lastActiveAt:serverTimestamp(),publicId});
- userId=publicId;document.getElementById("userId").textContent=publicId;document.getElementById("userIdNote").textContent="Your User ID is linked to your Firebase account.";
- const profileText=document.querySelector("#profile .panel > p");if(profileText)profileText.textContent="Your YASJOY account";
- if(stopUserListener)stopUserListener();
- stopUserListener=onSnapshot(userRef,userSnap=>{const data=userSnap.data()||{};setBannedView(data.banned===true);balance=Number.isFinite(data.balance)?data.balance:0;refreshBalance()},error=>console.error("User data error:",error));
-}
-loadSocialLinks();
-onSnapshot(collection(db,"withdrawMethods"),renderWithdrawalMethods,error=>{console.error("Withdrawal methods listener error:",error);const host=document.getElementById("withdrawMethodsList");host.replaceChildren();const msg=document.createElement("div");msg.className="empty-offers withdraw-status";msg.textContent="Could not load withdrawal methods. Check Firebase rules.";host.appendChild(msg)});
-onSnapshot(collection(db,"offerWalls"),renderOfferWalls,error=>{console.error("Offer walls listener error:",error);const host=document.getElementById("offersList");host.replaceChildren();const msg=document.createElement("div");msg.className="empty-offers";msg.textContent="Could not load offer walls. Please check your connection or Firebase rules.";host.appendChild(msg)});
-onAuthStateChanged(auth,async user=>{try{if(!user){currentYasjoyUser=null;await signInAnonymously(auth);return}currentYasjoyUser=user;await setupUser(user)}catch(error){console.error("Firebase account setup error:",error);document.getElementById("userId").textContent="Connection error — reload the page";document.getElementById("userIdNote").textContent="Could not connect. Check Anonymous Authentication and Firestore rules."}});
+
+/* COPY USER ID */
+
+window.copyUserId = async function(){
+
+ if(!publicId) return;
+
+ try{
+  await navigator.clipboard.writeText(publicId);
+  showMessage("homeMessage","User ID copied.","success");
+ }catch{
+  showMessage("homeMessage","Could not copy User ID.","error");
+ }
+};
+
+/* AUTHENTICATION */
+
+onAuthStateChanged(auth,async user=>{
+
+ if(user){
+
+  try{
+   await setupUser(user);
+  }catch(error){
+   console.error("User setup error:",error);
+
+   showMessage(
+    "homeMessage",
+    "Could not initialize your account. Check Firebase settings.",
+    "error"
+   );
+  }
+
+ }else{
+
+  try{
+   await signInAnonymously(auth);
+  }catch(error){
+   console.error("Anonymous authentication error:",error);
+
+   showMessage(
+    "homeMessage",
+    "Authentication failed. Enable Anonymous Authentication in Firebase.",
+    "error"
+   );
+  }
+
+ }
+
+});
+
+/* START */
+
+checkTerms();
+
 </script>
+
 </body>
 </html>
