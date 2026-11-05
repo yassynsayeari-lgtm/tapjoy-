@@ -33,7 +33,7 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .field-label{display:block;margin:16px 0 8px}input,select{width:100%;padding:15px;border:1px solid #cfe7f7;border-radius:14px;font-size:16px;background:white}
 .primary{width:100%;border:0;border-radius:14px;padding:15px;background:linear-gradient(110deg,var(--sky),var(--crimson));color:white;font-size:17px;font-weight:bold;margin-top:15px}
 .amounts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.amount{border:2px solid #d9efff;background:#f8fcff;color:#12366f;padding:15px;border-radius:18px;font-weight:bold}
-.amount.selected{border-color:var(--blue);background:#e3f4ff}.withdraw-methods{display:flex;flex-direction:row;flex-wrap:nowrap;gap:12px;overflow-x:auto;overflow-y:hidden;padding:6px 2px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}.withdraw-methods::-webkit-scrollbar{height:5px}.withdraw-methods::-webkit-scrollbar-thumb{background:#c7e6fa;border-radius:8px}.withdraw-method{display:flex;align-items:center;gap:10px;text-align:right;border:2px solid #d9efff;background:#fff;color:var(--dark);padding:13px;border-radius:16px;font-weight:bold;min-width:0}.withdraw-method.selected{border-color:var(--blue);background:#eaf6ff}.withdraw-method img{width:42px;height:42px;object-fit:contain;border-radius:10px}.withdraw-method .method-fallback{width:42px;height:42px;display:grid;place-items:center;background:#e3f4ff;border-radius:10px;font-size:20px}.withdraw-method span:last-child{overflow-wrap:anywhere}.withdraw-status{grid-column:1/-1}
+.amount.selected{border-color:var(--blue);background:#e3f4ff}.withdraw-methods{display:flex;flex-direction:row;align-items:stretch;gap:12px;overflow-x:auto;overflow-y:hidden;padding:5px 3px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}.withdraw-method{display:flex;align-items:center;gap:10px;text-align:right;border:2px solid #d9efff;background:#fff;color:var(--dark);padding:13px;border-radius:16px;font-weight:bold;min-width:0}.withdraw-method.selected{border-color:var(--blue);background:#eaf6ff}.withdraw-method img{width:42px;height:42px;object-fit:contain;border-radius:10px}.withdraw-method .method-fallback{width:42px;height:42px;display:grid;place-items:center;background:#e3f4ff;border-radius:10px;font-size:20px}.withdraw-method span:last-child{overflow-wrap:anywhere}.withdraw-status{grid-column:1/-1}
 .social{display:flex;align-items:center;gap:13px;padding:14px 12px;margin:10px 0;border:1px solid #d9efff;border-radius:15px;background:#f8fcff;color:var(--dark);text-decoration:none;font-weight:bold}
 .social-icon{font-size:24px;width:35px;text-align:center}
 .id-box{background:#eff7ff;border-radius:14px;padding:15px;display:flex;justify-content:space-between;align-items:center;gap:8px;overflow-wrap:anywhere}
@@ -49,26 +49,23 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .terms-overlay{position:fixed;inset:0;z-index:100000;background:#071b35d9;display:flex;align-items:center;justify-content:center;padding:16px}
 .terms-overlay[hidden]{display:none!important}.terms-card{width:100%;max-width:520px;max-height:90vh;overflow:auto;background:#fff;border-radius:24px;padding:24px;box-shadow:0 18px 60px #0005;color:#183153}
 .terms-card h2{margin:0 0 12px;color:#0878d7}.terms-card p,.terms-card li{line-height:1.75;font-size:14px}.terms-actions{display:flex;gap:10px;align-items:center;margin-top:18px}.terms-actions button{flex:1;border:0;border-radius:13px;padding:14px;font-weight:bold}.terms-accept{background:#0878d7;color:white}.terms-decline{background:#edf2f7;color:#42536a}
-.withdraw-method{min-height:132px;flex-direction:column;justify-content:center;gap:12px;padding:18px 12px;border-radius:22px;background:linear-gradient(145deg,#fff,#f2f9ff);box-shadow:0 7px 18px #277ab51a;transition:transform .18s,box-shadow .18s}
+.withdraw-method{flex:0 0 128px;min-height:132px;flex-direction:column;justify-content:center;gap:12px;padding:18px 12px;border-radius:22px;scroll-snap-align:start;background:linear-gradient(145deg,#fff,#f2f9ff);box-shadow:0 7px 18px #277ab51a;transition:flex-basis .35s cubic-bezier(.2,.8,.2,1),min-height .35s,transform .25s,box-shadow .25s,background .25s}
 .withdraw-method:active{transform:scale(.985)}
 .method-image-view{position:fixed;inset:0;z-index:100001;background:#06182dcc;display:flex;align-items:center;justify-content:center;padding:24px}.method-image-view[hidden]{display:none!important}.method-image-view img{max-width:min(82vw,360px);max-height:70vh;object-fit:contain;background:#fff;border-radius:28px;padding:18px;box-shadow:0 18px 55px #0007;animation:popIn .28s ease-out}@keyframes popIn{from{transform:scale(.72);opacity:.3}to{transform:scale(1);opacity:1}}.notify-btn{width:100%;border:1px solid #cfe7f7;border-radius:14px;background:#eef8ff;color:#0758a8;padding:14px;font-weight:bold;margin-top:12px}
 @media (prefers-reduced-motion:no-preference){.withdraw-method img{transition:transform .32s cubic-bezier(.2,.8,.2,1),filter .32s}.withdraw-method.selected img{transform:scale(1.12);filter:drop-shadow(0 5px 8px #16bdf255)}.withdraw-method{transition:transform .22s ease,background .22s ease,box-shadow .22s ease}}
-@media (prefers-reduced-motion:reduce){.withdraw-method,.withdraw-method img{transition:none!important}}.withdraw-method.selected{background:linear-gradient(145deg,#e5faff,#fff0f3);box-shadow:0 0 0 2px #16bdf255,0 8px 20px #dc143c20}
+@media (prefers-reduced-motion:reduce){.withdraw-method,.withdraw-method img{transition:none!important}}
+.withdraw-methods.has-selection{overflow-x:hidden;}
+.withdraw-methods.has-selection .withdraw-method:not(.selected){display:none;}
+.withdraw-methods.has-selection .withdraw-method.selected{display:flex;flex:1 1 100%;width:100%;min-width:100%;min-height:150px;flex-direction:row;justify-content:flex-start;gap:22px;padding:20px 24px;border-radius:24px;}
+.withdraw-methods.has-selection .withdraw-method.selected img,.withdraw-methods.has-selection .withdraw-method.selected .method-fallback{width:116px;height:116px;flex:0 0 116px;border-radius:22px;transform:scale(1.04);}
+.withdraw-methods.has-selection .withdraw-method.selected span:last-child{font-size:20px;text-align:start;}
+@media(max-width:390px){.withdraw-methods.has-selection .withdraw-method.selected{min-height:128px;padding:14px;gap:14px}.withdraw-methods.has-selection .withdraw-method.selected img,.withdraw-methods.has-selection .withdraw-method.selected .method-fallback{width:88px;height:88px;flex-basis:88px}}
+@media(prefers-reduced-motion:reduce){.withdraw-methods .withdraw-method{transition:none!important}}
+.withdraw-method.selected{background:linear-gradient(145deg,#e5faff,#fff0f3);box-shadow:0 0 0 2px #16bdf255,0 8px 20px #dc143c20}
 .withdraw-method img{width:96px;height:96px;padding:8px;object-fit:contain;border-radius:20px;background:#fff;box-shadow:0 4px 13px #12387812}
 .withdraw-method .method-fallback{width:96px;height:96px;font-size:36px;flex-shrink:0;border-radius:20px;background:linear-gradient(145deg,#e4f5ff,#cceaff);color:#0878d7;box-shadow:0 4px 13px #12387812}
 .withdraw-method span:last-child{font-size:16px;text-align:center;line-height:1.35;max-width:100%}
 @media(max-width:390px){.withdraw-method{min-height:120px;padding:14px 8px}.withdraw-method img,.withdraw-method .method-fallback{width:82px;height:82px}.withdraw-method .method-fallback{font-size:31px}}
-
-/* Horizontal withdrawal picker; selected method expands into a wide detail card */
-.withdraw-method{flex:0 0 148px;width:148px;min-height:154px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:14px 10px;border:2px solid #d9efff;border-radius:22px;}
-.withdraw-method img,.withdraw-method .method-fallback{width:88px;height:88px;object-fit:contain;border-radius:18px;flex-shrink:0;}
-.withdraw-method span:last-child{font-size:16px;text-align:center;}
-.withdraw-method.selected{flex:0 0 100%;width:100%;min-height:170px;flex-direction:row;justify-content:flex-start;gap:24px;padding:20px 24px;scroll-snap-align:center;}
-.withdraw-method.selected img,.withdraw-method.selected .method-fallback{width:132px;height:132px;border-radius:24px;}
-.withdraw-method.selected span:last-child{font-size:24px;text-align:start;}
-.withdraw-method[hidden]{display:none!important}
-@media(max-width:390px){.withdraw-method{flex-basis:140px;width:140px;min-height:145px}.withdraw-method img,.withdraw-method .method-fallback{width:80px;height:80px}.withdraw-method.selected{flex-basis:100%;width:100%;min-height:150px;gap:18px;padding:16px}.withdraw-method.selected img,.withdraw-method.selected .method-fallback{width:112px;height:112px}.withdraw-method.selected span:last-child{font-size:22px}}
-
 </style>
 </head>
 <body>
@@ -253,9 +250,14 @@ function renderWithdrawalMethods(snapshot){
 }
 function showMethodImage(method){const url=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo)?method.logo:'';if(!url)return;const view=document.getElementById('methodImageView'),img=document.getElementById('methodImageLarge');img.src=url;img.alt=(method.name||'Withdrawal method')+' logo';view.hidden=false}
 document.getElementById('methodImageView').addEventListener('click',()=>{document.getElementById('methodImageView').hidden=true});
-function hostScrollToSelected(button){button.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest',inline:'center'});}
 function chooseWithdrawalMethod(method,button){
- selectedMethod=method;selectedCoins=0;document.querySelectorAll('.withdraw-method').forEach(x=>{x.classList.remove('selected');x.hidden=x!==button});button.classList.add('selected');hostScrollToSelected(button);
+ const hostMethods=document.getElementById('withdrawMethodsList');
+ const flow=document.getElementById('withdrawFlow');
+ if(button.classList.contains('selected')){
+  button.classList.remove('selected');hostMethods.classList.remove('has-selection');selectedMethod=null;selectedCoins=0;flow.hidden=true;
+  document.getElementById('withdrawalTiers').replaceChildren();document.getElementById('account').value='';return;
+ }
+ selectedMethod=method;selectedCoins=0;document.querySelectorAll('.withdraw-method').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');hostMethods.classList.add('has-selection');
  const flow=document.getElementById('withdrawFlow');flow.hidden=false;
  document.getElementById('accountLabel').textContent=method.accountLabel||'Payout account details';
  document.getElementById('account').placeholder=method.accountPlaceholder||'Enter your payout account details';
