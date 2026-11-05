@@ -62,6 +62,7 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 @media(max-width:390px){.withdraw-methods.has-selection .withdraw-method.selected{min-height:128px;padding:14px;gap:14px}.withdraw-methods.has-selection .withdraw-method.selected img,.withdraw-methods.has-selection .withdraw-method.selected .method-fallback{width:88px;height:88px;flex-basis:88px}}
 @media(prefers-reduced-motion:reduce){.withdraw-methods .withdraw-method{transition:none!important}}
 .withdraw-method.selected{background:linear-gradient(145deg,#e5faff,#fff0f3);box-shadow:0 0 0 2px #16bdf255,0 8px 20px #dc143c20}
+.withdraw-back{width:100%;margin:10px 0 16px;padding:14px 18px;border:1px solid #bfe6f7;border-radius:16px;background:linear-gradient(100deg,#16bdf2,#d71948);color:#fff;font-weight:700;font-size:16px;box-shadow:0 6px 16px #16bdf233}.withdraw-back[hidden]{display:none!important}.withdraw-back:active{transform:scale(.99)}
 .withdraw-method img{width:96px;height:96px;padding:0;object-fit:contain;border-radius:20px;background:transparent;box-shadow:none;display:block}
 .withdraw-method .method-fallback{width:96px;height:96px;font-size:36px;flex-shrink:0;border-radius:20px;background:linear-gradient(145deg,#e4f5ff,#cceaff);color:#0878d7;box-shadow:0 4px 13px #12387812}
 .withdraw-method span:last-child{font-size:16px;text-align:center;line-height:1.35;max-width:100%}
@@ -96,7 +97,7 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 <section id="withdraw" class="page">
   <div class="panel"><h2>Withdraw your points</h2><p class="small">Available Balance</p>
     <div style="background:#1765ef;color:white;border-radius:22px;padding:25px;text-align:center;font-size:28px"><strong id="withdrawBalance">0</strong><div style="font-size:17px">Coins</div></div>
-    <h3>Choose withdrawal method</h3><div class="withdraw-methods" id="withdrawMethodsList"><div class="empty-offers withdraw-status">Loading withdrawal methods…</div></div>
+    <h3>Choose withdrawal method</h3><div class="withdraw-methods" id="withdrawMethodsList"><div class="empty-offers withdraw-status">Loading withdrawal methods…</div></div><button type="button" id="backWithdrawalMethods" class="withdraw-back" hidden>← Back to withdrawal methods</button>
     <div id="withdrawFlow" hidden>
       <h3 id="amountHeading">Select a points package</h3><div class="amounts" id="withdrawalTiers"></div>
       <label class="field-label" for="account" id="accountLabel">Payout account details</label><input id="account" autocomplete="off" placeholder="Enter your payout account details">
@@ -134,7 +135,8 @@ function openOffer(url,name,enabled){if(document.getElementById("bannedScreen")?
 document.getElementById('offerTermsCheck').addEventListener('change',e=>document.getElementById('offerTermsContinue').disabled=!e.target.checked);
 document.getElementById('offerTermsCancel').addEventListener('click',()=>{pendingOffer=null;document.getElementById('offerTermsGate').hidden=true;document.body.style.overflow=''});
 document.getElementById('offerTermsContinue').addEventListener('click',()=>{if(!pendingOffer||!document.getElementById('offerTermsCheck').checked)return;const target=pendingOffer;pendingOffer=null;document.getElementById('offerTermsGate').hidden=true;document.body.style.overflow='';window.open(target.url,'_blank','noopener,noreferrer')});
-document.getElementById('enableNotifications').addEventListener('click',async()=>{const status=document.getElementById('notificationStatus');if(!('Notification' in window)){status.textContent='This browser does not support notifications.';return}if(!window.isSecureContext){status.textContent='Notifications require a secure HTTPS connection.';return}try{const permission=await Notification.requestPermission();status.textContent=permission==='granted'?'Notifications permission enabled.':'Notifications permission: '+permission+'.'}catch(e){status.textContent='Could not request notification permission.'}});
+function updateNotificationUI(){const button=document.getElementById('enableNotifications'),status=document.getElementById('notificationStatus');if(!('Notification' in window)){button.textContent='🔔 Notifications unavailable';status.textContent='This browser or app environment does not support notifications.';button.disabled=true;return}button.disabled=false;if(Notification.permission==='granted'){button.textContent='✓ Notifications allowed';status.textContent='YASJOY has permission to send notifications.'}else if(Notification.permission==='denied'){button.textContent='🔔 Notifications blocked';status.textContent='Allow notifications for YASJOY from your browser or Android app settings.'}else{button.textContent='🔔 Allow YASJOY notifications';status.textContent='Tap to let your device ask whether YASJOY may send notifications.'}}
+document.getElementById('enableNotifications').addEventListener('click',()=>{const status=document.getElementById('notificationStatus');if(!('Notification' in window)){updateNotificationUI();return}if(!window.isSecureContext){status.textContent='Notifications require a secure HTTPS connection.';return}if(Notification.permission==='granted'){updateNotificationUI();return}if(Notification.permission==='denied'){updateNotificationUI();return}Notification.requestPermission().then(updateNotificationUI).catch(()=>{status.textContent='Could not request notification permission.'})});updateNotificationUI();
 
 let withdrawalSubmitting=false;
 async function submitRequest(){
@@ -242,7 +244,7 @@ function setBannedView(banned){const screen=document.getElementById("bannedScree
 function renderWithdrawalMethods(snapshot){
  withdrawalMethods=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(m=>m.enabled===true);
  const host=document.getElementById('withdrawMethodsList');host.replaceChildren();
- selectedMethod=null;selectedCoins=0;document.getElementById('withdrawFlow').hidden=true;document.getElementById('withdrawalTiers').replaceChildren();
+ selectedMethod=null;selectedCoins=0;document.getElementById('withdrawFlow').hidden=true;document.getElementById('backWithdrawalMethods').hidden=true;host.classList.remove('has-selection');document.getElementById('withdrawalTiers').replaceChildren();
  document.getElementById('withdrawalTiers').append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));
  if(!withdrawalMethods.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal methods are currently available.'}));return}
  withdrawalMethods.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
@@ -253,11 +255,9 @@ document.getElementById('methodImageView').addEventListener('click',()=>{documen
 function chooseWithdrawalMethod(method,button){
  const hostMethods=document.getElementById('withdrawMethodsList');
  const flow=document.getElementById('withdrawFlow');
- if(button.classList.contains('selected')){
-  button.classList.remove('selected');hostMethods.classList.remove('has-selection');selectedMethod=null;selectedCoins=0;flow.hidden=true;
-  document.getElementById('withdrawalTiers').replaceChildren();document.getElementById('account').value='';return;
- }
+ if(button.classList.contains('selected'))return; // Selecting the active method again does nothing.
  selectedMethod=method;selectedCoins=0;document.querySelectorAll('.withdraw-method').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');hostMethods.classList.add('has-selection');
+ document.getElementById('backWithdrawalMethods').hidden=false;
  const flow=document.getElementById('withdrawFlow');flow.hidden=false;
  document.getElementById('accountLabel').textContent=method.accountLabel||'Payout account details';
  document.getElementById('account').placeholder=method.accountPlaceholder||'Enter your payout account details';
@@ -266,6 +266,7 @@ function chooseWithdrawalMethod(method,button){
  if(!tiers.length){host.append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'No withdrawal amounts have been configured for this method.'}));return}
  tiers.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='amount';b.innerHTML='';const amount=document.createElement('strong');amount.textContent=String(t.displayLabel||Number(t.coins).toLocaleString('en-US')+' coins');const points=document.createElement('small');points.textContent=Number(t.coins).toLocaleString('en-US')+' coins';b.append(amount,document.createElement('br'),points);b.onclick=()=>selectAmount(b,Number(t.coins));host.append(b)});
 }
+document.getElementById('backWithdrawalMethods').addEventListener('click',()=>{const host=document.getElementById('withdrawMethodsList');host.classList.remove('has-selection');host.querySelectorAll('.withdraw-method').forEach(b=>b.classList.remove('selected'));selectedMethod=null;selectedCoins=0;document.getElementById('withdrawFlow').hidden=true;document.getElementById('backWithdrawalMethods').hidden=true;document.getElementById('withdrawalTiers').replaceChildren();document.getElementById('withdrawalTiers').append(Object.assign(document.createElement('div'),{className:'empty-offers withdraw-status',textContent:'Choose a withdrawal method first.'}));document.getElementById('account').value='';});
 async function loadSocialLinks(){const ids={telegram:"telegramLink",youtube:"youtubeLink",instagram:"instagramLink"},status=document.getElementById("socialStatus");const tik=document.getElementById("tiktokLink");tik.href="https://www.tiktok.com/@yasjoy71";tik.hidden=false;try{const snap=await getDoc(doc(db,"socialLinks","main"));if(!snap.exists()){status.textContent="Social links are not configured yet.";Object.values(ids).forEach(id=>document.getElementById(id).hidden=true);return}const links=snap.data();let count=0;for(const [key,id] of Object.entries(ids)){const el=document.getElementById(id),url=links[key];if(typeof url==="string"&&/^https:\/\/\S+$/i.test(url)){el.href=url;el.hidden=false;count++}else el.hidden=true}status.textContent=count?"Social links loaded from Firebase.":"No valid social links configured."}catch(error){console.error("Social links error:",error);status.textContent="Could not load social links. Check Firebase rules and socialLinks/main."}}
 /* Live offer-wall list: only visible records are rendered. */
 function renderOfferWalls(snapshot){
