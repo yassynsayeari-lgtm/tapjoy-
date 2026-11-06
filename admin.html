@@ -53,7 +53,7 @@ input,textarea,select{border-color:#edc0cd}input:focus,textarea:focus,select:foc
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';
 import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
-import{getFirestore,collection,onSnapshot,doc,updateDoc,addDoc,deleteDoc,getDoc,serverTimestamp}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js';
+import{getFirestore,collection,onSnapshot,doc,updateDoc,addDoc,deleteDoc,getDoc,setDoc,serverTimestamp}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js';
 const config={apiKey:'AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI',authDomain:'yasjoy.firebaseapp.com',projectId:'yasjoy',storageBucket:'yasjoy.firebasestorage.app',messagingSenderId:'967065409063',appId:'1:967065409063:web:4f7b882cc38f17ec8a2002'};
 const ADMIN_UID='wQgo9HTzP0NWC6JO2D1Di8iIPm62',app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
 let users=[],withdrawals=[],methods=[],walls=[],status='pending',unsubs=[];
@@ -200,17 +200,27 @@ function renderProviderFields(values={}){
  if(!name){host.textContent='اختر مزوّدًا لعرض حقول الإعداد المناسبة.';return}
  host.append(el('strong','حقول إعداد '+name));
  providerSchema(name).forEach(([key,label,type])=>{
-  const lab=el('label',label);const input=document.createElement('input');input.type='text';input.dataset.providerKey=key;input.dataset.fieldType=type;input.placeholder=type==='secret'?'لا تدخل المفتاح السري هنا':'أدخل القيمة إذا كانت متوفرة';input.value=type==='public'?(values[key]||''):'';if(type==='secret'){input.disabled=true;input.placeholder='يتطلب خادمًا آمنًا؛ غير متاح للحفظ في هذه النسخة'}
+  const lab=el('label',type==='secret'?label.replace(/\s*\(لا تحفظه هنا\)/,' (سري)'):label);const input=document.createElement('input');input.type='text';input.dataset.providerKey=key;input.dataset.fieldType=type;input.placeholder=type==='secret'?'لا تدخل المفتاح السري هنا':'أدخل القيمة إذا كانت متوفرة';input.value=type==='public'?(values[key]||''):'';if(type==='secret'){input.type='password';input.autocomplete='off';input.placeholder='أدخل المفتاح السري'}
   host.append(lab,input);
  });
  host.append(el('p','هذه قوالب أولية لتجهيز بيانات المزوّد وليست تأكيدًا بأن التكامل يعمل. راجع لوحة ووثائق المزوّد قبل التفعيل.','muted'));
 }
 providerSelect.addEventListener('change',()=>{const n=providerSelect.value;if(n&&!$('wallName').value.trim())$('wallName').value=n;renderProviderFields()});
 function renderWalls(){const l=$('wallList');l.replaceChildren();if(!walls.length)l.append(el('div','لا توجد جدران عروض.','empty'));walls.forEach(w=>{const c=el('article','','item'),logo=validUrl(w.logo);if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;c.append(im)}c.append(el('div',w.name||w.id),el('div','المزوّد: '+(w.provider||'غير محدد')),el('div','الرابط: '+(typeof w.url==='string'?w.url:'غير مضبوط')),el('div',w.enabled?'مفعّل':'متوقف','badge'));const a=el('div','','actions');[['تعديل',()=>editWall(w)],[w.enabled?'إيقاف':'تفعيل',()=>toggle('offerWalls',w.id,!w.enabled)],['حذف',()=>remove('offerWalls',w.id)]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});c.append(a);l.append(c)})}
-function editWall(w){$('wallId').value=w.id;$('wallProvider').value=w.provider||'';$('wallName').value=w.name||'';$('wallUrl').value=typeof w.url==='string'?w.url:'';$('wallLogo').value=w.logo||'';$('wallEnabled').checked=!!w.enabled;$('wallTitle').textContent='تعديل جدار عروض';renderProviderFields(w.integration||{})}
+async function markSavedSecrets(wallId){
+ try{
+  const s=await getDoc(doc(db,'offerWallSecrets',wallId));
+  if(!s.exists())return;
+  const data=s.data();
+  $('providerFields').querySelectorAll('input[data-field-type=secret]').forEach(input=>{
+   if(data[input.dataset.providerKey])input.placeholder='محفوظ ✓ — اتركه فارغًا للإبقاء عليه';
+  });
+ }catch(e){console.error('secrets read error:',e)}
+}
+function editWall(w){$('wallId').value=w.id;$('wallProvider').value=w.provider||'';$('wallName').value=w.name||'';$('wallUrl').value=typeof w.url==='string'?w.url:'';$('wallLogo').value=w.logo||'';$('wallEnabled').checked=!!w.enabled;$('wallTitle').textContent='تعديل جدار عروض';renderProviderFields(w.integration||{});markSavedSecrets(w.id)}
 function resetWall(){['wallId','wallName','wallUrl','wallLogo'].forEach(x=>$(x).value='');$('wallProvider').value='';$('wallEnabled').checked=false;$('wallTitle').textContent='إضافة جدار عروض';$('wallMsg').textContent='';renderProviderFields()}
 $('cancelWall').onclick=resetWall;
-$('saveWall').onclick=async()=>{const id=$('wallId').value,name=$('wallName').value.trim(),url=validUrl($('wallUrl').value.trim()),lr=$('wallLogo').value.trim(),logo=validUrl(lr);if(!name||!url){$('wallMsg').textContent='أدخل الاسم ورابطًا صحيحًا يبدأ بـ http أو https.';$('wallMsg').className='error';return}if(lr&&!logo){$('wallMsg').textContent='رابط الشعار غير صالح.';$('wallMsg').className='error';return}const provider=$('wallProvider').value;if(!provider){$('wallMsg').textContent='اختر مزوّد جدار العروض.';$('wallMsg').className='error';return}const integration={};$('providerFields').querySelectorAll('input[data-field-type=public]').forEach(input=>{if(input.value.trim())integration[input.dataset.providerKey]=input.value.trim()});const data={name,url,provider,integration,enabled:$('wallEnabled').checked};if(logo)data.logo=logo;try{if(id)await updateDoc(doc(db,'offerWalls',id),data);else await addDoc(collection(db,'offerWalls'),data);$('wallMsg').textContent='تم الحفظ.';$('wallMsg').className='success';resetWall()}catch(e){$('wallMsg').textContent='فشل الحفظ: '+e.message;$('wallMsg').className='error'}};
+$('saveWall').onclick=async()=>{const id=$('wallId').value,name=$('wallName').value.trim(),url=validUrl($('wallUrl').value.trim()),lr=$('wallLogo').value.trim(),logo=validUrl(lr);if(!name||!url){$('wallMsg').textContent='أدخل الاسم ورابطًا صحيحًا يبدأ بـ http أو https.';$('wallMsg').className='error';return}if(lr&&!logo){$('wallMsg').textContent='رابط الشعار غير صالح.';$('wallMsg').className='error';return}const provider=$('wallProvider').value;if(!provider){$('wallMsg').textContent='اختر مزوّد جدار العروض.';$('wallMsg').className='error';return}const integration={};$('providerFields').querySelectorAll('input[data-field-type=public]').forEach(input=>{if(input.value.trim())integration[input.dataset.providerKey]=input.value.trim()});const secrets={};$('providerFields').querySelectorAll('input[data-field-type=secret]').forEach(input=>{if(input.value.trim())secrets[input.dataset.providerKey]=input.value.trim()});const data={name,url,provider,integration,enabled:$('wallEnabled').checked};if(logo)data.logo=logo;try{let wallId=id;if(id)await updateDoc(doc(db,'offerWalls',id),data);else{const ref=await addDoc(collection(db,'offerWalls'),data);wallId=ref.id}if(Object.keys(secrets).length)await setDoc(doc(db,'offerWallSecrets',wallId),{...secrets,provider,updatedAt:serverTimestamp()},{merge:true});$('wallMsg').textContent='تم الحفظ.';$('wallMsg').className='success';resetWall()}catch(e){$('wallMsg').textContent='فشل الحفظ: '+e.message;$('wallMsg').className='error'}};
 async function toggle(col,id,enabled){try{await updateDoc(doc(db,col,id),{enabled})}catch(e){alert('تعذّر تحديث الحالة: '+e.message)}}
 async function remove(col,id){if(!confirm('هل تريد حذف هذا السجل؟ لا يمكن التراجع.'))return;try{await deleteDoc(doc(db,col,id))}catch(e){alert('تعذّر الحذف: '+e.message)}}
 $('search').addEventListener('input',renderUsers);
