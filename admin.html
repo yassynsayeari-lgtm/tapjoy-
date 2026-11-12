@@ -52,7 +52,83 @@ function groupWithdrawals(rows){const groups=[];rows.forEach(w=>{let g=groups.fi
 function appendUserWithdrawalSummary(host,mine){const total=mine.reduce((sum,w)=>sum+withdrawalPoints(w),0),groups=groupWithdrawals(mine);const summary=el('div','','summary-card');summary.append(el('strong','ملخص سحوبات المستخدم'));const grid=el('div','','summary-grid');const a=el('div','','summary-stat');a.append(el('span','إجمالي نقاط جميع الطلبات'),el('b',total.toLocaleString('en-US')+' نقطة'));const b=el('div','','summary-stat');b.append(el('span','عدد طلبات السحب'),el('b',String(mine.length)));const c=el('div','','summary-stat');c.append(el('span','مجموعات المحفظة والطريقة'),el('b',String(groups.length)));grid.append(a,b,c);summary.append(grid);groups.forEach((g,i)=>{const first=g.items[0],line=el('div','', 'details-box');line.append(el('strong','المجموعة '+(i+1)),detailLine('طريقة السحب',withdrawalMethod(first)),detailLine('المحفظة',withdrawalWallet(first)),detailLine('عدد الطلبات',g.items.length),detailLine('إجمالي نقاط المجموعة',g.points.toLocaleString('en-US')+' نقطة'));summary.append(line)});host.append(summary)}
 function renderUsers(){const q=$('search').value.trim().toLowerCase(),list=$('userList');list.replaceChildren();const rows=users.filter(u=>[u.id,u.uid,u.publicId].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>balance(b)-balance(a));$('userMsg').textContent='عدد المستخدمين: '+users.length;if(!rows.length){list.append(el('div','لا توجد نتائج.','empty'));return}rows.forEach((u,i)=>{const c=el('article','','item');c.append(el('div',(i+1)+'. '+(u.publicId||'مستخدم')));c.append(el('div','Firebase UID: '+u.id));c.append(el('div','الرصيد: '+balance(u).toLocaleString('en-US')));let last='غير معروف';if(u.lastActiveAt){const d=u.lastActiveAt.toDate?u.lastActiveAt.toDate():new Date(u.lastActiveAt);if(!isNaN(d))last=d.toLocaleString('ar')}c.append(el('div','آخر نشاط: '+last));c.append(el('div',u.banned?'محظور':'غير محظور','badge'));const details=el('div','','details-box');details.classList.add('hidden');const view=el('button','عرض التفاصيل','btn');view.onclick=()=>{const mine=userWithdrawals(u.id);details.replaceChildren(el('strong','طلبات السحب'));if(!mine.length)details.append(el('p','لا توجد طلبات سحب لهذا المستخدم.','muted'));else{appendUserWithdrawalSummary(details,mine);mine.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).forEach(w=>{const one=el('div','','details-box');one.append(detailLine('طريقة السحب',withdrawalMethod(w)),detailLine('المحفظة',withdrawalWallet(w)),detailLine('النقاط',withdrawalPoints(w).toLocaleString('en-US')),detailLine('حالة الدفع',w.status==='paid'?'تم الدفع':w.status==='pending'?'قيد الانتظار':String(w.status||'غير محدد')),detailLine('التاريخ',displayDate(w.createdAt)));details.append(one)})}details.classList.toggle('hidden')};c.append(view,details);const b=el('button',u.banned?'إلغاء الحظر':'حظر المستخدم','btn '+(u.banned?'':'danger'));b.onclick=async()=>{try{await updateDoc(doc(db,'users',u.id),{banned:!u.banned})}catch(e){alert('تعذّر تغيير الحظر: '+e.message)}};c.append(b);list.append(c)})}
 async function showWithdrawalDetails(w,box,button){button.disabled=true;button.textContent='جارٍ تحميل التفاصيل…';box.replaceChildren(el('div','جارٍ تحميل تفاصيل الطلب…','muted'));try{const uid=withdrawalUid(w),txSnap=await getDoc(doc(db,'transactions',w.id));box.replaceChildren();box.append(el('strong','تفاصيل طلب السحب'));box.append(detailLine('المعرّف العام',w.publicId),detailLine('طريقة السحب',withdrawalMethod(w)),detailLine('النقاط المخصومة',withdrawalPoints(w)),detailLine('عنوان المحفظة',withdrawalWallet(w)),detailLine('التاريخ والوقت',displayDate(w.createdAt)));const mine=userWithdrawals(uid),group=mine.filter(x=>sameWithdrawalGroup(x,w)),groupTotal=group.reduce((sum,x)=>sum+withdrawalPoints(x),0),userTotal=mine.reduce((sum,x)=>sum+withdrawalPoints(x),0);const summary=el('div','','summary-card');summary.append(el('strong','ملخص الطلبات المرتبطة بهذا الحساب'));const grid=el('div','','summary-grid');[['إجمالي نقاط المجموعة',groupTotal],['عدد طلبات المجموعة',group.length],['إجمالي نقاط كل سحوبات المستخدم',userTotal],['عدد سحوبات المستخدم',mine.length]].forEach(([label,value])=>{const stat=el('div','','summary-stat');stat.append(el('span',label),el('b',Number(value).toLocaleString('en-US')+(String(label).includes('نقاط')?' نقطة':'')));grid.append(stat)});summary.append(grid);summary.append(detailLine('طريقة السحب المشتركة',withdrawalMethod(w)),detailLine('المحفظة المشتركة',withdrawalWallet(w)));box.append(summary,el('h4','التحقق من سجل المعاملة'));if(!txSnap.exists())box.append(el('p','لا يوجد سجل معاملة مطابق لهذا الطلب.','warn'));else{const tx=txSnap.data(),expected=-withdrawalPoints(w),actual=Number(tx.coins??tx.amount??tx.points),checks=[['معرّف الطلب',String(tx.withdrawalId||'')===String(w.id)],['UID المستخدم',!!uid&&String(tx.uid||tx.userId||'')===String(uid)],['قيمة النقاط',Number.isFinite(expected)&&Number.isFinite(actual)&&actual===expected]],allOk=checks.every(x=>x[1]);checks.forEach(([label,ok])=>box.append(el('div',(ok?'✓ ':'✗ ')+label+(ok?' — مطابق':' — غير مطابق'),ok?'ok':'warn')));box.append(el('p',allOk?'تم العثور على سجل معاملة مطابق للطلب.':'سجل المعاملة موجود، لكن بعض بياناته غير متطابقة.',allOk?'ok':'warn'))}}catch(e){box.replaceChildren(el('p','تعذّر تحميل التفاصيل: '+e.message,'warn'))}finally{button.disabled=false;button.textContent='إخفاء/تحديث التفاصيل'}}
-function renderWithdrawals(){const list=$('withdrawList');list.replaceChildren();const rows=withdrawals.filter(w=>String(w.status||'pending').toLowerCase()===status);if(!rows.length){list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));return}rows.forEach(w=>{const c=el('article','','item');c.append(el('div','طلب سحب',''));const detailButton=el('button','عرض تفاصيل الطلب','btn'),details=el('div','','details-box');details.classList.add('hidden');detailButton.onclick=async()=>{if(!details.classList.contains('hidden')){details.classList.add('hidden');detailButton.textContent='عرض تفاصيل الطلب';return}details.classList.remove('hidden');await showWithdrawalDetails(w,details,detailButton)};c.append(detailButton,details);if(status==='pending'){const a=el('div','','actions');[['paid','تأكيد الدفع'],['rejected','رفض الطلب']].forEach(([s,t])=>{const b=el('button',t,'btn '+(s==='rejected'?'danger':''));b.onclick=async()=>{if(!confirm(s==='paid'?'هل دفعت المبلغ فعلًا؟':'هل تريد رفض الطلب؟'))return;try{await updateDoc(doc(db,'withdrawals',w.id),{status:s,updatedAt:serverTimestamp()});alert(s==='paid'?'تم تحديث الطلب إلى مدفوع.':'تم رفض الطلب. لم تتم إعادة النقاط.')}catch(e){alert('تعذّر تحديث الطلب: '+e.message)}};a.append(b)});c.append(a)}list.append(c)})}
+function withdrawalCategory(w){
+ return String(w.categoryLabel||w.tierLabel||w.displayLabel||w.tier||w.packageName||w.amountLabel||w.category||withdrawalMethod(w)||'فئة غير محددة').trim();
+}
+function withdrawalDisplayAmount(w){
+ const candidates=[w.amount,w.cashAmount,w.withdrawalAmount,w.value];
+ for(const value of candidates){if(value!==undefined&&value!==null&&value!==''&&Number.isFinite(Number(value)))return Number(value)}
+ return null;
+}
+function groupUserWithdrawals(rows){
+ const groups=[];
+ rows.forEach(w=>{
+  const uid=withdrawalUid(w)||'unknown:'+String(w.publicId||w.id);
+  let group=groups.find(g=>normalizedGroupPart(g.uid)===normalizedGroupPart(uid));
+  if(!group){group={uid,items:[],points:0,categories:[]};groups.push(group)}
+  group.items.push(w);group.points+=withdrawalPoints(w);
+  const category=withdrawalCategory(w),key=normalizedGroupPart(category);
+  let cat=group.categories.find(x=>x.key===key);
+  if(!cat){cat={key,label:category,items:[],points:0,amount:0,hasAmount:true};group.categories.push(cat)}
+  cat.items.push(w);cat.points+=withdrawalPoints(w);
+  const amount=withdrawalDisplayAmount(w);
+  if(amount===null)cat.hasAmount=false;else cat.amount+=amount;
+ });
+ return groups;
+}
+function renderWithdrawals(){
+ const list=$('withdrawList');list.replaceChildren();
+ const rows=withdrawals.filter(w=>String(w.status||'pending').toLowerCase()===status);
+ if(!rows.length){list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));return}
+ const groups=groupUserWithdrawals(rows);
+ groups.forEach((group,index)=>{
+  const user=users.find(u=>String(u.id)===String(group.uid));
+  const first=group.items[0];
+  const card=el('article','','item');
+  card.append(el('div','المستخدم '+(index+1)+' — '+(first.publicId||user?.publicId||'معرّف غير متوفر')));
+  card.append(detailLine('Firebase UID',group.uid==='unknown:'+String(first.publicId||first.id)?'غير متوفر':group.uid));
+  const summary=el('div','','summary-card');
+  summary.append(el('strong','ملخص سحوبات المستخدم'));
+  const stats=el('div','','summary-grid');
+  [[ 'إجمالي النقاط',group.points.toLocaleString('en-US')+' نقطة' ],['عدد طلبات السحب',String(group.items.length)]].forEach(([label,value])=>{const stat=el('div','','summary-stat');stat.append(el('span',label),el('b',value));stats.append(stat)});
+  summary.append(stats,el('h4','فئات السحب'));
+  group.categories.forEach(cat=>{
+   const categoryBox=el('div','','details-box');
+   categoryBox.append(el('strong',cat.label));
+   const amounts=cat.items.map(w=>withdrawalDisplayAmount(w)).filter(v=>v!==null);
+   if(amounts.length===cat.items.length&&amounts.length){
+    const equation=amounts.map(v=>v.toLocaleString('en-US',{maximumFractionDigits:4})).join(' + ');
+    categoryBox.append(detailLine('مجموع الفئة',equation+' = '+cat.amount.toLocaleString('en-US',{maximumFractionDigits:4})));
+   }else{
+    categoryBox.append(detailLine('إجمالي النقاط',cat.points.toLocaleString('en-US')+' نقطة'));
+   }
+   categoryBox.append(detailLine('عدد الطلبات',cat.items.length));
+   summary.append(categoryBox);
+  });
+  card.append(summary);
+  const orders=el('div','','details-box');
+  orders.append(el('strong','تفاصيل الطلبات الفردية'));
+  group.items.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).forEach((w,orderIndex)=>{
+   const one=el('div','','item');
+   one.append(el('strong','طلب '+(orderIndex+1)),detailLine('الفئة',withdrawalCategory(w)),detailLine('النقاط',withdrawalPoints(w).toLocaleString('en-US')),detailLine('الحالة',w.status==='paid'?'مدفوع':w.status==='pending'?'معلّق':String(w.status||'غير محدد')));
+   const detailButton=el('button','عرض التفاصيل والتحقق','btn');
+   const detail=el('div','','details-box');detail.classList.add('hidden');
+   detailButton.onclick=async()=>{if(!detail.classList.contains('hidden')){detail.classList.add('hidden');detailButton.textContent='عرض التفاصيل والتحقق';return}detail.classList.remove('hidden');await showWithdrawalDetails(w,detail,detailButton)};
+   one.append(detailButton,detail);
+   if(status==='pending'){
+    const actions=el('div','','actions');
+    [['paid','تأكيد الدفع'],['rejected','رفض الطلب']].forEach(([next,label])=>{
+     const button=el('button',label,'btn '+(next==='rejected'?'danger':''));
+     button.onclick=async()=>{if(!confirm(next==='paid'?'هل دفعت المبلغ فعلًا؟':'هل تريد رفض الطلب؟'))return;try{await updateDoc(doc(db,'withdrawals',w.id),{status:next,updatedAt:serverTimestamp()});alert(next==='paid'?'تم تحديث الطلب إلى مدفوع.':'تم رفض الطلب. لم تتم إعادة النقاط.')}catch(e){alert('تعذّر تحديث الطلب: '+e.message)}};
+     actions.append(button);
+    });
+    one.append(actions);
+   }
+   orders.append(one);
+  });
+  card.append(orders);list.append(card);
+ });
+}
 function validUrl(v){if(!v)return '';try{const u=new URL(v);return ['http:','https:'].includes(u.protocol)?u.href:''}catch{return ''}}
 function addTierRow(coins='',displayLabel=''){const wrap=el('div','','tier-row'),points=document.createElement('input');points.type='number';points.min='1';points.step='1';points.placeholder='النقاط';points.className='tier-coins';points.value=coins;const label=document.createElement('input');label.type='text';label.maxLength=32;label.placeholder='النص الظاهر للمستخدم';label.className='tier-label';label.value=displayLabel;const del=el('button','حذف');del.type='button';del.onclick=()=>wrap.remove();wrap.append(points,label,del);$('tierRows').append(wrap)}
 function readTiers(){return [...$('tierRows').querySelectorAll('.tier-row')].map(r=>({coins:Number(r.querySelector('.tier-coins').value),displayLabel:r.querySelector('.tier-label').value.trim()}))}
