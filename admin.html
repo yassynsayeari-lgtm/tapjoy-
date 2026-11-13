@@ -95,22 +95,52 @@ function groupUserWithdrawals(rows){
  return groups;
 }
 function renderWithdrawals(){
- const list=$('withdrawList');list.replaceChildren();
- const rows=withdrawals.filter(w=>String(w.status||'pending').toLowerCase()===status);
- if(!rows.length){list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));return}
+ const list=$('withdrawList');
+ list.replaceChildren();
+
+ // القائمة نفسها تبقى مفلترة حسب التبويب المختار.
+ const rows=withdrawals.filter(w=>
+  String(w.status||'pending').toLowerCase()===status
+ );
+ if(!rows.length){
+  list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));
+  return;
+ }
+
  const groups=groupUserWithdrawals(rows);
  groups.forEach((group,index)=>{
-  const user=users.find(u=>String(u.id)===String(group.uid));
   const first=group.items[0];
+  const user=users.find(u=>String(u.id)===String(group.uid));
+  // الملخص يحسب كل حالات هذا المستخدم، وليس حالة التبويب الحالي فقط.
+  const allUserRequests=userWithdrawals(group.uid);
+  const allGroups=groupUserWithdrawals(allUserRequests);
+  const allUserGroup=allGroups[0]||{categories:[]};
+  const totalPoints=allUserRequests.reduce((sum,w)=>sum+withdrawalPoints(w),0);
+  const countByState=state=>allUserRequests.filter(w=>
+   String(w.status||'pending').toLowerCase()===state
+  ).length;
+
   const card=el('article','','item');
   card.append(el('div','المستخدم '+(index+1)+' — '+(first.publicId||user?.publicId||'معرّف غير متوفر')));
   card.append(detailLine('Firebase UID',group.uid==='unknown:'+String(first.publicId||first.id)?'غير متوفر':group.uid));
+
   const summary=el('div','','summary-card');
   summary.append(el('strong','ملخص سحوبات المستخدم'));
   const stats=el('div','','summary-grid');
-  [[ 'إجمالي النقاط',group.points.toLocaleString('en-US')+' نقطة' ],['عدد طلبات السحب',String(group.items.length)]].forEach(([label,value])=>{const stat=el('div','','summary-stat');stat.append(el('span',label),el('b',value));stats.append(stat)});
+  [
+   ['إجمالي نقاط جميع السحوبات',totalPoints.toLocaleString('en-US')+' نقطة'],
+   ['إجمالي عدد الطلبات',String(allUserRequests.length)],
+   ['الطلبات المعلّقة',String(countByState('pending'))],
+   ['الطلبات المدفوعة',String(countByState('paid'))],
+   ['الطلبات المرفوضة',String(countByState('rejected'))]
+  ].forEach(([label,value])=>{
+   const stat=el('div','','summary-stat');
+   stat.append(el('span',label),el('b',value));
+   stats.append(stat);
+  });
   summary.append(stats,el('h4','فئات السحب'));
-  group.categories.forEach(cat=>{
+
+  allUserGroup.categories.forEach(cat=>{
    const categoryBox=el('div','','details-box');
    categoryBox.append(el('strong',cat.label));
    const amounts=cat.items.map(w=>withdrawalDisplayAmount(w)).filter(v=>v!==null);
@@ -123,8 +153,10 @@ function renderWithdrawals(){
    categoryBox.append(detailLine('عدد الطلبات',cat.items.length));
    summary.append(categoryBox);
   });
+
   card.append(summary);
-  card.append(el('p','تفاصيل كل طلب فردي موجودة في قسم «عرض طلبات».','muted'));list.append(card);
+  card.append(el('p','الطلبات المعروضة هنا حسب التبويب المختار، والملخص يشمل جميع حالات السحب. تفاصيل كل طلب فردي موجودة في قسم «عرض طلبات».','muted'));
+  list.append(card);
  });
 }
 
