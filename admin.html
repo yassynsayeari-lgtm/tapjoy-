@@ -9,12 +9,30 @@ body{background:linear-gradient(145deg,#fff4f6,#f8e9ee 55%,#f4dce4);color:#40132
 #users h2{color:#941337;font-size:25px;margin:8px 0 18px}#users #search{border:2px solid #efc2ce;border-radius:14px;background:#fffafb;padding:14px 16px}#users #userMsg{background:#fff0f4;border:1px solid #f0c4d0;border-radius:12px;padding:10px 13px;color:#8c1535;font-weight:bold}#userList{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:12px;align-items:start}#userList .item{margin:0;padding:16px;border:1px solid #efc2ce;border-right:5px solid #b5123b;border-radius:18px;background:linear-gradient(145deg,#fff,#fff7f9);box-shadow:0 6px 18px #850d2b0b;line-height:1.8}#userList .item>div:first-child{font-size:17px;font-weight:900;color:#85102f;margin-bottom:8px}#userList .item>div:nth-child(2){font-size:11px;color:#718096;direction:ltr;text-align:right;overflow-wrap:anywhere}#userList .item>div:nth-child(3){display:inline-block;margin:8px 0;padding:7px 12px;border-radius:11px;background:#fff0f4;color:#941337;font-size:17px;font-weight:900}#userList .item .badge{margin:7px 0 10px}#userList .item button{width:100%;border:0;border-radius:12px;padding:12px;font-weight:bold}@media(max-width:520px){#userList{grid-template-columns:1fr}#users.panel{padding:14px}}
 /* Withdrawal totals: display-only summaries; individual withdrawal records remain unchanged. */
 .summary-card{background:#fff0f4;border:1px solid #e9aabb;border-radius:12px;padding:11px;margin:9px 0;color:#70132d}.summary-card strong{color:#941337}.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin:9px 0}.summary-stat{background:#fff;border:1px solid #f0c4d0;border-radius:10px;padding:9px}.summary-stat b{display:block;color:#941337;font-size:18px;margin-top:3px}
+
+/* Individual withdrawal requests view — visual enhancement only */
+#viewRequests.panel{background:linear-gradient(155deg,#fff,#fff8fa);border:1px solid #efc2ce;border-radius:20px;box-shadow:0 12px 32px #850d2b12}
+#viewRequests h2{color:#941337;font-size:25px;margin:8px 0 6px}
+.request-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#fff0f4;border:1px solid #f0c4d0;border-radius:14px;padding:12px;margin:14px 0}
+.request-toolbar strong{color:#85102f}
+.request-card{border:1px solid #efc2ce;border-right:5px solid #b5123b;border-radius:17px;background:#fff;padding:15px;margin:12px 0;box-shadow:0 5px 16px #850d2b0a}
+.request-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.request-card-head strong{font-size:16px;color:#85102f}
+.request-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin:10px 0}
+.request-meta>div{background:#fff7f9;border:1px solid #f3d3dc;border-radius:11px;padding:10px;line-height:1.7;overflow-wrap:anywhere}
+.request-meta b{display:block;color:#941337;font-size:12px;margin-bottom:3px}
+.request-card .details-box{margin-top:12px}
+.request-card .actions{border-top:1px solid #f4d9e0;padding-top:10px}
+.request-card .btn{min-width:120px}
+#viewRequests .tabs .tab{flex:1;min-width:90px}
+@media(max-width:520px){.request-meta{grid-template-columns:1fr 1fr}.request-card{padding:12px}}
 </style></head><body>
 <header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header><main>
 <section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><p id="loginMsg" class="muted"></p></section>
 <section id="app" class="hidden"><p class="muted">تم التحقق من حساب المسؤول</p><div id="home">
-<button class="menu" onclick="openPanel('withdraw')">💳 طلبات السحب<small>معلّقة، مدفوعة، مرفوضة</small></button><button class="menu" onclick="openPanel('users')">👥 المستخدمون<small>بحث، رصيد، آخر نشاط، حظر</small></button><button class="menu" onclick="openPanel('methods')">💰 طرق السحب<small>إضافة وتعديل وتشغيل وإيقاف</small></button><button class="menu" onclick="openPanel('walls')">🎁 جدران العروض<small>إضافة الروابط والشعارات وإدارتها</small></button></div>
+<button class="menu" onclick="openPanel('withdraw')">💳 طلبات السحب<small>معلّقة، مدفوعة، مرفوضة</small></button><button class="menu" onclick="openPanel('viewRequests')">📋 عرض طلبات<small>عرض كل طلب سحب فردي وتفاصيله والتحقق من معاملته</small></button><button class="menu" onclick="openPanel('users')">👥 المستخدمون<small>بحث، رصيد، آخر نشاط، حظر</small></button><button class="menu" onclick="openPanel('methods')">💰 طرق السحب<small>إضافة وتعديل وتشغيل وإيقاف</small></button><button class="menu" onclick="openPanel('walls')">🎁 جدران العروض<small>إضافة الروابط والشعارات وإدارتها</small></button></div>
 <section id="withdraw" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2><div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div><div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p></section>
+<section id="viewRequests" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>عرض طلبات السحب</h2><p class="muted">كل طلب يظهر بشكل مستقل، مع تفاصيله والتحقق من سجل المعاملة. لا يتم دمج أو تعديل سجلات الطلبات عند العرض.</p><div class="tabs"><button class="tab active" onclick="requestViewTab('pending',this)">معلّقة</button><button class="tab" onclick="requestViewTab('paid',this)">مدفوعة</button><button class="tab" onclick="requestViewTab('rejected',this)">مرفوضة</button></div><div id="individualRequestList"></div></section>
 <section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userList"></div></section>
 <section id="methods" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة طرق السحب</h2><div class="form"><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden"><label>اسم طريقة السحب</label><input id="methodName" placeholder="Binance أو PayPal"><label>رابط الشعار</label><input id="methodLogo" type="url" placeholder="رابط صورة الشعار https://..."><h3>فئات السحب</h3><p class="muted">أدخل عدد النقاط والنص الذي سيظهر للمستخدم. صورة الشعار تبقى منفصلة.</p><div id="tierRows"></div><button type="button" id="addTier" class="btn">＋ إضافة فئة</button><label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label><button id="saveMethod" class="primary">حفظ طريقة السحب والفئات</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
 <section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2><p class="muted">يجب إدخال رابط صحيح ومعتمد من مزوّد الخدمة. حفظ الرابط لا يعني تفعيل حساب المزوّد أو توثيق المكافآت.</p><div class="form"><h3 id="wallTitle">إضافة جدار عروض</h3><input id="wallId" type="hidden"><label>مزود جدار العروض</label><select id="wallProvider" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="">اختر المزوّد</option></select><label>الاسم الظاهر للمستخدم</label><input id="wallName" placeholder="اسم الجدار"><label>رابط الجدار أو صفحة العرض المعتمدة</label><input id="wallUrl" type="url" placeholder="https://..."><label>رابط الشعار (اختياري)</label><input id="wallLogo" type="url" placeholder="https://..."><div id="providerFields" class="details-box"></div><p class="muted">ملاحظة أمان: تُحفظ المعرّفات العامة فقط. مفاتيح API وSDK السرية لا تُحفظ في Firestore؛ يلزم خادم آمن للتحقق من المكافآت وربط الأسرار.</p><label class="check"><input id="wallEnabled" type="checkbox"> مفعّل</label><button id="saveWall" class="primary">حفظ</button><button id="cancelWall" class="btn">إلغاء</button><p id="wallMsg" class="muted"></p></div><div id="wallList"></div></section>
@@ -31,11 +49,11 @@ $('loginBtn').onclick=async()=>{$('loginMsg').textContent='جارٍ التحقق
 $('password').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};
 onAuthStateChanged(auth,async u=>{unsubs.forEach(f=>f());unsubs=[];if(!u){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}if(u.uid!==ADMIN_UID){await signOut(auth);$('loginMsg').textContent='هذا الحساب غير مخوّل.';return}$('login').classList.add('hidden');$('app').classList.remove('hidden');
 unsubs.push(onSnapshot(collection(db,'users'),s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));renderUsers()}));
-unsubs.push(onSnapshot(collection(db,'withdrawals'),s=>{withdrawals=s.docs.map(d=>({id:d.id,...d.data()}));renderWithdrawals();renderUsers()},e=>{$('withdrawList').replaceChildren(el('div','تعذّر تحميل طلبات السحب: '+e.message,'error'));console.error('withdrawals listener error:',e)}));
+unsubs.push(onSnapshot(collection(db,'withdrawals'),s=>{withdrawals=s.docs.map(d=>({id:d.id,...d.data()}));renderWithdrawals();renderIndividualRequests();renderUsers()},e=>{$('withdrawList').replaceChildren(el('div','تعذّر تحميل طلبات السحب: '+e.message,'error'));console.error('withdrawals listener error:',e)}));
 unsubs.push(onSnapshot(collection(db,'withdrawMethods'),s=>{methods=s.docs.map(d=>({id:d.id,...d.data()}));renderMethods()}));
 unsubs.push(onSnapshot(collection(db,'offerWalls'),s=>{walls=s.docs.map(d=>({id:d.id,...d.data()}));renderWalls()}));
 });
-let current='home';function show(id){$('home').style.display=id==='home'?'block':'none';document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));if(id!=='home')$(id).classList.add('show');current=id}window.openPanel=show;window.goHome=()=>show('home');window.withdrawTab=(s,b)=>{status=s;document.querySelectorAll('#withdraw .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderWithdrawals()};
+let current='home';function show(id){$('home').style.display=id==='home'?'block':'none';document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));if(id!=='home')$(id).classList.add('show');current=id}window.openPanel=show;window.goHome=()=>show('home');window.withdrawTab=(s,b)=>{status=s;document.querySelectorAll('#withdraw .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderWithdrawals()};let requestStatus='pending';window.requestViewTab=(s,b)=>{requestStatus=s;document.querySelectorAll('#viewRequests .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderIndividualRequests()};
 function el(tag,text='',className=''){const node=document.createElement(tag);if(text!==undefined&&text!==null)node.textContent=String(text);if(className)node.className=className;return node}
 function balance(u){return Number(u.balance??u.points??u.coins??0)||0}
 function displayDate(v){if(!v)return 'غير متوفر';const d=v.toDate?v.toDate():(v instanceof Date?v:new Date(v));return isNaN(d)?'غير معروف':d.toLocaleString('ar')}
@@ -106,27 +124,33 @@ function renderWithdrawals(){
    summary.append(categoryBox);
   });
   card.append(summary);
-  const orders=el('div','','details-box');
-  orders.append(el('strong','تفاصيل الطلبات الفردية'));
-  group.items.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).forEach((w,orderIndex)=>{
-   const one=el('div','','item');
-   one.append(el('strong','طلب '+(orderIndex+1)),detailLine('الفئة',withdrawalCategory(w)),detailLine('النقاط',withdrawalPoints(w).toLocaleString('en-US')),detailLine('الحالة',w.status==='paid'?'مدفوع':w.status==='pending'?'معلّق':String(w.status||'غير محدد')));
-   const detailButton=el('button','عرض التفاصيل والتحقق','btn');
-   const detail=el('div','','details-box');detail.classList.add('hidden');
-   detailButton.onclick=async()=>{if(!detail.classList.contains('hidden')){detail.classList.add('hidden');detailButton.textContent='عرض التفاصيل والتحقق';return}detail.classList.remove('hidden');await showWithdrawalDetails(w,detail,detailButton)};
-   one.append(detailButton,detail);
-   if(status==='pending'){
-    const actions=el('div','','actions');
-    [['paid','تأكيد الدفع'],['rejected','رفض الطلب']].forEach(([next,label])=>{
-     const button=el('button',label,'btn '+(next==='rejected'?'danger':''));
-     button.onclick=async()=>{if(!confirm(next==='paid'?'هل دفعت المبلغ فعلًا؟':'هل تريد رفض الطلب؟'))return;try{await updateDoc(doc(db,'withdrawals',w.id),{status:next,updatedAt:serverTimestamp()});alert(next==='paid'?'تم تحديث الطلب إلى مدفوع.':'تم رفض الطلب. لم تتم إعادة النقاط.')}catch(e){alert('تعذّر تحديث الطلب: '+e.message)}};
-     actions.append(button);
-    });
-    one.append(actions);
-   }
-   orders.append(one);
-  });
-  card.append(orders);list.append(card);
+  card.append(el('p','تفاصيل كل طلب فردي موجودة في قسم «عرض طلبات».','muted'));list.append(card);
+ });
+}
+
+function renderIndividualRequests(){
+ const list=$('individualRequestList');if(!list)return;list.replaceChildren();
+ const rows=withdrawals.filter(w=>String(w.status||'pending').toLowerCase()===requestStatus).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+ const toolbar=el('div','','request-toolbar');toolbar.append(el('strong','عدد الطلبات: '+rows.length),el('span','كل طلب مستقل في سجل Firebase','muted'));list.append(toolbar);
+ if(!rows.length){list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));return}
+ rows.forEach((w,index)=>{
+  const user=users.find(u=>String(u.id)===withdrawalUid(w));
+  const card=el('article','','request-card'),head=el('div','','request-card-head');
+  head.append(el('strong','طلب سحب #'+(index+1)+' — '+(w.publicId||user?.publicId||'معرّف غير متوفر')));
+  head.append(el('span',w.status==='paid'?'مدفوع':w.status==='pending'?'معلّق':'مرفوض','badge'));card.append(head);
+  const meta=el('div','','request-meta');
+  [[ 'طريقة السحب',withdrawalMethod(w)||'غير محددة' ],['الفئة',withdrawalCategory(w)],['النقاط',withdrawalPoints(w).toLocaleString('en-US')+' نقطة'],['المبلغ',withdrawalDisplayAmount(w)===null?'غير متوفر':withdrawalDisplayAmount(w)],['تاريخ الطلب',displayDate(w.createdAt)],['المحفظة',withdrawalWallet(w)||'غير متوفرة']].forEach(([label,value])=>{const cell=el('div');cell.append(el('b',label),el('span',value));meta.append(cell)});
+  card.append(meta);
+  const detailButton=el('button','عرض التفاصيل والتحقق من المعاملة','btn');
+  const detail=el('div','','details-box');detail.classList.add('hidden');
+  detailButton.onclick=async()=>{if(!detail.classList.contains('hidden')){detail.classList.add('hidden');detailButton.textContent='عرض التفاصيل والتحقق من المعاملة';return}detail.classList.remove('hidden');await showWithdrawalDetails(w,detail,detailButton);};
+  card.append(detailButton,detail);
+  if(requestStatus==='pending'){
+   const actions=el('div','','actions');
+   [['paid','تأكيد الدفع'],['rejected','رفض الطلب']].forEach(([next,label])=>{const button=el('button',label,'btn '+(next==='rejected'?'danger':''));button.onclick=async()=>{if(!confirm(next==='paid'?'هل دفعت المبلغ فعلًا؟':'هل تريد رفض الطلب؟'))return;try{await updateDoc(doc(db,'withdrawals',w.id),{status:next,updatedAt:serverTimestamp()});alert(next==='paid'?'تم تحديث الطلب إلى مدفوع.':'تم رفض الطلب. لم تتم إعادة النقاط.')}catch(e){alert('تعذّر تحديث الطلب: '+e.message)}};actions.append(button)});
+   card.append(actions);
+  }
+  list.append(card);
  });
 }
 function validUrl(v){if(!v)return '';try{const u=new URL(v);return ['http:','https:'].includes(u.protocol)?u.href:''}catch{return ''}}
