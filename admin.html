@@ -74,8 +74,21 @@ function withdrawalCategory(w){
  return String(w.categoryLabel||w.tierLabel||w.displayLabel||w.tier||w.packageName||w.amountLabel||w.category||withdrawalMethod(w)||'فئة غير محددة').trim();
 }
 function withdrawalDisplayAmount(w){
- const candidates=[w.amount,w.cashAmount,w.withdrawalAmount,w.value];
- for(const value of candidates){if(value!==undefined&&value!==null&&value!==''&&Number.isFinite(Number(value)))return Number(value)}
+ // اقرأ المبلغ من الحقول الصريحة أولاً، ثم من بيانات الفئة إن كانت محفوظة ككائن.
+ const tier=(w.tier&&typeof w.tier==='object')?w.tier:{};
+ const candidates=[w.amount,w.cashAmount,w.withdrawalAmount,w.value,w.usdAmount,w.amountUsd,w.tierAmount,tier.amount,tier.value];
+ for(const value of candidates){
+  if(value!==undefined&&value!==null&&value!==''&&Number.isFinite(Number(value)))return Number(value);
+ }
+ // بعض الإصدارات القديمة تحفظ المبلغ داخل نص الفئة مثل $0.10 أو 0.25 USD.
+ const labels=[w.amountLabel,w.displayLabel,w.tierLabel,w.categoryLabel,w.tier,w.category];
+ for(const value of labels){
+  if(typeof value!=='string')continue;
+  const text=value.trim();
+  if(!/(\$|USD|\bUS\s*DOLLAR\b)/i.test(text))continue;
+  const match=text.replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);
+  if(match&&Number.isFinite(Number(match[0])))return Number(match[0]);
+ }
  return null;
 }
 function groupUserWithdrawals(rows){
@@ -97,29 +110,17 @@ function groupUserWithdrawals(rows){
 function renderWithdrawals(){
  const list=$('withdrawList');
  list.replaceChildren();
-
- // القائمة نفسها تبقى مفلترة حسب التبويب المختار.
- const rows=withdrawals.filter(w=>
-  String(w.status||'pending').toLowerCase()===status
- );
- if(!rows.length){
-  list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));
-  return;
- }
-
+ // التبويب يحدد الطلبات التي تظهر، لكن الملخص يجمع كل حالات المستخدم.
+ const rows=withdrawals.filter(w=>String(w.status||'pending').toLowerCase()===status);
+ if(!rows.length){list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));return}
  const groups=groupUserWithdrawals(rows);
  groups.forEach((group,index)=>{
   const first=group.items[0];
   const user=users.find(u=>String(u.id)===String(group.uid));
-  // الملخص يحسب كل حالات هذا المستخدم، وليس حالة التبويب الحالي فقط.
-  const allUserRequests=userWithdrawals(group.uid);
-  const allGroups=groupUserWithdrawals(allUserRequests);
-  const allUserGroup=allGroups[0]||{categories:[]};
+  const allUserRequests=userWithdrawals(group.uid).slice().sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+  const allUserGroup=groupUserWithdrawals(allUserRequests)[0]||{categories:[]};
   const totalPoints=allUserRequests.reduce((sum,w)=>sum+withdrawalPoints(w),0);
-  const countByState=state=>allUserRequests.filter(w=>
-   String(w.status||'pending').toLowerCase()===state
-  ).length;
-
+  const countByState=state=>allUserRequests.filter(w=>String(w.status||'pending').toLowerCase()===state).length;
   const card=el('article','','item');
   card.append(el('div','المستخدم '+(index+1)+' — '+(first.publicId||user?.publicId||'معرّف غير متوفر')));
   card.append(detailLine('Firebase UID',group.uid==='unknown:'+String(first.publicId||first.id)?'غير متوفر':group.uid));
@@ -133,29 +134,56 @@ function renderWithdrawals(){
    ['الطلبات المعلّقة',String(countByState('pending'))],
    ['الطلبات المدفوعة',String(countByState('paid'))],
    ['الطلبات المرفوضة',String(countByState('rejected'))]
-  ].forEach(([label,value])=>{
-   const stat=el('div','','summary-stat');
-   stat.append(el('span',label),el('b',value));
-   stats.append(stat);
-  });
+  ].forEach(([label,value])=>{const stat=el('div','','summary-stat');stat.append(el('span',label),el('b',value));stats.append(stat)});
   summary.append(stats,el('h4','فئات السحب'));
 
   allUserGroup.categories.forEach(cat=>{
    const categoryBox=el('div','','details-box');
    categoryBox.append(el('strong',cat.label));
-   const amounts=cat.items.map(w=>withdrawalDisplayAmount(w)).filter(v=>v!==null);
-   if(amounts.length===cat.items.length&&amounts.length){
+   const amounts=cat.items.map(w=>withdrawalDisplayAmount(w));
+   if(amounts.length&&amounts.every(v=>v!==null)){
     const equation=amounts.map(v=>v.toLocaleString('en-US',{maximumFractionDigits:4})).join(' + ');
     categoryBox.append(detailLine('مجموع الفئة',equation+' = '+cat.amount.toLocaleString('en-US',{maximumFractionDigits:4})));
    }else{
+    categoryBox.append(detailLine('المبلغ', 'المبلغ غير محفوظ كقيمة رقمية في سجل الطلب'));
     categoryBox.append(detailLine('إجمالي النقاط',cat.points.toLocaleString('en-US')+' نقطة'));
    }
    categoryBox.append(detailLine('عدد الطلبات',cat.items.length));
    summary.append(categoryBox);
   });
-
   card.append(summary);
-  card.append(el('p','الطلبات المعروضة هنا حسب التبويب المختار، والملخص يشمل جميع حالات السحب. تفاصيل كل طلب فردي موجودة في قسم «عرض طلبات».','muted'));
+
+  // عرض كل طلب فردي داخل بطاقة المستخدم دون دمج أو تعديل مستندات Firestore.
+  const individual=el('div','','details-box');
+  individual.append(el('strong','طلبات السحب الفردية للمستخدم'));
+  allUserRequests.forEach((w,requestIndex)=>{
+   const one=el('div','','request-card');
+   const head=el('div','','request-card-head');
+   const state=String(w.status||'pending').toLowerCase();
+   head.append(el('strong','طلب '+(requestIndex+1)+' — '+(withdrawalCategory(w)||'فئة غير محددة')));
+   head.append(el('span',state==='paid'?'مدفوع':state==='pending'?'معلّق':state==='rejected'?'مرفوض':state,'badge'));
+   one.append(head);
+   const meta=el('div','','request-meta');
+   const amount=withdrawalDisplayAmount(w);
+   [
+    ['طريقة السحب',withdrawalMethod(w)||'غير محددة'],
+    ['الفئة',withdrawalCategory(w)],
+    ['المبلغ',amount===null?'غير محفوظ':amount.toLocaleString('en-US',{maximumFractionDigits:4})+' USD'],
+    ['النقاط',withdrawalPoints(w).toLocaleString('en-US')+' نقطة'],
+    ['تاريخ الطلب',displayDate(w.createdAt)],
+    ['المحفظة',withdrawalWallet(w)||'غير متوفرة']
+   ].forEach(([label,value])=>{const cell=el('div');cell.append(el('b',label),el('span',value));meta.append(cell)});
+   one.append(meta);
+   const detailButton=el('button','عرض التفاصيل والتحقق من المعاملة','btn');
+   const detail=el('div','','details-box');detail.classList.add('hidden');
+   detailButton.onclick=async()=>{
+    if(!detail.classList.contains('hidden')){detail.classList.add('hidden');detailButton.textContent='عرض التفاصيل والتحقق من المعاملة';return}
+    detail.classList.remove('hidden');await showWithdrawalDetails(w,detail,detailButton);
+   };
+   one.append(detailButton,detail);
+   individual.append(one);
+  });
+  card.append(individual);
   list.append(card);
  });
 }
