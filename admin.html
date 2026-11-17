@@ -98,11 +98,119 @@ footer{padding-bottom:max(24px,env(safe-area-inset-bottom))!important}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 
+
+/* ===== YASJOY Admin final theme + expanding dashboard cards ===== */
+:root{
+ --yas-sky:#16bdf2;--yas-sky-deep:#078fce;--yas-crimson:#dc143c;
+ --yas-crimson-deep:#a50f35;--yas-ink:#17365f;--yas-muted:#71879e;
+ --yas-border:#d7eaf5;
+}
+body{
+ background:radial-gradient(circle at 8% 0%,rgba(22,189,242,.13),transparent 32%),
+ radial-gradient(circle at 100% 12%,rgba(220,20,60,.10),transparent 34%),
+ linear-gradient(145deg,#effbff 0%,#fff5f7 52%,#eaf8ff 100%);
+ color:var(--yas-ink)
+}
+header{
+ background:linear-gradient(115deg,#087fb8 0%,#16bdf2 48%,#dc143c 100%);
+ box-shadow:0 10px 28px rgba(8,143,206,.19)
+}
+header p{color:#f5fcff}
+#home.dashboard-grid{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:clamp(10px,2.5vw,18px);align-items:stretch;
+ margin:16px 0 24px;scroll-margin-top:12px
+}
+#home.dashboard-grid>.menu{
+ appearance:none;position:relative;display:flex;flex-direction:row;
+ align-items:center;justify-content:flex-start;gap:clamp(8px,2vw,14px);
+ width:100%;min-width:0;min-height:clamp(145px,25vw,195px);
+ margin:0;padding:clamp(12px,3vw,21px);overflow:hidden;
+ text-align:right;color:var(--yas-ink);
+ background:linear-gradient(145deg,#fff 0%,#f8fdff 100%);
+ border:1px solid var(--yas-border);border-radius:clamp(17px,3vw,24px);
+ box-shadow:0 9px 24px rgba(30,113,160,.09);
+ font-size:clamp(15px,2.5vw,21px);line-height:1.45;
+ cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease,background .2s ease
+}
+#home.dashboard-grid>.menu::before{content:"";position:absolute;inset:0 0 0 auto;width:5px;background:var(--card-accent,var(--yas-sky))}
+#home.dashboard-grid>.menu-withdraw{--card-accent:var(--yas-crimson);--card-tint:#fff0f4}
+#home.dashboard-grid>.menu-users{--card-accent:#078fce;--card-tint:#eaf9ff}
+#home.dashboard-grid>.menu-methods{--card-accent:#d99a18;--card-tint:#fff8e8}
+#home.dashboard-grid>.menu-walls{--card-accent:#159b91;--card-tint:#eafaf7}
+#home.dashboard-grid>.menu:hover{transform:translateY(-3px);border-color:var(--card-accent);box-shadow:0 14px 28px rgba(30,113,160,.14)}
+#home.dashboard-grid>.menu:active{transform:scale(.985)}
+.menu-icon{
+ flex:0 0 clamp(46px,8.5vw,66px);width:clamp(46px,8.5vw,66px);height:clamp(46px,8.5vw,66px);
+ display:grid;place-items:center;border-radius:18px;background:var(--card-tint,#eaf9ff);
+ font-size:clamp(25px,4.8vw,35px);box-shadow:inset 0 0 0 1px rgba(20,80,120,.05)
+}
+.menu-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:7px}
+.menu-copy strong{font-size:clamp(14px,2.45vw,20px);font-weight:900;overflow-wrap:anywhere}
+.menu-copy small{display:block;margin:0;color:var(--yas-muted);font-size:clamp(10px,1.8vw,14px);font-weight:500;line-height:1.65;overflow-wrap:anywhere}
+.menu-arrow{flex:0 0 27px;width:27px;height:27px;display:grid;place-items:center;border-radius:50%;background:var(--card-tint,#eaf9ff);color:var(--card-accent,var(--yas-sky-deep));font-size:18px}
+#home.dashboard-grid>.menu[hidden]{display:none!important}
+#home.dashboard-grid.has-selection>.menu.is-selected{
+ grid-column:1/-1;min-height:clamp(90px,15vw,120px);padding:14px clamp(15px,4vw,25px);
+ border:2px solid var(--card-accent);border-radius:20px;
+ background:linear-gradient(105deg,#fff 0%,var(--card-tint) 100%);
+ box-shadow:0 12px 28px rgba(20,100,145,.13)
+}
+#home.dashboard-grid.has-selection>.menu.is-selected .menu-icon{
+ flex-basis:clamp(54px,10vw,74px);width:clamp(54px,10vw,74px);height:clamp(54px,10vw,74px);font-size:clamp(29px,5vw,39px)
+}
+#home.dashboard-grid.has-selection>.menu.is-selected .menu-copy strong{font-size:clamp(18px,3.2vw,25px)}
+#home.dashboard-grid.has-selection>.menu.is-selected .menu-arrow{transform:rotate(180deg)}
+.panel.show{
+ display:block;margin-top:12px;border:1px solid var(--yas-border);border-top:4px solid var(--yas-sky);
+ border-radius:22px;background:rgba(255,255,255,.97);
+ box-shadow:0 12px 30px rgba(23,91,130,.09);animation:yasPanelIn .22s ease-out
+}
+.panel h2,.login h2{color:#087fb8}
+.tab.active,.primary{background:linear-gradient(110deg,#078fce 0%,#16bdf2 52%,#dc143c 100%);color:#fff;box-shadow:0 5px 14px rgba(8,143,206,.16)}
+.back{color:#078fce}
+.form{border-color:#cfeaf7;background:#f8fdff}
+.details-box{background:#f0faff;border-color:#c5e9f8}
+.btn{background:#e8f8ff;color:#0878aa}
+.danger{background:#ffe8ee!important;color:#a30d32!important}
+.item{border-color:#d5eaf5}
+.badge{background:#e8f8ff;color:#0878aa}
+input,textarea,select{border-color:#cfe7f4}
+input:focus,textarea:focus,select:focus{outline:2px solid #16bdf2;outline-offset:1px}
+#users h2,#walls h2,#methods h2,#withdraw h2{color:#087fb8}
+#wallProvider{background:#f2fbff!important;border-color:#b9e5f5!important}
+#saveWall{background:linear-gradient(110deg,#078fce,#16bdf2,#dc143c)}
+#wallList .item{border-right:4px solid #16bdf2}
+#userList .item{border-right-color:#16bdf2;background:linear-gradient(145deg,#fff,#f6fcff)}
+#userList .item>div:first-child{color:#0878aa}
+#userList .item>div:nth-child(3){background:#eaf9ff;color:#0878aa}
+.summary-card{background:#fff5f7;border-color:#f2c8d4;color:#7d1935}
+.summary-card strong,.summary-stat b{color:#087fb8}
+.summary-stat,.request-meta>div{border-color:#d5eaf5}
+.request-toolbar{background:#effaff;border-color:#cfeaf7}
+.request-toolbar strong,.user-withdrawal-head,.user-request-list h3,.request-card-head strong,.request-meta b{color:#0878aa}
+.user-withdrawal-card{border-color:#cfeaf7;border-right-color:#16bdf2}
+.merged-request-card{background:#f8fdff;border-color:#d5eaf5;border-right-color:#dc143c}
+@keyframes yasPanelIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:390px){
+ #home.dashboard-grid{gap:9px}
+ #home.dashboard-grid>.menu{min-height:132px;padding:10px;gap:7px;border-radius:16px}
+ .menu-icon{flex-basis:41px;width:41px;height:41px;border-radius:13px;font-size:22px}
+ .menu-copy strong{font-size:13px}.menu-copy small{font-size:10px}
+ .menu-arrow{flex-basis:22px;width:22px;height:22px;font-size:14px}
+ #home.dashboard-grid.has-selection>.menu.is-selected{min-height:86px;padding:11px;gap:9px}
+}
+@media(prefers-reduced-motion:reduce){#home.dashboard-grid>.menu,.panel.show{transition:none;animation:none}}
+
 </style></head><body>
 <header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header><main>
 <section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><p id="loginMsg" class="muted"></p></section>
-<section id="app" class="hidden"><p class="muted">تم التحقق من حساب المسؤول</p><div id="home" class="dashboard-grid">
-<button class="menu" onclick="openPanel('withdraw')">💳 طلبات السحب<small>معلّقة، مدفوعة، مرفوضة</small></button><button class="menu" onclick="openPanel('users')">👥 المستخدمون<small>بحث، رصيد، آخر نشاط، حظر</small></button><button class="menu" onclick="openPanel('methods')">💰 طرق السحب<small>إضافة وتعديل وتشغيل وإيقاف</small></button><button class="menu" onclick="openPanel('walls')">🎁 جدران العروض<small>إضافة الروابط والشعارات وإدارتها</small></button></div>
+<section id="app" class="hidden"><p class="muted">تم التحقق من حساب المسؤول</p><div id="home" class="dashboard-grid" aria-label="الأقسام الرئيسية">
+<button type="button" class="menu menu-withdraw" data-panel="withdraw" aria-label="طلبات السحب" aria-expanded="false" onclick="openPanel('withdraw')"><span class="menu-icon">💳</span><span class="menu-copy"><strong>طلبات السحب</strong><small>معلّقة · مدفوعة · مرفوضة</small></span><span class="menu-arrow">←</span></button>
+<button type="button" class="menu menu-users" data-panel="users" aria-label="المستخدمون" aria-expanded="false" onclick="openPanel('users')"><span class="menu-icon">👥</span><span class="menu-copy"><strong>المستخدمون</strong><small>بحث · رصيد · آخر نشاط · حظر</small></span><span class="menu-arrow">←</span></button>
+<button type="button" class="menu menu-methods" data-panel="methods" aria-label="طرق السحب" aria-expanded="false" onclick="openPanel('methods')"><span class="menu-icon">💰</span><span class="menu-copy"><strong>طرق السحب</strong><small>إضافة · تعديل · تشغيل · إيقاف</small></span><span class="menu-arrow">←</span></button>
+<button type="button" class="menu menu-walls" data-panel="walls" aria-label="جدران العروض" aria-expanded="false" onclick="openPanel('walls')"><span class="menu-icon">🎁</span><span class="menu-copy"><strong>جدران العروض</strong><small>المزوّدون · الروابط · الشعارات · الإعدادات</small></span><span class="menu-arrow">←</span></button>
+</div>
 <section id="withdraw" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2><div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div><div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p></section>
 <section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userList"></div></section>
 <section id="methods" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة طرق السحب</h2><div class="form"><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden"><label>اسم طريقة السحب</label><input id="methodName" placeholder="Binance أو PayPal"><label>رابط الشعار</label><input id="methodLogo" type="url" placeholder="رابط صورة الشعار https://..."><h3>فئات السحب</h3><p class="muted">أدخل عدد النقاط والنص الذي سيظهر للمستخدم. صورة الشعار تبقى منفصلة.</p><div id="tierRows"></div><button type="button" id="addTier" class="btn">＋ إضافة فئة</button><label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label><button id="saveMethod" class="primary">حفظ طريقة السحب والفئات</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
@@ -124,7 +232,24 @@ unsubs.push(onSnapshot(collection(db,'withdrawals'),s=>{withdrawals=s.docs.map(d
 unsubs.push(onSnapshot(collection(db,'withdrawMethods'),s=>{methods=s.docs.map(d=>({id:d.id,...d.data()}));renderMethods();renderWithdrawals()}));
 unsubs.push(onSnapshot(collection(db,'offerWalls'),s=>{walls=s.docs.map(d=>({id:d.id,...d.data()}));renderWalls()}));
 });
-let current='home';function show(id){$('home').style.display=id==='home'?'block':'none';document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));if(id!=='home')$(id).classList.add('show');current=id}window.openPanel=show;window.goHome=()=>show('home');window.withdrawTab=(s,b)=>{status=s;document.querySelectorAll('#withdraw .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderWithdrawals()};
+let current='home';function show(id){
+ const home=$('home');
+ const valid=id==='home'||['withdraw','users','methods','walls'].includes(id);
+ if(!valid)return;
+ document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));
+ home.style.display='grid';
+ home.classList.toggle('has-selection',id!=='home');
+ home.querySelectorAll('.menu').forEach(card=>{
+  const selected=card.dataset.panel===id;
+  card.classList.toggle('is-selected',selected);
+  card.hidden=id!=='home'&&!selected;
+  card.setAttribute('aria-expanded',String(id!=='home'&&selected));
+ });
+ if(id!=='home')$(id).classList.add('show');
+ current=id;
+ if(id!=='home')requestAnimationFrame(()=>home.scrollIntoView({behavior:'smooth',block:'start'}));
+ else window.scrollTo({top:0,behavior:'smooth'});
+}window.openPanel=show;window.goHome=()=>show('home');window.withdrawTab=(s,b)=>{status=s;document.querySelectorAll('#withdraw .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderWithdrawals()};
 function el(tag,text='',className=''){const node=document.createElement(tag);if(text!==undefined&&text!==null)node.textContent=String(text);if(className)node.className=className;return node}
 function balance(u){return Number(u.balance??u.points??u.coins??0)||0}
 function displayDate(v){if(!v)return 'غير متوفر';const d=v.toDate?v.toDate():(v instanceof Date?v:new Date(v));return isNaN(d)?'غير معروف':d.toLocaleString('ar')}
