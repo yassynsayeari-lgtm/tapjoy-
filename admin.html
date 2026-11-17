@@ -137,8 +137,10 @@ function renderWithdrawals(){
   const user=users.find(u=>String(u.id)===String(group.uid));
   const allUserRequests=userWithdrawals(group.uid);
   const totalPoints=allUserRequests.reduce((sum,w)=>sum+withdrawalPoints(w),0);
-  const totalAmount=allUserRequests.reduce((sum,w)=>{const a=withdrawalDisplayAmount(w);return sum+(a===null?0:a)},0);
-  const allAmountsKnown=allUserRequests.length>0&&allUserRequests.every(w=>withdrawalDisplayAmount(w)!==null);
+  // المبلغ المستحق للدفع يُحسب من الطلبات المعلّقة فقط حتى لا تُضاف السحوبات المدفوعة أو المرفوضة مرة أخرى.
+  const pendingRequests=allUserRequests.filter(w=>String(w.status||'pending').toLowerCase()==='pending');
+  const totalAmount=pendingRequests.reduce((sum,w)=>{const a=withdrawalDisplayAmount(w);return sum+(a===null?0:a)},0);
+  const allAmountsKnown=pendingRequests.length>0&&pendingRequests.every(w=>withdrawalDisplayAmount(w)!==null);
   const countByState=state=>allUserRequests.filter(w=>String(w.status||'pending').toLowerCase()===state).length;
   const card=el('article','','item user-withdrawal-card');
   const userHead=el('div','','user-withdrawal-head');
@@ -151,13 +153,38 @@ function renderWithdrawals(){
   const stats=el('div','','summary-grid');
   [
    ['إجمالي النقاط',totalPoints.toLocaleString('en-US')+' نقطة'],
-   ['إجمالي المبالغ',allAmountsKnown?'$'+totalAmount.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:4}):'بعض المبالغ غير محددة'],
+   ['المبلغ المستحق للطلبات المعلّقة',pendingRequests.length===0?'$0.00':(allAmountsKnown?'$'+totalAmount.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:4}):'بعض مبالغ الطلبات غير محددة')],
    ['كل الطلبات',String(allUserRequests.length)],
    ['معلّقة',String(countByState('pending'))],
    ['مدفوعة',String(countByState('paid'))],
    ['مرفوضة',String(countByState('rejected'))]
   ].forEach(([label,value])=>{const stat=el('div','','summary-stat');stat.append(el('span',label),el('b',value));stats.append(stat)});
   summary.append(stats);
+
+  // تجميع المعلّقات حسب UID المستخدم + طريقة السحب + عنوان المحفظة.
+  // الجمع للعرض فقط؛ تبقى مستندات الطلبات الفردية كما هي في Firestore.
+  const payableGroups=groupWithdrawals(pendingRequests);
+  if(payableGroups.length){
+   const payable=el('div','','details-box');
+   payable.append(el('strong','إجمالي المستحق حسب طريقة السحب والمحفظة'));
+   payableGroups.forEach((payGroup,groupIndex)=>{
+    const firstPay=payGroup.items[0];
+    const amountValues=payGroup.items.map(w=>withdrawalDisplayAmount(w));
+    const known=amountValues.every(v=>v!==null);
+    const amountSum=amountValues.reduce((sum,v)=>sum+(v===null?0:v),0);
+    const row=el('div','','summary-stat');
+    row.append(
+     el('strong','المجموعة '+(groupIndex+1)),
+     detailLine('طريقة السحب',withdrawalMethod(firstPay)||'غير محددة'),
+     detailLine('المحفظة',withdrawalWallet(firstPay)||'غير متوفرة'),
+     detailLine('إجمالي النقاط المعلّقة',payGroup.points.toLocaleString('en-US')+' نقطة'),
+     detailLine('المبلغ المستحق',known?'$'+amountSum.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:4}):'غير مكتمل: راجع فئات طريقة السحب'),
+     detailLine('عدد الطلبات المجمّعة',payGroup.items.length)
+    );
+    payable.append(row);
+   });
+   summary.append(payable);
+  }
   card.append(summary);
 
   const individual=el('div','','user-request-list');
