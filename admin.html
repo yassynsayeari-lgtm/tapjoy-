@@ -27,10 +27,81 @@ body{background:linear-gradient(145deg,#fff4f6,#f8e9ee 55%,#f4dce4);color:#40132
 .merged-request-card .actions{border-top:1px solid #f4d9e0;padding-top:10px}
 .merged-request-card .btn{flex:1;min-width:120px}
 @media(max-width:520px){.request-meta{grid-template-columns:1fr 1fr}.user-withdrawal-card{padding:12px}.merged-request-card{padding:10px}}
+
+/* ===== YASJOY Admin responsive visual refresh (existing logic preserved) ===== */
+:root{
+ --admin-crimson:#b5123b;--admin-crimson-dark:#850d2b;
+ --admin-crimson-soft:#fff0f4;--admin-ink:#401322;
+ --admin-muted:#806b75;--admin-line:#efc4d0;
+ --admin-shadow:0 9px 25px rgba(133,13,43,.09);
+}
+html{min-width:320px;scroll-behavior:smooth}
+body{
+ min-height:100vh;
+ background:radial-gradient(circle at 8% 0%,rgba(255,255,255,.9),transparent 34%),
+ linear-gradient(145deg,#fff6f8 0%,#f8e8ee 55%,#f4dce5 100%);
+ color:var(--admin-ink);line-height:1.55
+}
+header{padding:clamp(24px,5vw,46px) 16px;text-align:center}
+header h1{margin:0;font-size:clamp(27px,5.2vw,46px);line-height:1.2;overflow-wrap:anywhere}
+header p{margin:14px 0 0;font-size:clamp(15px,2.7vw,21px);line-height:1.6}
+main{width:min(100%,1080px);padding:clamp(12px,3vw,24px);margin-inline:auto}
+#app>.muted{margin:8px 4px 16px;font-size:14px}
+#home.dashboard-grid{
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:clamp(10px,2.5vw,18px);
+ align-items:stretch
+}
+#home.dashboard-grid>.menu{
+ display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+ width:100%;min-width:0;min-height:clamp(145px,25vw,205px);
+ margin:0;padding:clamp(14px,3vw,24px);
+ text-align:right;border:1px solid var(--admin-line);
+ border-radius:clamp(16px,3vw,23px);
+ background:linear-gradient(145deg,#fff 0%,#fff8fa 100%);
+ box-shadow:var(--admin-shadow);color:#421326;
+ font-size:clamp(16px,2.5vw,22px);line-height:1.45;
+ overflow-wrap:anywhere;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease
+}
+#home.dashboard-grid>.menu:active{transform:scale(.985)}
+#home.dashboard-grid>.menu:focus-visible,
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+ outline:3px solid #e46a8b;outline-offset:3px
+}
+#home.dashboard-grid>.menu small{
+ display:block;margin-top:7px;color:var(--admin-muted);
+ font-size:clamp(12px,1.9vw,15px);font-weight:normal;line-height:1.65
+}
+.panel,.login{border:1px solid rgba(239,196,208,.9);border-radius:20px;padding:clamp(14px,3vw,24px);box-shadow:var(--admin-shadow)}
+.panel h2,.login h2{font-size:clamp(21px,3.5vw,29px);color:#85102f;line-height:1.35}
+.panel h3{line-height:1.4}
+.form{padding:clamp(12px,2.5vw,20px)}
+input,textarea,select{max-width:100%;min-height:46px;padding:12px 14px;border-radius:12px;background:#fff;color:#351322}
+textarea{min-height:100px;resize:vertical}
+button,.btn,.tab,.primary,.back{touch-action:manipulation}
+.btn,.tab,.primary{min-height:44px}
+.primary{padding:13px 16px;border-radius:13px}
+.actions{gap:9px}
+.actions .btn{flex:1 1 135px}
+.item,.user-withdrawal-card,.merged-request-card{min-width:0;overflow-wrap:anywhere}
+.details-box,.request-meta>div{min-width:0;overflow-wrap:anywhere}
+footer{padding-bottom:max(24px,env(safe-area-inset-bottom))!important}
+@media(min-width:850px){#home.dashboard-grid{gap:20px}#home.dashboard-grid>.menu{min-height:185px}}
+@media(max-width:380px){
+ #home.dashboard-grid{gap:9px}
+ #home.dashboard-grid>.menu{min-height:138px;padding:12px;font-size:15px;border-radius:15px}
+ #home.dashboard-grid>.menu small{font-size:11px}
+ .summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .tier-row,.tier-head{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:5px}
+ .tier-row{padding:7px}.tier-row input{min-width:0;padding:10px 7px;font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+
 </style></head><body>
 <header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header><main>
 <section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><p id="loginMsg" class="muted"></p></section>
-<section id="app" class="hidden"><p class="muted">تم التحقق من حساب المسؤول</p><div id="home">
+<section id="app" class="hidden"><p class="muted">تم التحقق من حساب المسؤول</p><div id="home" class="dashboard-grid">
 <button class="menu" onclick="openPanel('withdraw')">💳 طلبات السحب<small>معلّقة، مدفوعة، مرفوضة</small></button><button class="menu" onclick="openPanel('users')">👥 المستخدمون<small>بحث، رصيد، آخر نشاط، حظر</small></button><button class="menu" onclick="openPanel('methods')">💰 طرق السحب<small>إضافة وتعديل وتشغيل وإيقاف</small></button><button class="menu" onclick="openPanel('walls')">🎁 جدران العروض<small>إضافة الروابط والشعارات وإدارتها</small></button></div>
 <section id="withdraw" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2><div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div><div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p></section>
 <section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userList"></div></section>
