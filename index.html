@@ -104,10 +104,10 @@ function showPage(id){if(document.getElementById("termsGate")?.hidden===false)re
 function refreshBalance(){document.getElementById('balance').textContent=balance.toLocaleString();document.getElementById('withdrawBalance').textContent=balance.toLocaleString()}
 function selectAmount(button,coins){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins}
 let pendingOffer=null;
-function openOffer(url,name,enabled){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!enabled){alert(name+' is currently disabled by YASJOY administration.');return}if(!url||!/^https:\/\/\S+$/i.test(url)){alert('This offer wall has no valid HTTPS link.');return}pendingOffer={url,name};document.getElementById('offerTermsCheck').checked=false;document.getElementById('offerTermsContinue').disabled=true;document.getElementById('offerTermsGate').hidden=false;document.body.style.overflow='hidden'}
+function openOffer(url,name,enabled,wallId){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!enabled){alert(name+' is currently disabled by YASJOY administration.');return}if(!url||!/^https:\/\/\S+$/i.test(url)){alert('This offer wall has no valid HTTPS link.');return}pendingOffer={url,name,wallId};document.getElementById('offerTermsCheck').checked=false;document.getElementById('offerTermsContinue').disabled=true;document.getElementById('offerTermsGate').hidden=false;document.body.style.overflow='hidden'}
 document.getElementById('offerTermsCheck').addEventListener('change',e=>document.getElementById('offerTermsContinue').disabled=!e.target.checked);
 document.getElementById('offerTermsCancel').addEventListener('click',()=>{pendingOffer=null;document.getElementById('offerTermsGate').hidden=true;document.body.style.overflow=''});
-document.getElementById('offerTermsContinue').addEventListener('click',()=>{if(!pendingOffer||!document.getElementById('offerTermsCheck').checked)return;const target=pendingOffer;pendingOffer=null;document.getElementById('offerTermsGate').hidden=true;document.body.style.overflow='';window.open(target.url,'_blank','noopener,noreferrer')});
+document.getElementById('offerTermsContinue').addEventListener('click',()=>{if(!pendingOffer||!document.getElementById('offerTermsCheck').checked)return;const target=pendingOffer;pendingOffer=null;document.getElementById('offerTermsGate').hidden=true;document.body.style.overflow='';window.open(target.url,'_blank','noopener,noreferrer');if(window.recordOfferEntry)window.recordOfferEntry(target)});
 let withdrawalSubmitting=false;
 async function submitRequest(){
  if(document.getElementById("bannedScreen")?.hidden===false)return;
@@ -142,7 +142,7 @@ refreshBalance();
 </script>
 <script type="module">
 import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection,runTransaction} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,collection,runTransaction,increment} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 const firebaseConfig={apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",authDomain:"yasjoy.firebaseapp.com",projectId:"yasjoy",storageBucket:"yasjoy.firebasestorage.app",messagingSenderId:"967065409063",appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"};
 const app=getApps().length?getApp():initializeApp(firebaseConfig),db=getFirestore(app),auth=getAuth(app);
@@ -171,6 +171,13 @@ window.createYasjoyWithdrawal=async function(request){
   transaction.set(transactionRef,{uid:user.uid,type:'withdrawal',coins:-coins,withdrawalId:withdrawalId,createdAt:serverTimestamp()});
   return {success:true,withdrawalId,deductedCoins:coins,remainingBalance,status:'pending'};
  });
+};
+window.recordOfferEntry=async function(t){
+ try{
+  const user=currentYasjoyUser;if(!user||!t||!/^[A-Za-z0-9_-]{1,64}$/.test(String(t.wallId||'')))return;
+  const p='wallEntries.'+t.wallId;
+  await updateDoc(doc(db,'users',user.uid),{[p+'.name']:String(t.name||'').slice(0,60),[p+'.count']:increment(1),[p+'.lastAt']:serverTimestamp()});
+ }catch(e){console.warn('Could not record offer wall entry:',e)}
 };
 function setBannedView(banned){const screen=document.getElementById("bannedScreen");if(!screen)return;screen.hidden=!banned;const header=document.querySelector("header"),main=document.querySelector("main"),nav=document.querySelector("nav.bottom");if(header)header.style.display=banned?"none":"";if(main)main.style.display=banned?"none":"";if(nav)nav.style.display=banned?"none":""}
 function renderWithdrawalMethods(snapshot){
@@ -222,7 +229,7 @@ function renderOfferWalls(snapshot){
   const icon=document.createElement("div");icon.className="provider-icon";icon.style.background="#dff4ff";icon.style.color="#0758a8";
   if(typeof wall.logo==="string"&&/^https:\/\/\S+$/i.test(wall.logo)){const img=document.createElement("img");img.src=wall.logo;img.alt=name+" logo";img.loading="lazy";img.onerror=()=>{icon.textContent=name.charAt(0).toUpperCase()};icon.appendChild(img)}else icon.textContent=name.charAt(0).toUpperCase();
   const info=document.createElement("div"),title=document.createElement("h3"),description=document.createElement("p");title.textContent=name;description.textContent=typeof wall.description==="string"&&wall.description.trim()?wall.description.trim():"Complete offers and get rewards";info.append(title,description);top.append(icon,info);
-  const button=document.createElement("button");button.className="earn";button.textContent=enabled?"🪙 Earn coins ›":"Currently unavailable";button.disabled=!enabled;button.addEventListener("click",()=>openOffer(url,name,enabled));card.append(top,button);host.appendChild(card);
+  const button=document.createElement("button");button.className="earn";button.textContent=enabled?"🪙 Earn coins ›":"Currently unavailable";button.disabled=!enabled;button.addEventListener("click",()=>openOffer(url,name,enabled,wall.id));card.append(top,button);host.appendChild(card);
  }
 }
 let stopUserListener=null;
@@ -245,8 +252,11 @@ async function fetchGeo(){
 async function recordGeo(userRef,existing){
  try{
   const g=await fetchGeo();if(!g)return;
-  if(existing&&existing.ip===g.ip&&existing.countryCode===g.countryCode)return;
-  await updateDoc(userRef,{ip:g.ip,countryCode:g.countryCode,country:g.country,geoUpdatedAt:serverTimestamp()});
+  const payload={};
+  if(!existing||!existing.countryCode){payload.countryCode=g.countryCode;payload.country=g.country;payload.countryAt=serverTimestamp()}
+  if(!existing||existing.ip!==g.ip)payload.ip=g.ip;
+  if(!Object.keys(payload).length)return;
+  await updateDoc(userRef,payload);
  }catch(e){console.warn('Could not save country/IP:',e)}
 }
 async function setupUser(user){
