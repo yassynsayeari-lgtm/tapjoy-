@@ -226,9 +226,33 @@ function renderOfferWalls(snapshot){
  }
 }
 let stopUserListener=null;
+/* Auto-detect country + IP and save them on the user's document (best effort; never blocks the app). */
+async function fetchGeo(){
+ const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))]);
+ const sources=[
+  async()=>{const j=await (await fetch('https://ipwho.is/',{cache:'no-store'})).json();if(j.success===false)throw new Error('ipwho failed');return{ip:j.ip,countryCode:j.country_code,country:j.country}},
+  async()=>{const j=await (await fetch('https://get.geojs.io/v1/ip/geo.json',{cache:'no-store'})).json();return{ip:j.ip,countryCode:j.country_code,country:j.name||j.country}},
+  async()=>{const j=await (await fetch('https://api.country.is/',{cache:'no-store'})).json();return{ip:j.ip,countryCode:j.country,country:''}}
+ ];
+ for(const get of sources){
+  try{
+   const g=await withTimeout(get(),6000),code=String(g.countryCode||'').trim().toUpperCase(),ip=String(g.ip||'').trim();
+   if(/^[A-Z]{2}$/.test(code)&&ip&&ip.length<=45)return{ip,countryCode:code,country:String(g.country||'').slice(0,60)};
+  }catch(e){console.warn('Geo source failed:',e&&e.message)}
+ }
+ return null;
+}
+async function recordGeo(userRef,existing){
+ try{
+  const g=await fetchGeo();if(!g)return;
+  if(existing&&existing.ip===g.ip&&existing.countryCode===g.countryCode)return;
+  await updateDoc(userRef,{ip:g.ip,countryCode:g.countryCode,country:g.country,geoUpdatedAt:serverTimestamp()});
+ }catch(e){console.warn('Could not save country/IP:',e)}
+}
 async function setupUser(user){
  const userRef=doc(db,"users",user.uid),snap=await getDoc(userRef),publicId="YJ-"+user.uid.slice(0,8).toUpperCase();
  if(!snap.exists())await setDoc(userRef,{uid:user.uid,publicId,balance:0,createdAt:serverTimestamp(),lastActiveAt:serverTimestamp()});else await updateDoc(userRef,{lastActiveAt:serverTimestamp(),publicId});
+ recordGeo(userRef,snap.exists()?snap.data():null);
  userId=publicId;document.getElementById("userId").textContent=publicId;document.getElementById("userIdNote").textContent="Your User ID is linked to your Firebase account.";
  const profileText=document.querySelector("#profile .panel > p");if(profileText)profileText.textContent="Your YASJOY account";
  if(stopUserListener)stopUserListener();
