@@ -233,28 +233,36 @@ function renderOfferWalls(snapshot){
  }
 }
 let stopUserListener=null;
-/* Auto-detect country + IP and save them on the user's document (best effort; never blocks the app). */
-async function fetchGeo(){
+/* Auto-detect country + IP. The first country is fixed; a different country later (confirmed by a 2nd source) bans the account automatically. */
+async function fetchGeo(skip){
  const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))]);
  const sources=[
   async()=>{const j=await (await fetch('https://ipwho.is/',{cache:'no-store'})).json();if(j.success===false)throw new Error('ipwho failed');return{ip:j.ip,countryCode:j.country_code,country:j.country}},
   async()=>{const j=await (await fetch('https://get.geojs.io/v1/ip/geo.json',{cache:'no-store'})).json();return{ip:j.ip,countryCode:j.country_code,country:j.name||j.country}},
   async()=>{const j=await (await fetch('https://api.country.is/',{cache:'no-store'})).json();return{ip:j.ip,countryCode:j.country,country:''}}
  ];
- for(const get of sources){
+ for(let i=0;i<sources.length;i++){
+  if(i===skip)continue;
   try{
-   const g=await withTimeout(get(),6000),code=String(g.countryCode||'').trim().toUpperCase(),ip=String(g.ip||'').trim();
-   if(/^[A-Z]{2}$/.test(code)&&ip&&ip.length<=45)return{ip,countryCode:code,country:String(g.country||'').slice(0,60)};
+   const g=await withTimeout(sources[i](),6000),code=String(g.countryCode||'').trim().toUpperCase(),ip=String(g.ip||'').trim();
+   if(/^[A-Z]{2}$/.test(code)&&ip&&ip.length<=45)return{ip,countryCode:code,country:String(g.country||'').slice(0,60),src:i};
   }catch(e){console.warn('Geo source failed:',e&&e.message)}
  }
  return null;
 }
 async function recordGeo(userRef,existing){
  try{
-  const g=await fetchGeo();if(!g)return;
-  const payload={};
-  if(!existing||!existing.countryCode){payload.countryCode=g.countryCode;payload.country=g.country;payload.countryAt=serverTimestamp()}
-  if(!existing||existing.ip!==g.ip)payload.ip=g.ip;
+  const g=await fetchGeo(-1);if(!g)return;
+  const old=existing||{},payload={};
+  if(!old.countryCode){payload.countryCode=g.countryCode;payload.country=g.country;payload.countryAt=serverTimestamp();payload.lastCountryCode=g.countryCode}
+  else if(old.countryCode!==g.countryCode&&old.banned!==true){
+   const g2=await fetchGeo(g.src);
+   if(g2&&g2.countryCode===g.countryCode){
+    payload.banned=true;payload.banReason='country_change';payload.bannedBy='auto';payload.bannedAt=serverTimestamp();
+    payload.lastCountryCode=g.countryCode;payload.lastCountry=g.country;payload.previousCountryCode=old.countryCode;
+   }
+  }
+  if(old.ip!==g.ip){if(old.ip)payload.previousIp=old.ip;payload.ip=g.ip;payload.ipAt=serverTimestamp()}
   if(!Object.keys(payload).length)return;
   await updateDoc(userRef,payload);
  }catch(e){console.warn('Could not save country/IP:',e)}
