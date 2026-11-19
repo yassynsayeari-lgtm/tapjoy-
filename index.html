@@ -19,12 +19,11 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .wallet{font-size:90px}.banner-text{font-size:clamp(23px,5vw,34px);font-weight:800;line-height:1.25}
 .go{border:0;background:#ffffff38;color:white;border-radius:50%;width:55px;height:55px;font-size:30px;margin-top:15px}
 .section-title{font-size:30px;font-weight:900;margin:24px 0 4px}.subtitle{color:var(--muted);font-size:17px;margin:0 0 16px}
-.offers{display:flex;gap:13px;overflow-x:auto;overflow-y:hidden;padding:4px 2px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}.offers>.offer,.offers>.empty-offers{flex:0 0 min(78vw,270px);scroll-snap-align:start}
-.offer{background:white;border:1px solid #d5edff;border-radius:22px;padding:15px;box-shadow:0 5px 14px #74bce833;min-width:0}
-.offer-top{display:flex;align-items:center;gap:10px;min-height:86px}
+.offers{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;overflow:visible;padding:4px 0 16px;width:100%}.offers>.offer,.offers>.empty-offers{width:100%;min-width:0}
+.offer{background:white;border:1px solid #d5edff;border-radius:24px;padding:12px;box-shadow:0 8px 23px #74bce833;min-width:0;overflow:hidden}.offer-top{display:block;min-height:0}.offer-image{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:17px;background:linear-gradient(135deg,#16bdf2,#087fb8,#dc143c);margin-bottom:12px}.offer-fallback-image{display:grid;place-items:center;width:100%;aspect-ratio:16/9;border-radius:17px;margin-bottom:12px;background:linear-gradient(120deg,#078fce,#16bdf2 54%,#dc143c);color:#fff;font-size:clamp(45px,12vw,90px);font-weight:900;text-shadow:0 3px 12px #17365f55}
 .provider-icon{width:58px;height:58px;flex-shrink:0;border-radius:16px;display:grid;place-items:center;font-size:22px;font-weight:bold;color:white;overflow:hidden}
 .provider-icon img{width:100%;height:100%;object-fit:contain;background:white;border-radius:12px}
-.offer h3{font-size:19px;margin:0 0 7px;overflow-wrap:anywhere}.offer p{font-size:14px;color:var(--muted);line-height:1.35;margin:0}
+.offer h3{font-size:22px;margin:2px 2px 7px;overflow-wrap:anywhere}.offer p{font-size:15px;color:var(--muted);line-height:1.5;margin:0 2px}.offer .earn{margin:14px 0 2px;padding:15px;font-size:17px}
 .earn{margin-top:12px;width:100%;border:0;border-radius:30px;padding:13px 5px;background:var(--blue);color:white;font-weight:bold}
 .earn:disabled{background:#aabbd0;color:#fff;cursor:not-allowed}
 .empty-offers{grid-column:1/-1;background:#fff;border:1px dashed #b9d9ef;border-radius:18px;padding:20px;text-align:center;color:var(--muted);line-height:1.6}
@@ -63,10 +62,17 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .withdraw-method.selected img{filter:none!important;transform:none!important}
 #showMethodsBtn{display:none}
 
-/* ===== YASJOY FINAL USER PATCH ===== */
-main,header{max-width:1100px}.offers{display:grid;grid-template-columns:1fr;gap:20px;overflow:visible;padding:5px 0 20px}.offers>.offer,.offers>.empty-offers{width:100%;max-width:none;min-width:0}.offer{width:100%;padding:0;overflow:hidden;border-radius:28px}.offer-top{display:block;min-height:0}.provider-icon{width:100%;height:clamp(210px,42vw,390px);border-radius:0;background:linear-gradient(135deg,#e9f9ff,#fff2f5)!important}.provider-icon img{width:100%;height:100%;object-fit:cover;border-radius:0;background:transparent}.offer-info{padding:20px}.offer h3{font-size:clamp(23px,4vw,32px)}.offer p{font-size:16px;line-height:1.65}.earn{margin:0 20px 20px;width:calc(100% - 40px);padding:16px;font-size:17px}.wall-loader{position:fixed;inset:0;z-index:100003;background:linear-gradient(145deg,#071b35e8,#087fb8e8);display:grid;place-items:center;padding:20px}.wall-loader[hidden]{display:none!important}.wall-loader-card{width:min(92vw,480px);background:#fff;border-radius:30px;padding:30px;text-align:center;box-shadow:0 20px 70px #0006}.wall-loader-art{height:190px;border-radius:22px;display:grid;place-items:center;font-size:86px;background:linear-gradient(135deg,#dff8ff,#fff0f4)}.spinner{width:45px;height:45px;border:5px solid #d7eef9;border-top-color:#dc143c;border-radius:50%;margin:20px auto 0;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-.withdraw-methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));overflow:visible}.withdraw-method{width:100%;min-height:220px;flex-basis:auto}.withdraw-method img,.withdraw-method .method-fallback{width:130px;height:130px}.withdraw-method.selected{grid-column:1/-1;width:100%;flex-basis:auto}.banned-card h2,.banned-card p{direction:ltr}
-@media(max-width:520px){main{padding:0 12px}.provider-icon{height:230px}.withdraw-methods{grid-template-columns:1fr 1fr}.withdraw-method{min-height:180px}.withdraw-method img,.withdraw-method .method-fallback{width:105px;height:105px}}
+.wall-launch-overlay{position:fixed;inset:0;z-index:100002;display:flex;align-items:center;justify-content:center;padding:22px;background:linear-gradient(145deg,#071d36ee,#0a6c9ce8 52%,#9c1238ee);backdrop-filter:blur(10px)}
+.wall-launch-overlay[hidden]{display:none!important}
+.wall-launch-card{width:min(100%,380px);padding:30px 22px;border:1px solid #ffffff66;border-radius:30px;text-align:center;color:#fff;background:linear-gradient(145deg,#ffffff22,#ffffff0a);box-shadow:0 20px 60px #00152c66}
+.wall-launch-logo{font-size:25px;font-weight:900;letter-spacing:1px}
+.wall-launch-coin{font-size:76px;margin:18px 0 8px;filter:drop-shadow(0 8px 14px #061a3c77);animation:coinFloat 1.3s ease-in-out infinite alternate}
+.wall-launch-spinner{width:42px;height:42px;border:4px solid #ffffff55;border-top-color:#fff;border-radius:50%;margin:8px auto 17px;animation:yasSpin .75s linear infinite}
+.wall-launch-card h2{margin:0 0 8px;font-size:22px}.wall-launch-card p{margin:0;color:#e9f8ff;line-height:1.6}
+@keyframes yasSpin{to{transform:rotate(360deg)}}@keyframes coinFloat{to{transform:translateY(-7px) rotate(5deg)}}
+@media(min-width:760px){main{max-width:900px}.offers{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:390px){.offer{padding:9px}.offer h3{font-size:19px}}
+
 </style>
 </head>
 <body>
@@ -80,11 +86,11 @@ main,header{max-width:1100px}.offers{display:grid;grid-template-columns:1fr;gap:
 <li>You must provide accurate payout details belonging to you.</li>
 <li>Accounts may be restricted for abuse or violation of these terms.</li>
 <li>These terms may be updated when necessary. You may be asked to review the updated version.</li>
-</ol><p class="small">By selecting “I Agree & Continue”, you confirm that you have read and accepted these terms.</p><div class="terms-actions"><button class="terms-decline" id="termsDecline">I Do Not Agree</button><button class="terms-accept" id="termsAccept">I Agree & Continue</button></div></div></section>
+</ol><p class="small">By selecting “I Agree & Continue”, you confirm that you have read and accepted these terms.</p><div class="terms-actions"><button class="terms-decline" id="termsDecline">I Do Not Agree</button><button class="terms-accept" id="termsAccept">I Agree &amp; Continue</button></div></div></section>
 <div id="methodImageView" class="method-image-view" hidden role="dialog" aria-modal="true"><img id="methodImageLarge" alt="Withdrawal method logo"></div>
-<section id="offerTermsGate" class="terms-overlay" hidden aria-modal="true" role="dialog" aria-labelledby="offerTermsTitle"><div class="terms-card"><h2 id="offerTermsTitle">Offer Wall Terms</h2><p>Before continuing, please read and accept these conditions:</p><ol><li>Offer availability depends on your country, device, and provider rules.</li><li>Complete each offer honestly on your own device.</li><li>Do not use VPNs, proxies, multiple accounts, or misleading information to bypass provider restrictions.</li><li>Rewards are credited only after the offer provider verifies completion.</li><li>YASJOY cannot guarantee approval or reward tracking by an external provider.</li></ol><label style="display:flex;gap:9px;align-items:flex-start;margin-top:14px;font-size:14px"><input id="offerTermsCheck" type="checkbox" style="width:auto;margin-top:3px"> I have read and agree to these terms.</label><div class="terms-actions"><button class="terms-accept" id="offerTermsContinue" disabled>Agree &amp; Continue</button></div></div></section>
-<section id="wallLoader" class="wall-loader" hidden aria-live="polite"><div class="wall-loader-card"><div class="wall-loader-art">🎁</div><h2 id="wallLoaderTitle">Loading offer wall…</h2><p class="small">Please wait while the secure offer page opens.</p><div class="spinner"></div></div></section>
-<section id="bannedScreen" class="banned-screen" hidden role="alert"><div class="banned-card"><div style="font-size:55px">🚫</div><h2>Account Restricted</h2><p>Access to YASJOY has been disabled for this account. Please contact YASJOY support.</p></div></section>
+<section id="offerTermsGate" class="terms-overlay" hidden aria-modal="true" role="dialog" aria-labelledby="offerTermsTitle"><div class="terms-card"><h2 id="offerTermsTitle">Offer Wall Terms</h2><p>Before continuing, please read and accept these conditions:</p><ol><li>Offer availability depends on your country, device, and provider rules.</li><li>Complete each offer honestly on your own device.</li><li>Do not use VPNs, proxies, multiple accounts, or misleading information to bypass provider restrictions.</li><li>Rewards are credited only after the offer provider verifies completion.</li><li>YASJOY cannot guarantee approval or reward tracking by an external provider.</li></ol><label style="display:flex;gap:9px;align-items:flex-start;margin-top:14px;font-size:14px"><input id="offerTermsCheck" type="checkbox" style="width:auto;margin-top:3px"> I have read and agree to these terms.</label><div class="terms-actions"><button class="terms-decline" id="offerTermsCancel">Cancel</button><button class="terms-accept" id="offerTermsContinue" disabled>Agree &amp; Continue</button></div></div></section>
+<div id="wallLaunchOverlay" class="wall-launch-overlay" hidden role="status" aria-live="polite"><div class="wall-launch-card"><div class="wall-launch-logo">⭐ YASJOY</div><div class="wall-launch-coin">🪙</div><div class="wall-launch-spinner"></div><h2>Connecting to offer wall</h2><p>Please wait while your provider page opens…</p></div></div>
+<section id="bannedScreen" class="banned-screen" hidden role="alert"><div class="banned-card"><div style="font-size:55px">🚫</div><h2>Account Restricted</h2><p>Access to this YASJOY account has been restricted. Please contact the YASJOY administration team.</p></div></section>
 <header><div class="brand"><span class="star">⭐</span><span>YASJOY👑</span></div><div class="balance"><span class="coin">🪙</span><span id="balance">0</span><button onclick="refreshBalance()" style="border:0;background:none;color:#078af5;font-size:24px" aria-label="Refresh">⟳</button></div></header>
 <main>
 <section id="home" class="page active"><div class="banner"><div class="wallet">💰</div><div style="flex:1"><div class="banner-text">Withdraw your points</div><button class="go" onclick="showPage('withdraw')" aria-label="Withdraw">➜</button></div></div><div class="section-title">🔥 Offer Walls</div><p class="subtitle">Complete offers · Earn coins</p><div class="offers" id="offersList"><div class="empty-offers">Loading offer walls…</div></div></section>
@@ -104,18 +110,18 @@ document.getElementById('termsAccept').addEventListener('click',async()=>{
  }
  document.getElementById('termsGate').hidden=true;document.body.style.overflow='';
 });
-document.getElementById('termsDecline').addEventListener('click',()=>{alert('You cannot use YASJOY without accepting the terms.');});
+document.getElementById('termsDecline').addEventListener('click',()=>{alert('You cannot use YASJOY unless you accept the terms.');});
 checkTerms();
 function showPage(id){if(document.getElementById("termsGate")?.hidden===false)return;if(document.getElementById("bannedScreen")?.hidden===false)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id);if(page)page.classList.add('active');document.getElementById('navHome').classList.toggle('active',id==='home');document.getElementById('navProfile').classList.toggle('active',id==='profile');window.scrollTo(0,0);refreshBalance()}
 function refreshBalance(){document.getElementById('balance').textContent=balance.toLocaleString();document.getElementById('withdrawBalance').textContent=balance.toLocaleString()}
 function selectAmount(button,coins){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins}
 let pendingOffer=null;
-function offerTermsKey(wallId){return 'yasjoy_offer_terms_'+String(wallId||'unknown')+'_v1'}
-function launchOffer(target){const loader=document.getElementById('wallLoader');document.getElementById('wallLoaderTitle').textContent='Loading '+target.name+'…';loader.hidden=false;document.body.style.overflow='hidden';if(window.recordOfferEntry)window.recordOfferEntry(target);const popup=window.open(target.url,'_blank','noopener,noreferrer');setTimeout(()=>{loader.hidden=true;document.body.style.overflow='';if(!popup)alert('Your browser blocked the offer wall. Please allow pop-ups and try again.');},1800)}
-function openOffer(url,name,enabled,wallId){if(document.getElementById('bannedScreen')?.hidden===false)return;if(!enabled){alert(name+' is currently unavailable.');return}if(!url||!/^https:\/\/\S+$/i.test(url)){alert('This offer wall has no valid secure link.');return}const target={url,name,wallId};if(localStorage.getItem(offerTermsKey(wallId))==='accepted'){launchOffer(target);return}pendingOffer=target;document.getElementById('offerTermsCheck').checked=false;document.getElementById('offerTermsContinue').disabled=true;document.getElementById('offerTermsGate').hidden=false;document.body.style.overflow='hidden'}
+const OFFER_TERMS_VERSION='yasjoy-offer-terms-2026-11-v1';
+function launchOffer(target){const overlay=document.getElementById('wallLaunchOverlay');overlay.hidden=false;document.body.style.overflow='hidden';let popup=null;try{popup=window.open(target.url,'_blank');if(popup)popup.opener=null}catch(error){console.warn('Offer wall window error:',error)}if(popup&&window.recordOfferEntry)window.recordOfferEntry(target);let cleaned=false;const hide=()=>{if(cleaned)return;cleaned=true;overlay.hidden=true;document.body.style.overflow='';document.removeEventListener('visibilitychange',onVisibility);window.removeEventListener('focus',hide)};const onVisibility=()=>{if(!document.hidden)hide()};document.addEventListener('visibilitychange',onVisibility);window.addEventListener('focus',hide);setTimeout(hide,popup?7000:1200);if(!popup)setTimeout(()=>alert('The offer page could not be opened. Please allow pop-ups and try again.'),300)}
+function openOffer(url,name,enabled,wallId){if(document.getElementById("bannedScreen")?.hidden===false)return;if(!enabled){alert(name+' is currently unavailable.');return}if(!url||!/^https:\/\/\S+$/i.test(url)){alert('This offer wall has no valid HTTPS link.');return}pendingOffer={url,name,wallId};if(localStorage.getItem('yasjoy_offer_terms_accepted')===OFFER_TERMS_VERSION){const target=pendingOffer;pendingOffer=null;launchOffer(target);return}document.getElementById('offerTermsCheck').checked=false;document.getElementById('offerTermsContinue').disabled=true;document.getElementById('offerTermsGate').hidden=false;document.body.style.overflow='hidden'}
 document.getElementById('offerTermsCheck').addEventListener('change',e=>document.getElementById('offerTermsContinue').disabled=!e.target.checked);
-document.getElementById('offerTermsCancel').remove();
-document.getElementById('offerTermsContinue').addEventListener('click',()=>{if(!pendingOffer||!document.getElementById('offerTermsCheck').checked)return;const target=pendingOffer;pendingOffer=null;localStorage.setItem(offerTermsKey(target.wallId),'accepted');document.getElementById('offerTermsGate').hidden=true;document.body.style.overflow='';launchOffer(target)});
+document.getElementById('offerTermsCancel').addEventListener('click',()=>{pendingOffer=null;document.getElementById('offerTermsGate').hidden=true;document.body.style.overflow=''});
+document.getElementById('offerTermsContinue').addEventListener('click',()=>{if(!pendingOffer||!document.getElementById('offerTermsCheck').checked)return;localStorage.setItem('yasjoy_offer_terms_accepted',OFFER_TERMS_VERSION);const target=pendingOffer;pendingOffer=null;document.getElementById('offerTermsGate').hidden=true;document.body.style.overflow='';launchOffer(target)});
 let withdrawalSubmitting=false;
 async function submitRequest(){
  if(document.getElementById("bannedScreen")?.hidden===false)return;
@@ -197,8 +203,8 @@ function renderWithdrawalMethods(snapshot){
  withdrawalMethods.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
  withdrawalMethods.forEach(method=>{
   const b=document.createElement('button');b.type='button';b.className='withdraw-method';
-  const logo=typeof method.logo==='string'&&/^https:\/\/\S+$/i.test(method.logo);
-  if(logo){const img=document.createElement('img');img.src=method.logo;img.alt=(method.name||'')+' logo';img.onerror=()=>img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}));b.append(img)}
+  const logo=safeWallImage(method.logo);
+  if(logo){const img=document.createElement('img');img.src=logo;img.alt=(method.name||'')+' logo';img.onerror=()=>img.replaceWith(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}));b.append(img)}
   else b.append(Object.assign(document.createElement('span'),{className:'method-fallback',textContent:'💳'}));
   b.append(Object.assign(document.createElement('span'),{textContent:method.name||'Withdrawal'}));b.onclick=()=>chooseWithdrawalMethod(method,b);host.append(b);
  });
@@ -226,18 +232,19 @@ async function loadSocialLinks(){
  status.textContent=count?"Social links loaded from Firebase.":"No valid social links configured."
  }catch(error){console.error("Social links error:",error);status.textContent="Could not load social links. Check Firebase rules and socialLinks/main."}
 }
+function safeWallImage(value){const s=String(value||'').trim();if(/^https:\/\/\S+$/i.test(s))return s;if(/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/i.test(s)&&s.length<260000)return s;return ''}
 function renderOfferWalls(snapshot){
- const host=document.getElementById("offersList");host.replaceChildren();
- const walls=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(w=>w.visible!==false);
- if(!walls.length){const empty=document.createElement("div");empty.className="empty-offers";empty.textContent="No offer walls are currently available.";host.appendChild(empty);return}
- walls.sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
+ const host=document.getElementById('offersList');host.replaceChildren();
+ const walls=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(w=>w.enabled===true&&typeof w.url==='string'&&/^https:\/\/\S+$/i.test(w.url));
+ if(!walls.length){const empty=document.createElement('div');empty.className='empty-offers';empty.textContent='No offer walls are currently available.';host.append(empty);return}
+ walls.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
  for(const wall of walls){
-  const name=typeof wall.name==="string"&&wall.name.trim()?wall.name.trim():"Offer wall",url=typeof wall.url==="string"&&/^https:\/\/\S+$/i.test(wall.url)?wall.url:"",enabled=wall.enabled===true&&!!url;
-  const card=document.createElement("article");card.className="offer";const top=document.createElement("div");top.className="offer-top";
-  const icon=document.createElement("div");icon.className="provider-icon";icon.style.background="#dff4ff";icon.style.color="#0758a8";
-  if(typeof wall.logo==="string"&&/^https:\/\/\S+$/i.test(wall.logo)){const img=document.createElement("img");img.src=wall.logo;img.alt=name+" logo";img.loading="lazy";img.onerror=()=>{icon.textContent=name.charAt(0).toUpperCase()};icon.appendChild(img)}else icon.textContent=name.charAt(0).toUpperCase();
-  const info=document.createElement("div");info.className="offer-info";const title=document.createElement("h3"),description=document.createElement("p");title.textContent=name;description.textContent=typeof wall.description==="string"&&wall.description.trim()?wall.description.trim():"Complete offers and get rewards";info.append(title,description);top.append(icon,info);
-  const button=document.createElement("button");button.className="earn";button.textContent=enabled?"🪙 Earn coins ›":"Currently unavailable";button.disabled=!enabled;button.addEventListener("click",()=>openOffer(url,name,enabled,wall.id));card.append(top,button);host.appendChild(card);
+  const name=typeof wall.name==='string'&&wall.name.trim()?wall.name.trim():'Offer wall',url=wall.url;
+  const card=document.createElement('article');card.className='offer';const top=document.createElement('div');top.className='offer-top';
+  const image=safeWallImage(wall.image||wall.logo);
+  if(image){const img=document.createElement('img');img.className='offer-image';img.src=image;img.alt=name+' offer wall';img.loading='lazy';img.onerror=()=>{const fallback=document.createElement('div');fallback.className='offer-fallback-image';fallback.textContent='⭐';img.replaceWith(fallback)};top.append(img)}else{const fallback=document.createElement('div');fallback.className='offer-fallback-image';fallback.textContent='⭐ YASJOY';top.append(fallback)}
+  const info=document.createElement('div'),title=document.createElement('h3'),description=document.createElement('p');title.textContent=name;description.textContent=typeof wall.description==='string'&&wall.description.trim()?wall.description.trim():'Open the provider page and follow its offer requirements.';info.append(title,description);top.append(info);
+  const button=document.createElement('button');button.className='earn';button.textContent='🪙 Open Offer Wall ›';button.addEventListener('click',()=>openOffer(url,name,true,wall.id));card.append(top,button);host.append(card);
  }
 }
 let stopUserListener=null;
@@ -245,10 +252,10 @@ let stopUserListener=null;
 async function fetchGeo(skip){
  const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))]);
  const sources=[
-  async()=>{const t=await (await fetch('/cdn-cgi/trace',{cache:'no-store'})).text();const m=Object.fromEntries(t.trim().split('\n').map(x=>x.split('=')));if(!m.ip||!m.loc)throw new Error('Cloudflare trace unavailable');return{ip:m.ip,countryCode:m.loc,country:''}},
-  async()=>{const j=await (await fetch('https://ipwho.is/',{cache:'no-store'})).json();if(j.success===false)throw new Error('ipwho failed');return{ip:j.ip,countryCode:j.country_code,country:j.country}},
-  async()=>{const j=await (await fetch('https://get.geojs.io/v1/ip/geo.json',{cache:'no-store'})).json();return{ip:j.ip,countryCode:j.country_code,country:j.name||j.country}},
-  async()=>{const j=await (await fetch('https://api.country.is/',{cache:'no-store'})).json();return{ip:j.ip,countryCode:j.country,country:''}}
+  async()=>{const r=await fetch('/api/geo',{cache:'no-store',headers:{'Accept':'application/json'}});if(!r.ok)throw new Error('Cloudflare geo endpoint unavailable');const j=await r.json();return{ip:j.ip,countryCode:j.countryCode,country:j.country,region:j.region}},
+  async()=>{const r=await fetch('https://ipwho.is/',{cache:'no-store'});const j=await r.json();if(j.success===false)throw new Error('ipwho failed');return{ip:j.ip,countryCode:j.country_code,country:j.country}},
+  async()=>{const r=await fetch('https://get.geojs.io/v1/ip/geo.json',{cache:'no-store'});const j=await r.json();return{ip:j.ip,countryCode:j.country_code,country:j.name||j.country}},
+  async()=>{const r=await fetch('https://api.country.is/',{cache:'no-store'});const j=await r.json();return{ip:j.ip,countryCode:j.country,country:''}}
  ];
  for(let i=0;i<sources.length;i++){
   if(i===skip)continue;
@@ -264,11 +271,10 @@ async function recordGeo(userRef,existing){
   const g=await fetchGeo(-1);if(!g)return;
   const old=existing||{},payload={};
   if(!old.countryCode){payload.countryCode=g.countryCode;payload.country=g.country;payload.countryAt=serverTimestamp();payload.lastCountryCode=g.countryCode}
-  else if(old.countryCode!==g.countryCode&&old.banned!==true){
+  else if(old.countryCode!==g.countryCode&&old.countryMismatch!==true&&old.banned!==true){
    const g2=await fetchGeo(g.src);
    if(g2&&g2.countryCode===g.countryCode){
-    payload.banned=true;payload.banReason='country_change';payload.bannedBy='auto';payload.bannedAt=serverTimestamp();
-    payload.lastCountryCode=g.countryCode;payload.lastCountry=g.country;payload.previousCountryCode=old.countryCode;
+    payload.countryMismatch=true;payload.countryMismatchAt=serverTimestamp();payload.lastCountryCode=g.countryCode;payload.lastCountry=g.country;payload.previousCountryCode=old.countryCode;setBannedView(true);
    }
   }
   if(old.ip!==g.ip){if(old.ip)payload.previousIp=old.ip;payload.ip=g.ip;payload.ipAt=serverTimestamp()}
@@ -283,7 +289,7 @@ async function setupUser(user){
  userId=publicId;document.getElementById("userId").textContent=publicId;document.getElementById("userIdNote").textContent="Your User ID is linked to your Firebase account.";
  const profileText=document.querySelector("#profile .panel > p");if(profileText)profileText.textContent="Your YASJOY account";
  if(stopUserListener)stopUserListener();
- stopUserListener=onSnapshot(userRef,userSnap=>{const data=userSnap.data()||{};setBannedView(data.banned===true);balance=Number.isFinite(data.balance)?data.balance:0;refreshBalance()},error=>console.error("User data error:",error));
+ stopUserListener=onSnapshot(userRef,userSnap=>{const data=userSnap.data()||{};setBannedView(data.banned===true||data.countryMismatch===true);balance=Number.isFinite(data.balance)?data.balance:0;refreshBalance()},error=>console.error("User data error:",error));
 }
 loadSocialLinks();
 onSnapshot(collection(db,"withdrawMethods"),renderWithdrawalMethods,error=>{console.error("Withdrawal methods listener error:",error);const host=document.getElementById("withdrawMethodsList");host.replaceChildren();const msg=document.createElement("div");msg.className="empty-offers withdraw-status";msg.textContent="Could not load withdrawal methods. Check Firebase rules.";host.appendChild(msg)});
