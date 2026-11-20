@@ -219,72 +219,81 @@ input:focus,textarea:focus,select:focus{outline:2px solid #16bdf2;outline-offset
 #userList .item>div.user-geo{font-size:14px;font-weight:bold;color:#17365f;line-height:1.8}
 #userList .item>div.user-ip{direction:ltr;text-align:right;font-weight:normal;color:#456;font-size:13px;unicode-bidi:plaintext}
 
-/* Final layout pass: large 2x2 dashboard, full-width landscape withdrawal cards */
-#home.dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px}
-#home.dashboard-grid>.menu{min-height:clamp(190px,31vw,245px);padding:clamp(16px,3.3vw,27px);}
-#home.dashboard-grid>.menu .menu-copy strong{font-size:clamp(16px,2.8vw,23px)}
-#home.dashboard-grid>.menu .menu-copy small{font-size:clamp(12px,2vw,15px)}
-@media(max-width:420px){#home.dashboard-grid{gap:11px}#home.dashboard-grid>.menu{min-height:175px;padding:12px;gap:8px}#home.dashboard-grid>.menu .menu-icon{flex-basis:45px;width:45px;height:45px;font-size:24px}#home.dashboard-grid>.menu .menu-copy strong{font-size:14px}#home.dashboard-grid>.menu .menu-copy small{font-size:11px}}
-.wall-admin-image{display:block;width:100%;max-height:190px;aspect-ratio:16/9;object-fit:cover;border-radius:14px;margin-bottom:10px}
-.upload-preview{display:block;max-width:130px;max-height:130px;object-fit:contain;border:1px solid var(--yas-border);border-radius:14px;background:#fff;padding:5px;margin:5px 0 12px}
-.wide-preview{width:100%;max-width:100%;max-height:220px;aspect-ratio:16/9;object-fit:cover}
-.user-withdrawal-card{width:100%;display:grid;grid-template-columns:minmax(115px,.28fr) minmax(0,1fr);gap:12px;padding:16px;align-items:start;}
-.user-withdrawal-head{grid-column:1/-1;margin:0 0 2px}
-.withdrawal-method-visual{grid-column:1;grid-row:2;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:#effaff;border:1px solid #d5eaf5;border-radius:16px;padding:12px;min-height:120px;text-align:center;color:#0878aa;font-weight:bold;overflow-wrap:anywhere}
-.withdrawal-method-visual img{width:min(100%,112px);height:88px;object-fit:contain;border-radius:12px}
-.withdrawal-method-fallback{font-size:48px;line-height:1.2}
-.user-withdrawal-card>.summary-card{grid-column:2;grid-row:2;margin:0;min-width:0}
-.user-withdrawal-card>.wallet-copy-row,.user-withdrawal-card>.integrity-check,.user-withdrawal-card>.btn,.user-withdrawal-card>.user-request-list,.user-withdrawal-card>.actions{grid-column:1/-1}
-.wallet-copy-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#f8fdff;border:1px solid #d5eaf5;border-radius:12px;padding:10px;min-width:0}
-.wallet-copy-row code{direction:ltr;unicode-bidi:plaintext;overflow-wrap:anywhere;flex:1;min-width:0}
-.wallet-copy-row button{border:0;border-radius:10px;background:#dff5ff;color:#0878aa;padding:10px 15px;font-weight:bold;white-space:nowrap}
-.integrity-check{border-radius:12px;padding:10px 13px;background:#f6f9fc;border:1px solid #d5eaf5;font-weight:bold}
-.integrity-check.ok{background:#eafaf2;color:#147647;border-color:#a8e2c4}
-.integrity-check.bad{background:#fff0f2;color:#a30d32;border-color:#f2bdca}
-.integrity-check.unknown{background:#fff9e9;color:#8a6411;border-color:#f0dfa7}
-.user-withdrawal-card .summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.user-withdrawal-card .summary-stat{min-width:0;overflow-wrap:anywhere}
-.user-withdrawal-card .actions{margin:0}
-#pointsList .item{background:#f8fdff;border-right:4px solid #16bdf2}
-#pointsList .point-value{font-weight:900;color:#0878aa;direction:ltr;text-align:right}
-#users .tabs{margin:12px 0}
-@media(max-width:390px){.user-withdrawal-card{grid-template-columns:92px minmax(0,1fr);gap:8px;padding:10px}.withdrawal-method-visual{padding:8px;min-height:96px}.withdrawal-method-visual img{height:65px}.user-withdrawal-card .summary-grid{grid-template-columns:1fr}.wallet-copy-row{align-items:stretch}.wallet-copy-row button{width:100%}}
-
+/* ===== v7: big dashboard squares ===== */
+[hidden]{display:none!important}
+#home.dashboard-grid:not(.has-selection)>.menu{flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:14px;min-height:clamp(215px,52vw,290px);padding:22px 12px;border-radius:28px;box-shadow:0 14px 34px rgba(30,113,160,.14)}
+#home.dashboard-grid:not(.has-selection)>.menu .menu-icon{flex:0 0 auto;width:clamp(84px,22vw,112px);height:clamp(84px,22vw,112px);font-size:clamp(46px,12vw,62px);border-radius:30px}
+#home.dashboard-grid:not(.has-selection)>.menu .menu-copy{flex:0 0 auto;align-items:center;gap:8px}
+#home.dashboard-grid:not(.has-selection)>.menu .menu-copy strong{font-size:clamp(21px,5.6vw,30px)}
+#home.dashboard-grid:not(.has-selection)>.menu .menu-copy small{font-size:clamp(12px,3.2vw,15px);line-height:1.6}
+#home.dashboard-grid:not(.has-selection)>.menu .menu-arrow{display:none}
+#home.dashboard-grid:not(.has-selection)>.menu::before{inset:0 0 auto 0;width:auto;height:7px}
+#home.dashboard-grid>.menu-points{--card-accent:#7b4fd6;--card-tint:#f2ecff}
+#home.dashboard-grid:not(.has-selection)>.menu-points{grid-column:1/-1;min-height:clamp(170px,40vw,220px)}
+/* ===== v7: withdrawals carousel ===== */
+.wd-carousel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:4px 0 10px;overscroll-behavior-x:contain}
+.wd-carousel>.user-withdrawal-card{flex:0 0 100%;min-width:100%;scroll-snap-align:center;scroll-snap-stop:always;margin:0;max-height:calc(100vh - 150px);max-height:calc(100dvh - 150px);overflow-y:auto}
+.wd-method{display:flex;justify-content:center;align-items:center;min-height:84px;margin:8px 0;padding:10px;border-radius:16px;background:#fff7f9;border:1px solid #f0c9d4}
+.wd-method img{max-width:78%;max-height:76px;object-fit:contain}
+.wd-method strong{font-size:22px;color:#941337}
+.addr-box{display:flex;align-items:stretch;gap:8px;margin:8px 0}
+.addr-box>span{flex:1;min-width:0;padding:13px 12px;border:1px solid #e9aabb;border-radius:12px;background:#fff;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;direction:ltr;text-align:left;overflow-wrap:anywhere;word-break:break-all}
+.addr-box>button{flex:0 0 auto;margin:0;min-width:92px}
+.wd-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}
+.wd-stats>div{background:#f4fbff;border:1px solid #cfe7f5;border-radius:12px;padding:10px 6px;text-align:center}
+.wd-stats span{display:block;font-size:12px;color:#71879e}.wd-stats b{display:block;font-size:16px;margin-top:4px;color:#0b6aa3;overflow-wrap:anywhere}
+.verify-line{margin:8px 0;padding:11px 12px;border-radius:12px;font-weight:900;text-align:center;background:#eef3f8;color:#456}
+.verify-line.v-ok{background:#e7f8ee;color:#0d7a3b}.verify-line.v-missing{background:#fff6dd;color:#8a5a00}.verify-line.v-forged{background:#ffe5ea;color:#b00c32}.verify-line.v-error{background:#eef3f8;color:#456}
+/* ===== v7: image upload + full-screen method sheet ===== */
+.logo-preview{max-width:140px;max-height:140px;display:block;margin:8px 0;border-radius:14px;border:1px solid #d5eaf5;object-fit:contain;background:#fff}
+#methodForm{display:none}
+#methodForm.sheet-open{display:block;position:fixed;inset:0;z-index:9000;overflow:auto;border-radius:0;margin:0;padding:16px 16px 90px;background:#f8fdff}
+#addMethodBtn{width:100%;margin:6px 0 14px;padding:15px;font-size:18px}
+.secret-row{display:flex;gap:8px;align-items:center}.secret-row input{flex:1;margin:7px 0}.secret-row button{margin:0}
+#wallList .item img.logo{width:100%;max-width:260px;max-height:150px;object-fit:contain;display:block;margin:0 auto 10px}
+/* ===== v7: points panel ===== */
+.pt-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
+.pt-stats>div{background:#f3edff;border:1px solid #d9c9f5;border-radius:16px;padding:14px 8px;text-align:center}
+.pt-stats span{display:block;font-size:13px;color:#6b5a8e}.pt-stats b{display:block;font-size:24px;margin-top:6px;color:#5b34b0}
+.pt-row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;border:1px solid #e4daf6;border-radius:12px;margin:7px 0;background:#fff;font-size:14px}
+.pt-row b{color:#0d7a3b;white-space:nowrap}.pt-row.bad b{color:#b00c32}.pt-row small{display:block;color:#71879e}
 </style></head><body>
 <header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header><main>
 <section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><p id="loginMsg" class="muted"></p></section>
 <section id="app" class="hidden"><p class="muted">تم التحقق من حساب المسؤول</p><div id="home" class="dashboard-grid" aria-label="الأقسام الرئيسية">
 <button type="button" class="menu menu-withdraw" data-panel="withdraw" aria-label="طلبات السحب" aria-expanded="false" onclick="openPanel('withdraw')"><span class="menu-icon">💳</span><span class="menu-copy"><strong>طلبات السحب</strong><small>معلّقة · مدفوعة · مرفوضة</small></span><span class="menu-arrow">←</span></button>
-<button type="button" class="menu menu-users" data-panel="users" aria-label="المستخدمون" aria-expanded="false" onclick="openPanel('users')"><span class="menu-icon">👥</span><span class="menu-copy"><strong>المستخدمون</strong><small>بحث · الدولة · جدران العروض · الحظر</small></span><span class="menu-arrow">←</span></button>
-
+<button type="button" class="menu menu-users" data-panel="users" aria-label="المستخدمون" aria-expanded="false" onclick="openPanel('users')"><span class="menu-icon">👥</span><span class="menu-copy"><strong>المستخدمون</strong><small>بحث · رصيد · آخر نشاط · حظر</small></span><span class="menu-arrow">←</span></button>
 <button type="button" class="menu menu-methods" data-panel="methods" aria-label="طرق السحب" aria-expanded="false" onclick="openPanel('methods')"><span class="menu-icon">💰</span><span class="menu-copy"><strong>طرق السحب</strong><small>إضافة · تعديل · تشغيل · إيقاف</small></span><span class="menu-arrow">←</span></button>
 <button type="button" class="menu menu-walls" data-panel="walls" aria-label="جدران العروض" aria-expanded="false" onclick="openPanel('walls')"><span class="menu-icon">🎁</span><span class="menu-copy"><strong>جدران العروض</strong><small>المزوّدون · الروابط · الشعارات · الإعدادات</small></span><span class="menu-arrow">←</span></button>
+<button type="button" class="menu menu-points" data-panel="points" aria-label="النقاط" aria-expanded="false" onclick="openPanel('points')"><span class="menu-icon">🪙</span><span class="menu-copy"><strong>النقاط</strong><small>نقاط الجدران الواصلة للمستخدمين · سجل Postback</small></span><span class="menu-arrow">←</span></button>
 </div>
+<section id="points" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>النقاط القادمة من الجدران</h2><p class="muted">كل نقطة هنا وصلت فعلًا من جدار عروض إلى رصيد مستخدم عبر Postback موثّق.</p><div id="pointsBody"></div></section>
 <section id="withdraw" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2><div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div><div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p></section>
-<section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div class="tabs"><button class="tab active" type="button" onclick="usersSubTab('users',this)">المستخدمون</button><button class="tab" type="button" onclick="usersSubTab('points',this)">سجل النقاط</button></div><div id="userList"></div><div id="pointsList" class="hidden"></div></section>
-<section id="methods" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة طرق السحب</h2><div class="form"><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden"><label>اسم طريقة السحب</label><input id="methodName" placeholder="Binance أو PayPal"><label>صورة طريقة السحب</label><input id="methodLogoFile" type="file" accept="image/*"><input id="methodLogoExisting" type="hidden"><img id="methodLogoPreview" class="upload-preview hidden" alt="معاينة شعار طريقة السحب"><h3>فئات السحب</h3><p class="muted">أدخل عدد النقاط والنص الذي سيظهر للمستخدم. صورة الشعار تبقى منفصلة.</p><p class="muted">لكل فئة ثلاث خانات: <b>النقاط</b> التي تُخصم، و<b>المبلغ</b> (مثل 0.25 أو 5) وهو نفسه النص الظاهر للمستخدم ونفسه المبلغ المستحق في طلبات السحب، و<b>العملة</b> (الافتراضي $ ويمكنك كتابة US أو غيره). لا يوجد حد لعدد الفئات: اضغط «＋ إضافة فئة» كما تشاء ثم احفظ.</p><div id="tierRows"></div><button type="button" id="addTier" class="btn">＋ إضافة فئة</button><label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label><button id="saveMethod" class="primary">حفظ طريقة السحب والفئات</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
-<section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2><p class="muted">هذه النسخة تفتح رابط HTTPS مباشرًا فقط. اسم المزوّد والرابط والصورة لا تعني أن SDK أو Postback أو اعتماد المكافآت قد تم تفعيله. لا تُسجّل نقاط العرض إلا بعد تحقق موثوق من المزوّد عبر خادم آمن.</p><div class="form"><h3 id="wallTitle">إضافة جدار عروض</h3><input id="wallId" type="hidden"><label>مزود جدار العروض</label><select id="wallProvider" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="">اختر المزوّد</option></select><input id="wallCustomProvider" class="hidden" placeholder="اكتب اسم المزوّد بالإنجليزية"><label>الاسم الظاهر للمستخدم</label><input id="wallName" placeholder="اسم الجدار"><label>رابط الجدار المعتمد (HTTPS)</label><input id="wallUrl" type="url" inputmode="url" placeholder="https://..."><label>صورة الجدار (ارفع صورة أفقية 16:9)</label><input id="wallImageFile" type="file" accept="image/*"><input id="wallImageExisting" type="hidden"><img id="wallImagePreview" class="upload-preview wide-preview hidden" alt="معاينة صورة الجدار"><label class="check"><input id="wallEnabled" type="checkbox"> مفعّل ويظهر للمستخدم</label><button id="saveWall" class="primary">حفظ الجدار</button><button id="cancelWall" class="btn">إلغاء</button><p id="wallMsg" class="muted"></p></div><div id="wallList"></div></section>
+<section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userList"></div></section>
+<section id="methods" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة طرق السحب</h2><button type="button" id="addMethodBtn" class="primary">＋ إضافة طريقة سحب</button><div class="form" id="methodForm"><button type="button" class="back" id="closeMethodSheet">✕ إغلاق</button><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden"><label>اسم طريقة السحب</label><input id="methodName" placeholder="Binance أو PayPal"><label>صورة الشعار (ارفعها من جهازك)</label><input id="methodLogoFile" type="file" accept="image/*"><img id="methodLogoPreview" class="logo-preview" hidden alt=""><label>أو رابط الصورة (اختياري)</label><input id="methodLogo" type="url" placeholder="https://..." dir="ltr"><h3>فئات السحب</h3><p class="muted">أدخل عدد النقاط والنص الذي سيظهر للمستخدم. صورة الشعار تبقى منفصلة.</p><p class="muted">لكل فئة ثلاث خانات: <b>النقاط</b> التي تُخصم، و<b>المبلغ</b> (مثل 0.25 أو 5) وهو نفسه النص الظاهر للمستخدم ونفسه المبلغ المستحق في طلبات السحب، و<b>العملة</b> (الافتراضي $ ويمكنك كتابة US أو غيره). لا يوجد حد لعدد الفئات: اضغط «＋ إضافة فئة» كما تشاء ثم احفظ.</p><div id="tierRows"></div><button type="button" id="addTier" class="btn">＋ إضافة فئة</button><label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label><button id="saveMethod" class="primary">حفظ طريقة السحب والفئات</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
+<section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2><p class="muted">اربط الجدار بنقاط حقيقية: احفظ الجدار ثم انسخ رابط Postback وضعه في لوحة المزوّد، فتصل النقاط للمستخدم تلقائيًا عبر Cloudflare.</p><div class="form"><h3 id="wallTitle">إضافة جدار عروض</h3><input id="wallId" type="hidden"><label>مزود جدار العروض</label><select id="wallProvider" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="">اختر المزوّد</option></select><input id="wallCustomProvider" class="hidden" placeholder="اكتب اسم المزوّد (بالإنجليزية)"><label>الاسم الظاهر للمستخدم</label><input id="wallName" placeholder="اسم الجدار"><label>رابط الجدار (اكتب {uid} مكان معرّف المستخدم)</label><input id="wallUrl" type="url" dir="ltr" placeholder="https://wall.provider.com/?app=XXX&user_id={uid}"><label>وصف قصير (اختياري)</label><input id="wallDesc" placeholder="أكمل العروض واربح نقاط"><label>صورة الجدار (ارفعها من جهازك)</label><input id="wallLogoFile" type="file" accept="image/*"><img id="wallLogoPreview" class="logo-preview" hidden alt=""><label>أو رابط الصورة (اختياري)</label><input id="wallLogo" type="url" dir="ltr" placeholder="https://..."><label>عدد النقاط لكل 1 من مبلغ المزوّد</label><input id="wallRate" type="number" min="0" step="any" value="1000"><p class="muted">مثال: المزوّد يرسل 0.25 والقيمة 1000 ← يحصل المستخدم على 250 نقطة. إن كان المزوّد يرسل نقاطًا جاهزة اجعلها 1.</p><label>طريقة التحقق من التوقيع (sig)</label><select id="wallVerify" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="key">key — sig هو المفتاح السري نفسه</option><option value="md5">md5 — md5(txid-secret) مثل CPX</option><option value="sha256">sha256 — sha256(txid-secret)</option><option value="hmac">hmac — HMAC-SHA256(secret, uid|amount|txid)</option></select><label>المفتاح السري (Secret)</label><div class="secret-row"><input id="wallSecret" type="password" autocomplete="off" dir="ltr" placeholder="الصق المفتاح السري من لوحة المزوّد"><button type="button" id="genSecret" class="btn">🎲 توليد</button></div><p id="secretState" class="muted"></p><div id="postbackBox" class="details-box hidden"><strong>رابط Postback — ضعه في لوحة المزوّد</strong><div class="addr-box"><span id="postbackUrl"></span><button type="button" id="copyPostback" class="btn">📋 نسخ</button></div><p class="muted">أسماء المتغيرات تختلف بين المزوّدين (مثل {user_id} و{reward} و{transaction_id}). بدّل {uid} و{amount} و{txid} و{sig} بما يطلبه مزوّدك.</p></div><label class="check"><input id="wallEnabled" type="checkbox"> مفعّل (يظهر للمستخدمين)</label><button id="saveWall" class="primary">حفظ</button><button id="cancelWall" class="btn">إلغاء</button><p id="wallMsg" class="muted"></p></div><div id="wallList"></div></section>
 </section></main><footer class="muted" style="text-align:center;padding:20px">YASJOY Admin • Firebase</footer>
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';
 import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
-import{getFirestore,collection,onSnapshot,doc,updateDoc,addDoc,deleteDoc,getDoc,setDoc,serverTimestamp,writeBatch,query,where,getDocs}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js';
+import{getFirestore,collection,onSnapshot,doc,updateDoc,addDoc,deleteDoc,getDoc,setDoc,serverTimestamp,writeBatch,query,where,getDocs,orderBy,limit}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js';
 const config={apiKey:'AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI',authDomain:'yasjoy.firebaseapp.com',projectId:'yasjoy',storageBucket:'yasjoy.firebasestorage.app',messagingSenderId:'967065409063',appId:'1:967065409063:web:4f7b882cc38f17ec8a2002'};
 const ADMIN_UID='wQgo9HTzP0NWC6JO2D1Di8iIPm62',app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
-let users=[],withdrawals=[],methods=[],walls=[],transactions=[],status='pending',unsubs=[];
+let users=[],withdrawals=[],methods=[],walls=[],status='pending',unsubs=[],offerTx=[],postLogs=[],pointsErr='',methodImg='',wallImg='';const verifyCache=new Map(),autoBanned=new Set();
 setPersistence(auth,browserLocalPersistence).catch(console.error);
 $('loginBtn').onclick=async()=>{$('loginMsg').textContent='جارٍ التحقق…';try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value)}catch(e){$('loginMsg').textContent='تعذّر تسجيل الدخول. تحقق من البيانات.';$('loginMsg').className='error'}};
 $('password').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};
 onAuthStateChanged(auth,async u=>{unsubs.forEach(f=>f());unsubs=[];if(!u){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}if(u.uid!==ADMIN_UID){await signOut(auth);$('loginMsg').textContent='هذا الحساب غير مخوّل.';return}$('login').classList.add('hidden');$('app').classList.remove('hidden');
-unsubs.push(onSnapshot(collection(db,'users'),s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));renderUsers();s.docs.forEach(d=>{const data=d.data();if(!Number.isSafeInteger(data.balance)||data.balance<0){const legacy=Number(data.balance??data.points??data.coins??0),balance=Number.isSafeInteger(legacy)&&legacy>=0?legacy:0;updateDoc(d.ref,{balance}).catch(e=>console.warn('Could not initialize user balance:',d.id,e));}})}));
+unsubs.push(onSnapshot(collection(db,'users'),s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));renderUsers();renderWalls();renderPoints()}));
 unsubs.push(onSnapshot(collection(db,'withdrawals'),s=>{withdrawals=s.docs.map(d=>({id:d.id,...d.data()}));renderWithdrawals();renderUsers()},e=>{$('withdrawList').replaceChildren(el('div','تعذّر تحميل طلبات السحب: '+e.message,'error'));console.error('withdrawals listener error:',e)}));
-unsubs.push(onSnapshot(collection(db,'withdrawMethods'),s=>{methods=s.docs.map(d=>({id:d.id,...d.data()}));renderMethods();renderWithdrawals();s.docs.forEach(d=>{const data=d.data();if(!Array.isArray(data.tierCoins)&&Array.isArray(data.tiers)){const tierCoins=data.tiers.map(t=>Number(t.coins)).filter(n=>Number.isSafeInteger(n)&&n>0);updateDoc(d.ref,{tierCoins}).catch(e=>console.warn('Could not update withdrawal tier index:',d.id,e));}})}));
-unsubs.push(onSnapshot(collection(db,'offerWalls'),s=>{walls=s.docs.map(d=>({id:d.id,...d.data()}));renderWalls()}));
-unsubs.push(onSnapshot(collection(db,'transactions'),s=>{transactions=s.docs.map(d=>({id:d.id,...d.data()}));renderPoints();},e=>{$('pointsList').replaceChildren(el('div','تعذّر تحميل سجل النقاط: '+e.message,'error'));console.error('transactions listener error:',e)}));
+unsubs.push(onSnapshot(collection(db,'withdrawMethods'),s=>{methods=s.docs.map(d=>({id:d.id,...d.data()}));renderMethods();renderWithdrawals()}));
+unsubs.push(onSnapshot(collection(db,'offerWalls'),s=>{walls=s.docs.map(d=>({id:d.id,...d.data()}));renderWalls();renderPoints()}));
+unsubs.push(onSnapshot(query(collection(db,'transactions'),where('type','==','offer'),limit(500)),s=>{offerTx=s.docs.map(d=>({id:d.id,...d.data()}));pointsErr='';renderPoints()},e=>{pointsErr=e.message;renderPoints()}));
+unsubs.push(onSnapshot(query(collection(db,'postbackLogs'),orderBy('createdAt','desc'),limit(50)),s=>{postLogs=s.docs.map(d=>({id:d.id,...d.data()}));renderPoints()},e=>{pointsErr=pointsErr||e.message;renderPoints()}));
 });
 let current='home';function show(id){
  const home=$('home');
- const valid=id==='home'||['withdraw','users','methods','walls'].includes(id);
+ const valid=id==='home'||['withdraw','users','methods','walls','points'].includes(id);
  if(!valid)return;
  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));
  home.style.display='grid';
@@ -299,7 +308,7 @@ let current='home';function show(id){
  current=id;
  if(id!=='home')requestAnimationFrame(()=>home.scrollIntoView({behavior:'smooth',block:'start'}));
  else window.scrollTo({top:0,behavior:'smooth'});
-}window.openPanel=show;window.goHome=()=>show('home');window.usersSubTab=usersSubTabSafe;window.withdrawTab=(s,b)=>{status=s;document.querySelectorAll('#withdraw .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderWithdrawals()};
+}window.openPanel=show;window.goHome=()=>show('home');window.withdrawTab=(s,b)=>{status=s;document.querySelectorAll('#withdraw .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderWithdrawals()};
 function el(tag,text='',className=''){const node=document.createElement(tag);if(text!==undefined&&text!==null)node.textContent=String(text);if(className)node.className=className;return node}
 function balance(u){return Number(u.balance??u.points??u.coins??0)||0}
 function displayDate(v){if(!v)return 'غير متوفر';const d=v.toDate?v.toDate():(v instanceof Date?v:new Date(v));return isNaN(d)?'غير معروف':d.toLocaleString('ar')}
@@ -318,49 +327,56 @@ function userWithdrawnStats(uid){let paid=0,pending=0,rejected=0;withdrawals.for
 function flagEmoji(code){const c=String(code||'').trim().toUpperCase();if(!/^[A-Z]{2}$/.test(c))return '';return String.fromCodePoint(...[...c].map(ch=>127397+ch.charCodeAt(0)))}
 function countryInfo(u){const two=/^[A-Za-z]{2}$/;let code=String(u.countryCode||u.country_code||u.cc||'').trim(),name=String(u.countryName||u.country_name||'').trim();const raw=String(u.country||'').trim();if(!two.test(code)&&two.test(raw))code=raw;if(!name&&raw&&!two.test(raw))name=raw;let ar='';if(two.test(code)){try{ar=new Intl.DisplayNames(['ar'],{type:'region'}).of(code.toUpperCase())||''}catch(e){}}return{code:two.test(code)?code.toUpperCase():'',name:ar||name,flag:flagEmoji(code)}}
 function userIp(u){return String(u.ip||u.ipAddress||u.ip_address||u.lastIp||'').trim()}
-async function deleteUserCompletely(u,btn){
- const uid=String(u.id);btn.disabled=true;btn.textContent='جارٍ الحذف النهائي…';
- try{
-  const admin=auth.currentUser;if(!admin)throw new Error('انتهت جلسة المسؤول. سجّل الدخول من جديد.');
-  const idToken=await admin.getIdToken(true);
-  const response=await fetch('/api/admin/delete-user',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},body:JSON.stringify({uid})});
-  const result=await response.json().catch(()=>({}));
-  if(!response.ok||result.success!==true){const suffix=result.partial?'\nقد تكون عملية حذف Firestore بدأت قبل حدوث الخطأ؛ راجع بيانات Firebase قبل إعادة المحاولة.':'';throw new Error((result.error||'فشل الحذف النهائي.')+suffix)}
-  alert('تم حذف حساب المستخدم نهائيًا من Firebase Authentication وFirestore.');
- }catch(e){console.error('Permanent user deletion error:',e);alert('لم يكتمل الحذف النهائي: '+e.message+'\nتحقق من إعداد وظيفة Cloudflare ومفاتيح الخادم. لا تعاود المحاولة قبل التأكد من حالة المستخدم وبياناته.');btn.disabled=false;btn.textContent='حذف نهائي للمستخدم'}
-}
-
-async function appendUserOfferInfo(u,box){
- const sec=el('div','','details-box');sec.append(el('strong','الدولة ونشاط جدران العروض'));
- const ci=countryInfo(u),country=((ci.flag?ci.flag+' ':'')+(ci.name||ci.code)).trim();
- sec.append(detailLine('الدولة',country||'غير معروفة'));
- if(u.countryMismatch===true||u.banned===true)sec.append(el('p','تنبيه أمني: تغيّر البلد المرصود أو تم تقييد الحساب.','warn'));
- const status=el('p','جارٍ تحميل سجل نقاط الجدران…','muted');sec.append(status);box.append(sec);
- const rows=new Map(),entries=u.wallEntries&&typeof u.wallEntries==='object'?u.wallEntries:{};
- Object.entries(entries).forEach(([id,e])=>rows.set(id,{name:(e&&e.name)||id,count:Number(e&&e.count)||0,last:e&&e.lastAt,points:0}));
- const txs=[],seen=new Set();let txError='';
- for(const field of ['uid','userId']){try{const snap=await getDocs(query(collection(db,'transactions'),where(field,'==',String(u.id))));snap.forEach(d=>{if(!seen.has(d.id)){seen.add(d.id);txs.push(d.data())}})}catch(e){txError=e.message}}
- let walletPoints=0;
- txs.forEach(t=>{const coins=Number(t.coins??t.amount??t.points),wid=String(t.wallId||t.offerWallId||''),nm=String(t.wallName||t.provider||t.offerWall||'');if(!(coins>0))return;if(!wid&&!nm&&t.type!=='offer'&&t.type!=='offerwall')return;
-  let r=wid?rows.get(wid):null;if(!r&&nm)r=[...rows.values()].find(x=>String(x.name).toLowerCase()===nm.toLowerCase());
-  if(!r){r={name:nm||wid||'جدار غير معروف',count:0,last:null,points:0};rows.set(wid||nm||'unknown',r)}
-  r.points+=coins;walletPoints+=coins});
- status.remove();
- if(txError)sec.append(el('p','تعذرت قراءة بعض معاملات النقاط: '+txError,'warn'));
- if(!rows.size){sec.append(el('p','لا يوجد سجل جدران أو مكافآت مسجّل لهذا المستخدم.','muted'));return}
- [...rows.values()].sort((a,b)=>b.points-a.points||b.count-a.count).forEach(r=>{const card=el('div','','merged-request-card');card.append(el('strong','الجدار: '+r.name),detailLine('مرات الفتح المسجلة',r.count?r.count.toLocaleString('en-US'):'0'),detailLine('آخر فتح',r.last?displayDate(r.last):'غير مسجل'),detailLine('نقاط مسجّلة في سجل المعاملات',r.points.toLocaleString('en-US')+' نقطة'));sec.append(card)});
- sec.append(el('p','إجمالي النقاط الموجبة المسجّلة في معاملات الجدران: '+walletPoints.toLocaleString('en-US')+' نقطة. فتح الجدار وحده لا يثبت إكمال العرض.','muted'));
-}
-
-function usersSubTabSafe(tab,button){document.querySelectorAll('#users .tabs .tab').forEach(x=>x.classList.remove('active'));button.classList.add('active');$('userList').classList.toggle('hidden',tab!=='users');$('pointsList').classList.toggle('hidden',tab!=='points');if(tab==='points')renderPoints()}
-function renderPoints(){const host=$('pointsList');if(!host)return;host.replaceChildren();const ordered=transactions.slice().sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));const summary=el('div','','summary-card');const positives=ordered.filter(t=>Number(t.coins??t.amount??t.points)>0).reduce((s,t)=>s+Number(t.coins??t.amount??t.points),0);const negatives=ordered.filter(t=>Number(t.coins??t.amount??t.points)<0).reduce((s,t)=>s+Math.abs(Number(t.coins??t.amount??t.points)),0);summary.append(el('strong','ملخص سجل النقاط'),el('div','إجمالي الإضافات المسجّلة: '+positives.toLocaleString('en-US')+' نقطة'),el('div','إجمالي الخصومات المسجّلة: '+negatives.toLocaleString('en-US')+' نقطة'),el('div','عدد السجلات: '+ordered.length));host.append(summary);if(!ordered.length){host.append(el('div','لا توجد معاملات نقاط في Firebase بعد.','empty'));return}ordered.slice(0,150).forEach((t,i)=>{const uid=String(t.uid||t.userId||''),user=users.find(x=>x.id===uid),value=Number(t.coins??t.amount??t.points),item=el('article','','item'),head=el('strong',(i+1)+'. '+(user?.publicId||t.publicId||uid||'مستخدم غير معروف'));item.append(head,detailLine('النوع',t.type||'غير محدد'),detailLine('مرجع العملية',t.withdrawalId||t.id||'—'),detailLine('التاريخ',displayDate(t.createdAt)),el('div',(Number.isFinite(value)?(value>0?'+':'')+value.toLocaleString('en-US'):'Invalid amount')+' coins','point-value'));host.append(item)})}
-
-function renderUsers(){const q=$('search').value.trim().toLowerCase(),list=$('userList');list.replaceChildren();const rows=users.filter(u=>[u.id,u.uid,u.publicId].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>balance(b)-balance(a));$('userMsg').textContent='عدد المستخدمين: '+users.length;if(!rows.length){list.append(el('div','لا توجد نتائج.','empty'));return}rows.forEach((u,i)=>{const c=el('article','','item');c.append(el('div',(i+1)+'. '+(u.publicId||'مستخدم')));c.append(el('div','Firebase UID: '+u.id));c.append(el('div','الرصيد: '+balance(u).toLocaleString('en-US')));const ci=countryInfo(u),ipv=userIp(u),cText=((ci.flag?ci.flag+' ':'')+(ci.name||ci.code)).trim();c.append(el('div','الدولة: '+(cText||'غير معروفة'),'user-geo'),el('div','IP: '+(ipv||'غير متوفر'),'user-geo user-ip'));if(u.previousIp)c.append(el('div','IP السابق: '+u.previousIp,'user-geo user-ip'));if((u.banned&&u.banReason==='country_change')||u.countryMismatch===true){const o=countryInfo({countryCode:u.countryCode}),n=countryInfo({countryCode:u.lastCountryCode}),ban=el('div','🚫 محظور تلقائيًا: تغيّرت الدولة من '+((o.flag?o.flag+' ':'')+(o.name||o.code||'؟'))+' إلى '+((n.flag?n.flag+' ':'')+(n.name||n.code||'؟')),'user-geo');ban.style.color='#a30d32';c.append(ban)}let last='غير معروف';if(u.lastActiveAt){const d=u.lastActiveAt.toDate?u.lastActiveAt.toDate():new Date(u.lastActiveAt);if(!isNaN(d))last=d.toLocaleString('ar')}c.append(el('div','آخر نشاط: '+last));c.append(el('div',(u.banned||u.countryMismatch)?'مقيّد تلقائيًا / محظور':'غير محظور','badge'));const details=el('div','','details-box');details.classList.add('hidden');const view=el('button','عرض التفاصيل','btn');view.onclick=async()=>{if(!details.classList.contains('hidden')){details.classList.add('hidden');return}details.replaceChildren();details.classList.remove('hidden');await appendUserOfferInfo(u,details)};c.append(view,details);const b=el('button',(u.banned||u.countryMismatch)?'إلغاء الحظر':'حظر المستخدم','btn '+((u.banned||u.countryMismatch)?'':'danger'));b.onclick=async()=>{try{
- if((u.banned||u.countryMismatch)&&u.lastCountryCode){
-  if(!confirm('أُوقف هذا الحساب تلقائيًا بسبب تغيّر الدولة ('+(u.countryCode||'?')+' ← '+u.lastCountryCode+').\nإعادة الحساب تعني قبول الدولة الجديدة ('+u.lastCountryCode+') كدولته الثابتة. متابعة؟'))return;
-  await updateDoc(doc(db,'users',u.id),{banned:false,countryMismatch:false,countryCode:u.lastCountryCode,country:u.lastCountry||'',previousCountryCode:u.countryCode||'',banReason:'',restoredAt:serverTimestamp()});return;
+async function adminPost(path,body){
+ const token=await auth.currentUser.getIdToken(),bases=[''];
+ if(location.hostname!=='tapjoy-elp.pages.dev')bases.push('https://tapjoy-elp.pages.dev');
+ let last='';
+ for(const base of bases){
+  try{const r=await fetch(base+path,{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify(body)});
+   const j=await r.json().catch(()=>null);if(r.ok&&j&&j.ok)return j;last=(j&&(j.error||j.message))||('HTTP '+r.status)}catch(e){last=e.message}
  }
- await updateDoc(doc(db,'users',u.id),{banned:!u.banned})}catch(e){alert('تعذّر تغيير الحظر: '+e.message)}};c.append(b);const del=el('button','حذف نهائي للمستخدم','btn danger');del.onclick=()=>deleteUserCompletely(u,del);c.append(del);list.append(c)})}
+ throw new Error(last||'الخادم غير متاح');
+}
+async function deleteUserCompletely(u,btn){
+ const uid=String(u.id),pid=String(u.publicId||uid);
+ if(!confirm('حذف نهائي للمستخدم '+pid+'؟\nسيُحذف حسابه ورصيده وكل طلباته ومعاملاته وتسجيل دخوله. لا يمكن التراجع.'))return;
+ btn.disabled=true;btn.textContent='جارٍ الحذف…';
+ try{
+  const r=await adminPost('/api/admin/delete-user',{uid});
+  alert('تم حذف المستخدم '+pid+' بالكامل'+(r.authDeleted?' (بما فيه تسجيل الدخول).':'.'));return;
+ }catch(serverErr){
+  console.warn('delete-user server unavailable, using client fallback:',serverErr);
+  try{
+   const refs=new Map();
+   userWithdrawals(uid).forEach(w=>{refs.set('withdrawals/'+w.id,doc(db,'withdrawals',w.id));refs.set('transactions/'+w.id,doc(db,'transactions',w.id))});
+   for(const field of ['uid','userId']){try{const snap=await getDocs(query(collection(db,'transactions'),where(field,'==',uid)));snap.forEach(d=>refs.set('transactions/'+d.id,d.ref))}catch(e){console.warn('transactions query',field,e)}}
+   const others=[...refs.values()];
+   for(let i=0;i<others.length;i+=400){const b=writeBatch(db);others.slice(i,i+400).forEach(r=>b.delete(r));await b.commit()}
+   await deleteDoc(doc(db,'users',uid));
+   alert('تم حذف بيانات المستخدم '+pid+' من قاعدة البيانات.\nتنبيه: خادم Cloudflare غير مفعّل بعد ('+serverErr.message+') لذلك لم يُحذف تسجيل دخوله من Authentication.');
+  }catch(e){console.error('delete user error:',e);alert('تعذّر حذف المستخدم: '+e.message);btn.disabled=false;btn.textContent='حذف المستخدم نهائيًا'}
+ }
+}
+function appendUserOfferInfo(u,box){
+ const sec=el('div','','details-box');sec.append(el('strong','الدولة والجدران'));
+ const ci=countryInfo(u),cText=((ci.flag?ci.flag+' ':'')+(ci.name||ci.code)).trim();
+ sec.append(detailLine('الدولة (ثابتة منذ أول تسجيل)',cText||'غير معروفة'));
+ const rows=new Map(),entries=u.wallEntries&&typeof u.wallEntries==='object'?u.wallEntries:{},pts=u.wallPoints&&typeof u.wallPoints==='object'?u.wallPoints:{};
+ const nameOf=id=>{const w=walls.find(x=>x.id===id);return (w&&w.name)||(entries[id]&&entries[id].name)||id};
+ Object.keys(entries).forEach(id=>rows.set(id,{name:nameOf(id),count:Number(entries[id]&&entries[id].count)||0,last:entries[id]&&entries[id].lastAt,points:0}));
+ Object.keys(pts).forEach(id=>{const r=rows.get(id)||{name:nameOf(id),count:0,last:null,points:0};r.points=Number(pts[id])||0;rows.set(id,r)});
+ if(!rows.size){sec.append(el('p','لم يدخل هذا المستخدم أي جدار بعد.','muted'));box.append(sec);return}
+ let total=0;
+ [...rows.values()].sort((a,b)=>b.points-a.points||b.count-a.count).forEach(r=>{total+=r.points;const card=el('div','','merged-request-card');card.append(el('strong','🎁 '+r.name),detailLine('مرات الدخول',r.count?r.count.toLocaleString('en-US'):'0'),detailLine('آخر دخول',r.last?displayDate(r.last):'—'),detailLine('النقاط من هذا الجدار',r.points.toLocaleString('en-US')+' نقطة'));sec.append(card)});
+ sec.append(el('p','مجموع نقاط الجدران: '+total.toLocaleString('en-US')+' نقطة','user-total'));
+ box.append(sec);
+}
+function renderUsers(){const q=$('search').value.trim().toLowerCase(),list=$('userList');list.replaceChildren();const rows=users.filter(u=>[u.id,u.uid,u.publicId].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>balance(b)-balance(a));$('userMsg').textContent='عدد المستخدمين: '+users.length;if(!rows.length){list.append(el('div','لا توجد نتائج.','empty'));return}rows.forEach((u,i)=>{const c=el('article','','item');c.append(el('div',(i+1)+'. '+(u.publicId||'مستخدم')));c.append(el('div','Firebase UID: '+u.id));c.append(el('div','الرصيد: '+balance(u).toLocaleString('en-US')));const ws=userWithdrawnStats(u.id);c.append(el('div','المجموع الكلي: '+(balance(u)+ws.total).toLocaleString('en-US'),'user-total'));c.append(el('div','المسحوب: '+ws.total.toLocaleString('en-US')+' (مدفوع '+ws.paid.toLocaleString('en-US')+' · معلّق '+ws.pending.toLocaleString('en-US')+' · مرفوض '+ws.rejected.toLocaleString('en-US')+')','user-sub'));const ci=countryInfo(u),ipv=userIp(u),cText=((ci.flag?ci.flag+' ':'')+(ci.name||ci.code)).trim();c.append(el('div','الدولة: '+(cText||'غير معروفة'),'user-geo'),el('div','IP: '+(ipv||'غير متوفر'),'user-geo user-ip'));if(u.previousIp)c.append(el('div','IP السابق: '+u.previousIp,'user-geo user-ip'));if(u.banned&&u.banReason==='country_change'){const o=countryInfo({countryCode:u.countryCode}),n=countryInfo({countryCode:u.lastCountryCode}),ban=el('div','🚫 محظور تلقائيًا: تغيّرت الدولة من '+((o.flag?o.flag+' ':'')+(o.name||o.code||'؟'))+' إلى '+((n.flag?n.flag+' ':'')+(n.name||n.code||'؟')),'user-geo');ban.style.color='#a30d32';c.append(ban)}if(u.banned&&u.banReason==='tampering'){const t=el('div','🚫 محظور تلقائيًا: محاولة تلاعب بطلبات السحب','user-geo');t.style.color='#a30d32';c.append(t)}let last='غير معروف';if(u.lastActiveAt){const d=u.lastActiveAt.toDate?u.lastActiveAt.toDate():new Date(u.lastActiveAt);if(!isNaN(d))last=d.toLocaleString('ar')}c.append(el('div','آخر نشاط: '+last));c.append(el('div',u.banned?'محظور':'غير محظور','badge'));const details=el('div','','details-box');details.classList.add('hidden');const view=el('button','عرض التفاصيل','btn');view.onclick=()=>{if(details.classList.contains('hidden')){details.replaceChildren();appendUserOfferInfo(u,details)}details.classList.toggle('hidden')};c.append(view,details);const b=el('button',u.banned?'إلغاء الحظر':'حظر المستخدم','btn '+(u.banned?'':'danger'));b.onclick=async()=>{try{
+ if(u.banned&&u.banReason==='country_change'&&u.lastCountryCode){
+  if(!confirm('أُوقف هذا الحساب تلقائيًا بسبب تغيّر الدولة ('+(u.countryCode||'?')+' ← '+u.lastCountryCode+').\nإعادة الحساب تعني قبول الدولة الجديدة ('+u.lastCountryCode+') كدولته الثابتة. متابعة؟'))return;
+  await updateDoc(doc(db,'users',u.id),{banned:false,countryCode:u.lastCountryCode,country:u.lastCountry||'',previousCountryCode:u.countryCode||'',banReason:'',restoredAt:serverTimestamp()});return;
+ }
+ await updateDoc(doc(db,'users',u.id),u.banned&&u.banReason==='tampering'?{banned:false,banReason:'',tamperingReviewedAt:serverTimestamp()}:{banned:!u.banned})}catch(e){alert('تعذّر تغيير الحظر: '+e.message)}};c.append(b);const del=el('button','حذف المستخدم نهائيًا','btn danger');del.onclick=()=>deleteUserCompletely(u,del);c.append(del);list.append(c)})}
 async function showWithdrawalDetails(w,box,button){button.disabled=true;button.textContent='جارٍ تحميل التفاصيل…';box.replaceChildren(el('div','جارٍ تحميل تفاصيل الطلب…','muted'));try{const uid=withdrawalUid(w),txSnap=await getDoc(doc(db,'transactions',w.id));box.replaceChildren();box.append(el('strong','تفاصيل طلب السحب'));box.append(detailLine('المعرّف العام',w.publicId),detailLine('التاريخ والوقت',displayDate(w.createdAt)));box.append(el('h4','التحقق من سجل المعاملة'));if(!txSnap.exists())box.append(el('p','لا يوجد سجل معاملة مطابق لهذا الطلب.','warn'));else{const tx=txSnap.data(),expected=-withdrawalPoints(w),actual=Number(tx.coins??tx.amount??tx.points),checks=[['معرّف الطلب',String(tx.withdrawalId||'')===String(w.id)],['UID المستخدم',!!uid&&String(tx.uid||tx.userId||'')===String(uid)],['قيمة النقاط',Number.isFinite(expected)&&Number.isFinite(actual)&&actual===expected]],allOk=checks.every(x=>x[1]);checks.forEach(([label,ok])=>box.append(el('div',(ok?'✓ ':'✗ ')+label+(ok?' — مطابق':' — غير مطابق'),ok?'ok':'warn')));box.append(el('p',allOk?'تم العثور على سجل معاملة مطابق للطلب.':'سجل المعاملة موجود، لكن بعض بياناته غير متطابقة.',allOk?'ok':'warn'))}}catch(e){box.replaceChildren(el('p','تعذّر تحميل التفاصيل: '+e.message,'warn'))}finally{button.disabled=false;button.textContent='إخفاء/تحديث التفاصيل'}}
 function amountUnitFromLabel(label,method){
  const text=String(label||'').trim();
@@ -427,73 +443,66 @@ function groupUserWithdrawals(rows){
  });
  return groups;
 }
+function methodImageFor(first){const id=String(first.methodId||''),n=normalizedGroupPart(withdrawalMethod(first)),m=methods.find(x=>id&&x.id===id)||methods.find(x=>normalizedGroupPart(x.name)===n);return m?imgSrc(m.logo):''}
+function verifyWithdrawal(w){
+ const key=w.id+'|'+withdrawalPoints(w)+'|'+withdrawalUid(w);
+ if(verifyCache.has(key))return verifyCache.get(key);
+ const p=(async()=>{try{
+  const snap=await getDoc(doc(db,'transactions',w.id));if(!snap.exists())return 'missing';
+  const tx=snap.data(),uid=withdrawalUid(w),expected=-withdrawalPoints(w),actual=Number(tx.coins??tx.amount??tx.points);
+  const uidOk=!!uid&&String(tx.uid||tx.userId||'')===uid,coinsOk=Number.isFinite(actual)&&actual===expected,idOk=String(tx.withdrawalId||'')===String(w.id);
+  if(!uidOk||!coinsOk)return 'forged';return idOk?'ok':'missing';
+ }catch(e){verifyCache.delete(key);return 'error'}})();
+ verifyCache.set(key,p);return p;
+}
+async function autoBanTamper(uid,user){
+ if(!uid||!user||user.banned||user.tamperingReviewedAt||autoBanned.has(uid))return;
+ autoBanned.add(uid);
+ try{await updateDoc(doc(db,'users',uid),{banned:true,banReason:'tampering',bannedBy:'auto',bannedAt:serverTimestamp()})}catch(e){console.warn('auto-ban failed',e)}
+}
 function renderWithdrawals(){
- const list=$('withdrawList');
+ const list=$('withdrawList'),old=list.querySelector('.wd-carousel'),keep=old&&old.dataset.status===status?old.scrollLeft:0;
  list.replaceChildren();
- const rows=withdrawals.filter(w=>String(w.status||'pending').toLowerCase()===status)
-  .slice().sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+ const rows=withdrawals.filter(w=>String(w.status||'pending').toLowerCase()===status).slice().sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
  const groups=groupWithdrawals(rows);
- const toolbar=el('div','','request-toolbar');
- toolbar.append(el('strong','عدد طلبات الدفع المجمّعة: '+groups.length),el('span','تُجمع حسب المستخدم + طريقة السحب + عنوان المحفظة','muted'));
- list.append(toolbar);
- if(!groups.length){list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));return}
+ const toolbar=el('div','','request-toolbar'),counter=el('strong','');
+ toolbar.append(counter,el('span','اسحب يمينًا أو يسارًا للتنقل بين الطلبات','muted'));list.append(toolbar);
+ if(!groups.length){counter.textContent='لا توجد طلبات';list.append(el('div','لا توجد طلبات في هذه القائمة.','empty'));return}
+ const rail=el('div','','wd-carousel');rail.dataset.status=status;
  groups.forEach((group,index)=>{
-  const first=group.items[0];
-  const uid=withdrawalUid(first);
-  const user=users.find(u=>String(u.id)===String(uid));
-  const amountValues=group.items.map(w=>withdrawalDisplayAmount(w));
-  const allAmountsKnown=amountValues.every(v=>v!==null&&Number.isFinite(v));
-  const totalAmount=amountValues.reduce((sum,v)=>sum+(v===null?0:v),0);
-  const totalPoints=group.items.reduce((sum,w)=>sum+withdrawalPoints(w),0);
+  const first=group.items[0],uid=withdrawalUid(first),user=users.find(u=>String(u.id)===String(uid));
+  const amountValues=group.items.map(w=>withdrawalDisplayAmount(w)),allAmountsKnown=amountValues.every(v=>v!==null&&Number.isFinite(v));
+  const totalAmount=amountValues.reduce((sum,v)=>sum+(v===null?0:v),0),totalPoints=group.items.reduce((sum,w)=>sum+withdrawalPoints(w),0);
   const state=String(first.status||'pending').toLowerCase();
-  const card=el('article','','item user-withdrawal-card');
-  const head=el('div','','user-withdrawal-head');
-  head.append(el('strong','طلب سحب مجمّع '+(index+1)+' — '+(first.publicId||user?.publicId||'مستخدم')));
-  head.append(el('span',state==='paid'?'مدفوع':state==='pending'?'معلّق':state==='rejected'?'مرفوض':state,'badge'));
-  card.append(head);
-  const method=methods.find(m=>String(m.id)===String(first.methodId||'')||normalizedGroupPart(m.name)===normalizedGroupPart(withdrawalMethod(first)));
-  const methodVisual=el('div','','withdrawal-method-visual');const methodLogo=safeImageSrc(method?.logo);
-  if(methodLogo){const methodImg=document.createElement('img');methodImg.src=methodLogo;methodImg.alt=(method?.name||'Withdrawal method')+' logo';methodVisual.append(methodImg)}else methodVisual.append(el('div','💳','withdrawal-method-fallback'));
-  methodVisual.setAttribute('aria-label',method?.name||withdrawalMethod(first)||'Withdrawal method');card.append(methodVisual);
-
-  const summary=el('div','','summary-card');
-  summary.append(el('strong','ملخص طلب الدفع الموحّد'));
-  const stats=el('div','','summary-grid');
-  [
-   ['عنوان المحفظة',withdrawalWallet(first)||'غير متوفر'],
-   ['إجمالي النقاط',totalPoints.toLocaleString('en-US')+' نقطة'],
-   ['المبلغ المستحق',allAmountsKnown?formatMoney(totalAmount,withdrawalAmountInfo(first).unit||'USD'):'غير مكتمل — راجع فئات السحب'],
-   ['عدد عمليات السحب',String(group.items.length)]
-  ].forEach(([label,value])=>{const stat=el('div','','summary-stat');stat.append(el('span',label),el('b',value));stats.append(stat)});
-  summary.append(stats);
-  if(!allAmountsKnown)summary.append(el('p','تنبيه: لم يتمكن النظام من تحديد مبلغ عملية واحدة أو أكثر. لا تؤكد الدفع قبل تصحيح فئة المبلغ في طريقة السحب.','warn'));
-  card.append(summary);
-  const walletRow=el('div','','wallet-copy-row');walletRow.append(el('strong','Wallet:'),el('code',withdrawalWallet(first)||'غير متوفر'));
-  const copyWallet=el('button','نسخ العنوان','button');copyWallet.type='button';copyWallet.onclick=async()=>{const value=withdrawalWallet(first);if(!value){alert('لا يوجد عنوان محفظة لنسخه.');return}try{await navigator.clipboard.writeText(value);copyWallet.textContent='تم النسخ ✓';setTimeout(()=>copyWallet.textContent='نسخ العنوان',1600)}catch(e){window.prompt('انسخ عنوان المحفظة:',value)}};walletRow.append(copyWallet);card.append(walletRow);
-  const integrity=el('div','جارٍ التحقق من سلامة سجل العملية…','integrity-check unknown');card.append(integrity);
-  Promise.all(group.items.map(async w=>{try{const snap=await getDoc(doc(db,'transactions',w.id));if(!snap.exists())return 'error';const tx=snap.data(),expected=-withdrawalPoints(w),actual=Number(tx.coins??tx.amount??tx.points);const ok=String(tx.uid||tx.userId||'')===withdrawalUid(w)&&String(tx.withdrawalId||'')===String(w.id)&&tx.type==='withdrawal'&&Number.isFinite(actual)&&actual===expected;return ok?'ok':'error'}catch(e){console.warn('withdrawal integrity check:',e);return 'unknown'}})).then(results=>{const state=results.every(x=>x==='ok')?'ok':results.some(x=>x==='error')?'error':'unknown';integrity.className='integrity-check '+(state==='ok'?'ok':state==='error'?'bad':'unknown');integrity.textContent=state==='ok'?'Operation successful — ledger record matches (payment status is separate).':state==='error'?'Error — missing or mismatched transaction record.':'Could not verify — check Firebase access.'}).catch(e=>{integrity.className='integrity-check unknown';integrity.textContent='Could not verify — '+e.message});
-
-  const toggleDetails=el('button','عرض العمليات الداخلة في هذا الطلب ('+group.items.length+')','btn');
-  const detailList=el('div','','user-request-list details-box');detailList.classList.add('hidden');
+  const card=el('article','','item user-withdrawal-card'),head=el('div','','user-withdrawal-head');
+  head.append(el('strong','طلب '+(index+1)+' — '+(first.publicId||user?.publicId||'مستخدم')),el('span',state==='paid'?'مدفوع':state==='pending'?'معلّق':state==='rejected'?'مرفوض':state,'badge'));card.append(head);
+  const mbox=el('div','','wd-method'),logoSrc=methodImageFor(first),mname=withdrawalMethod(first)||'غير محددة';
+  if(logoSrc){const im=document.createElement('img');im.alt=mname;im.onerror=()=>im.replaceWith(el('strong',mname));im.src=logoSrc;mbox.append(im)}else mbox.append(el('strong',mname));
+  card.append(mbox);
+  const addr=withdrawalWallet(first),wbox=el('div','','addr-box'),span=el('span',addr||'غير متوفر'),cp=el('button','📋 نسخ','btn');cp.type='button';cp.disabled=!addr;cp.onclick=()=>copyText(addr,cp);wbox.append(span,cp);card.append(wbox);
+  const stats=el('div','','wd-stats');
+  [['إجمالي النقاط',totalPoints.toLocaleString('en-US')],['المبلغ المستحق',allAmountsKnown?formatMoney(totalAmount,withdrawalAmountInfo(first).unit||'USD'):'غير مكتمل'],['العمليات',String(group.items.length)]].forEach(([l,v])=>{const d=el('div');d.append(el('span',l),el('b',v));stats.append(d)});
+  card.append(stats);
+  if(!allAmountsKnown)card.append(el('p','تنبيه: تعذّر تحديد مبلغ عملية أو أكثر. لا تؤكد الدفع قبل تصحيح فئة المبلغ في طريقة السحب.','warn'));
+  const vline=el('div','جارٍ التحقق من العملية…','verify-line');card.append(vline);
+  Promise.all(group.items.map(verifyWithdrawal)).then(rs=>{
+   const v=rs.includes('forged')?'forged':rs.includes('error')?'error':rs.some(r=>r!=='ok')?'missing':'ok';
+   vline.className='verify-line v-'+v;
+   vline.textContent=v==='ok'?'✓ عملية ناجحة':v==='forged'?'✗ خطأ — تلاعب مكتشف'+(user&&user.banned?' (المستخدم محظور)':' — يتم حظر المستخدم'):v==='missing'?'⚠ غير موثّق — لا يوجد سجل معاملة مطابق':'تعذّر التحقق الآن';
+   if(v==='forged')autoBanTamper(uid,user);
+  });
+  const toggleDetails=el('button','عرض العمليات الداخلة في هذا الطلب ('+group.items.length+')','btn'),detailList=el('div','','user-request-list details-box');detailList.classList.add('hidden');
   group.items.forEach((w,requestIndex)=>{
-   const one=el('div','','merged-request-card');
-   one.append(el('strong','عملية سحب '+(requestIndex+1)));
+   const one=el('div','','merged-request-card');one.append(el('strong','عملية سحب '+(requestIndex+1)));
    const meta=el('div','','request-meta');
-   [
-    ['المبلغ',withdrawalAmountLabel(w)],
-    ['النقاط',withdrawalPoints(w).toLocaleString('en-US')+' نقطة'],
-    ['التاريخ',displayDate(w.createdAt)],
-    ['رقم العملية',w.id]
-   ].forEach(([label,value])=>{const cell=el('div');cell.append(el('b',label),el('span',value));meta.append(cell)});
+   [['المبلغ',withdrawalAmountLabel(w)],['النقاط',withdrawalPoints(w).toLocaleString('en-US')+' نقطة'],['التاريخ',displayDate(w.createdAt)],['رقم العملية',w.id]].forEach(([label,value])=>{const cell=el('div');cell.append(el('b',label),el('span',value));meta.append(cell)});
    one.append(meta);
-   const verify=el('button','تفاصيل والتحقق من هذه العملية','btn');
-   const verifyBox=el('div','','details-box');verifyBox.classList.add('hidden');
+   const verify=el('button','تفاصيل والتحقق من هذه العملية','btn'),verifyBox=el('div','','details-box');verifyBox.classList.add('hidden');
    verify.onclick=async()=>{if(!verifyBox.classList.contains('hidden')){verifyBox.classList.add('hidden');return}verifyBox.classList.remove('hidden');await showWithdrawalDetails(w,verifyBox,verify)};
    one.append(verify,verifyBox);detailList.append(one);
   });
   toggleDetails.onclick=()=>{detailList.classList.toggle('hidden');toggleDetails.textContent=detailList.classList.contains('hidden')?'عرض العمليات الداخلة في هذا الطلب ('+group.items.length+')':'إخفاء العمليات الفردية'};
   card.append(toggleDetails,detailList);
-
   if(state==='pending'){
    const actions=el('div','','actions');
    [['paid','تأكيد دفع الطلب كاملاً'],['rejected','رفض الطلب كاملاً']].forEach(([next,label])=>{
@@ -501,27 +510,51 @@ function renderWithdrawals(){
     button.onclick=async()=>{
      const verb=next==='paid'?'تأكيد دفع جميع العمليات في هذا الطلب؟ تأكد أنك أرسلت إجمالي المبلغ فعلياً.':'رفض جميع العمليات في هذا الطلب؟ لن تُعاد النقاط للمستخدم.';
      if(!confirm(verb))return;
-     if(group.items.length>500){alert('هذا الطلب يحتوي على أكثر من 500 عملية، ولا يمكن تحديثها دفعة واحدة. تواصل مع الدعم قبل المتابعة.');return}
+     if(group.items.length>500){alert('هذا الطلب يحتوي على أكثر من 500 عملية، ولا يمكن تحديثها دفعة واحدة.');return}
      button.disabled=true;button.textContent='جارٍ تحديث الطلب…';
-     try{
-      const batch=writeBatch(db),now=serverTimestamp();
-      group.items.forEach(w=>batch.update(doc(db,'withdrawals',w.id),{status:next,updatedAt:now,groupActionAt:now,groupAction:'bulk-'+next}));
-      await batch.commit();
-      alert(next==='paid'?'تم تأكيد دفع الطلب المجمّع بالكامل.':'تم رفض الطلب المجمّع بالكامل. لم تتم إعادة النقاط.');
-     }catch(e){console.error('Bulk withdrawal update error:',e);alert('تعذّر تحديث الطلب المجمّع: '+e.message);button.disabled=false;button.textContent=label}
+     try{const batch=writeBatch(db),now=serverTimestamp();group.items.forEach(w=>batch.update(doc(db,'withdrawals',w.id),{status:next,updatedAt:now,groupActionAt:now,groupAction:'bulk-'+next}));await batch.commit();alert(next==='paid'?'تم تأكيد دفع الطلب المجمّع بالكامل.':'تم رفض الطلب المجمّع بالكامل. لم تتم إعادة النقاط.')}
+     catch(e){console.error('Bulk withdrawal update error:',e);alert('تعذّر تحديث الطلب المجمّع: '+e.message);button.disabled=false;button.textContent=label}
     };
     actions.append(button);
    });
    card.append(actions);
   }
-  list.append(card);
+  rail.append(card);
  });
+ list.append(rail);
+ const upd=()=>{const i=Math.max(0,Math.min(groups.length-1,Math.round(Math.abs(rail.scrollLeft)/Math.max(1,rail.clientWidth))));counter.textContent='طلب '+(i+1)+' من '+groups.length};
+ rail.addEventListener('scroll',upd,{passive:true});
+ if(keep)rail.scrollLeft=keep;upd();
 }
 function validUrl(v){if(!v)return '';try{const u=new URL(v);return ['http:','https:'].includes(u.protocol)?u.href:''}catch{return ''}}
-function safeImageSrc(v){const s=String(v||'').trim();if(/^https:\/\/\S+$/i.test(s))return validUrl(s);if(/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/i.test(s)&&s.length<260000)return s;return ''}
-async function compressImageFile(file,maxBytes=150000){if(!file||!file.type.startsWith('image/'))throw new Error('اختر ملف صورة صالحًا.');if(file.size>12*1024*1024)throw new Error('حجم الصورة الأصلي كبير جدًا.');const image=new Image(),objectUrl=URL.createObjectURL(file);try{await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(new Error('تعذرت قراءة الصورة.'));image.src=objectUrl});const canvas=document.createElement('canvas'),scale=Math.min(1,640/Math.max(image.naturalWidth,image.naturalHeight));canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));const ctx=canvas.getContext('2d');if(!ctx)throw new Error('تعذر تجهيز الصورة.');ctx.drawImage(image,0,0,canvas.width,canvas.height);let quality=.86,data=canvas.toDataURL('image/webp',quality);while(data.length>maxBytes*1.38&&quality>.42){quality-=.08;data=canvas.toDataURL('image/webp',quality)}if(data.length>maxBytes*1.38)throw new Error('الصورة كبيرة بعد الضغط؛ اختر صورة أصغر.');return data}finally{URL.revokeObjectURL(objectUrl)}}
-function setPreview(inputId,previewId,existingId){const input=$(inputId),preview=$(previewId),existing=$(existingId);input.onchange=async()=>{const file=input.files?.[0];if(!file){preview.classList.add('hidden');return}try{const data=await compressImageFile(file);preview.src=data;preview.classList.remove('hidden')}catch(e){input.value='';alert(e.message)}}} 
-setPreview('methodLogoFile','methodLogoPreview','methodLogoExisting');setPreview('wallImageFile','wallImagePreview','wallImageExisting');
+function imgSrc(v){if(typeof v!=='string'||!v)return '';if(/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(v))return v;return validUrl(v)}
+async function compressImage(file,max){
+ if(!file||!/^image\/(png|jpe?g|webp|gif|bmp)/i.test(file.type))throw new Error('اختر ملف صورة (PNG أو JPG أو WEBP).');
+ const url=URL.createObjectURL(file);
+ try{
+  const img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error('تعذّر قراءة الصورة.'));i.src=url});
+  let size=max;
+  for(let t=0;t<4;t++){
+   const k=Math.min(1,size/Math.max(img.naturalWidth,img.naturalHeight)),c=document.createElement('canvas');
+   c.width=Math.max(1,Math.round(img.naturalWidth*k));c.height=Math.max(1,Math.round(img.naturalHeight*k));
+   c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+   let d=c.toDataURL('image/webp',.88);if(!d.startsWith('data:image/webp'))d=c.toDataURL('image/png');
+   if(d.length<=600000)return d;size=Math.round(size*.7);
+  }
+  throw new Error('الصورة كبيرة جدًا حتى بعد الضغط.');
+ }finally{URL.revokeObjectURL(url)}
+}
+function copyText(text,btn){
+ const done=()=>{if(!btn)return;const o=btn.dataset.o||btn.textContent;btn.dataset.o=o;btn.textContent='✓ تم النسخ';setTimeout(()=>{btn.textContent=o},1500)};
+ const fallback=()=>{const t=document.createElement('textarea');t.value=text;t.style.cssText='position:fixed;opacity:0';document.body.append(t);t.select();try{document.execCommand('copy')}catch(e){}t.remove();done()};
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done).catch(fallback);else fallback();
+}
+function bindImagePicker(inputId,previewId,max,msgId,onData){
+ $(inputId).addEventListener('change',async()=>{const f=$(inputId).files[0];if(!f)return;
+  try{const d=await compressImage(f,max);onData(d);const p=$(previewId);p.src=d;p.hidden=false}
+  catch(e){$(msgId).textContent=e.message;$(msgId).className='error'}
+  finally{$(inputId).value=''}})
+}
 function addTierRow(coins='',displayLabel='',extra={}){const wrap=el('div','','tier-row tier-v2'),points=document.createElement('input');points.type='number';points.min='1';points.step='1';points.placeholder='النقاط';points.className='tier-coins';points.value=coins;const label=document.createElement('input');label.type='text';label.maxLength=32;label.placeholder='النص الظاهر للمستخدم';label.className='tier-label';label.value=displayLabel;const del=el('button','حذف');del.type='button';del.onclick=()=>wrap.remove();
  const mk=(cls,ph,val,type='text',max)=>{const i=document.createElement('input');i.type=type;i.className=cls;i.placeholder=ph;i.value=val;if(max)i.maxLength=max;if(type==='number'){i.min='0';i.step='any'}return i};
  let rawAmt=extra.amount!==undefined&&extra.amount!==null?String(extra.amount):'',sym=extra.symbol||'';
@@ -534,21 +567,80 @@ function addTierRow(coins='',displayLabel='',extra={}){const wrap=el('div','','t
  [amount,symbol,unit].forEach(i=>i.addEventListener('input',auto));
  wrap.append(points,amount,symbol,unit,label,del);$('tierRows').append(wrap)}
 function readTiers(){return [...$('tierRows').querySelectorAll('.tier-row')].map(r=>{const q=c=>r.querySelector(c),raw=(q('.tier-amount')?.value||'').trim(),amount=raw===''?undefined:Number(raw),symbol=(q('.tier-symbol')?.value||'').trim(),unit=(q('.tier-unit')?.value||'').trim();const t={coins:Number(q('.tier-coins').value),displayLabel:composeTierLabel(raw,symbol)||q('.tier-label').value.trim()};if(raw!==''&&!(Number.isFinite(amount)&&amount>0))t.amountInvalid=true;else if(amount!==undefined)t.amount=amount;if(symbol)t.symbol=symbol;if(unit)t.unitName=unit;return t})}
-function renderMethods(){const l=$('methodList');l.replaceChildren();if(!methods.length)l.append(el('div','لا توجد طرق سحب.','empty'));methods.forEach(m=>{const c=el('article','','item'),logo=safeImageSrc(m.logo);if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;im.alt=m.name||'logo';c.append(im)}c.append(el('div',m.name||m.id),el('div','فئات السحب:'));(Array.isArray(m.tiers)?m.tiers:[]).forEach(t=>c.append(el('div',Number(t.coins).toLocaleString('en-US')+' نقطة = '+(t.displayLabel||'—'))));c.append(el('div',m.enabled?'مفعّلة':'متوقفة','badge'));const a=el('div','','actions');[['تعديل',()=>editMethod(m)],[m.enabled?'إيقاف':'تفعيل',()=>toggle('withdrawMethods',m.id,!m.enabled)],['حذف',()=>remove('withdrawMethods',m.id)]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});c.append(a);l.append(c)})}
-function editMethod(m){$('methodId').value=m.id;$('methodName').value=m.name||'';$('methodLogoExisting').value=m.logo||'';$('methodLogoFile').value='';if(safeImageSrc(m.logo)){$('methodLogoPreview').src=m.logo;$('methodLogoPreview').classList.remove('hidden')}else $('methodLogoPreview').classList.add('hidden');$('methodEnabled').checked=!!m.enabled;$('methodTitle').textContent='تعديل طريقة سحب';$('tierRows').replaceChildren();(Array.isArray(m.tiers)?m.tiers:[]).forEach(t=>addTierRow(t.coins,t.displayLabel,t));if(!m.tiers?.length)addTierRow(m.minimumWithdrawal||'','')}
-function resetMethod(){['methodId','methodName','methodLogoExisting','methodLogoFile'].forEach(x=>$(x).value='');$('methodLogoPreview').removeAttribute('src');$('methodLogoPreview').classList.add('hidden');$('methodEnabled').checked=true;$('methodTitle').textContent='إضافة طريقة سحب';$('methodMsg').textContent='';$('tierRows').replaceChildren();[100,250,500,1000,2000,5000].forEach(points=>addTierRow(points,''))}
-$('addTier').onclick=()=>addTierRow();$('cancelMethod').onclick=resetMethod;
-$('saveMethod').onclick=async()=>{const id=$('methodId').value,name=$('methodName').value.trim(),file=$('methodLogoFile').files?.[0],tiers=readTiers();if(!name){$('methodMsg').textContent='أدخل اسم طريقة السحب.';$('methodMsg').className='error';return}if(tiers.some(t=>t.amountInvalid)){$('methodMsg').textContent='المبلغ في إحدى الفئات غير صالح. أدخل رقمًا أكبر من صفر.';$('methodMsg').className='error';return}if(!tiers.length||tiers.some(t=>!Number.isSafeInteger(t.coins)||t.coins<=0||!t.displayLabel)){$('methodMsg').textContent='أدخل النقاط والمبلغ لكل فئة.';$('methodMsg').className='error';return}if(new Set(tiers.map(t=>t.coins)).size!==tiers.length){$('methodMsg').textContent='لا تكرر عدد النقاط في أكثر من فئة.';$('methodMsg').className='error';return}tiers.sort((a,b)=>a.coins-b.coins);const data={name,tiers,tierCoins:tiers.map(t=>t.coins),minimumWithdrawal:Math.min(...tiers.map(t=>t.coins)),enabled:$('methodEnabled').checked};try{const logo=file?await compressImageFile(file,100000):$('methodLogoExisting').value;if(logo)data.logo=logo;if(id)await updateDoc(doc(db,'withdrawMethods',id),data);else await addDoc(collection(db,'withdrawMethods'),data);$('methodMsg').textContent='تم حفظ طريقة السحب وفئاتها.';$('methodMsg').className='success';resetMethod()}catch(e){$('methodMsg').textContent='فشل الحفظ: '+e.message;$('methodMsg').className='error'}};resetMethod();
+function renderMethods(){const l=$('methodList');l.replaceChildren();if(!methods.length)l.append(el('div','لا توجد طرق سحب.','empty'));methods.forEach(m=>{const c=el('article','','item'),logo=imgSrc(m.logo);if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;im.alt=m.name||'logo';c.append(im)}c.append(el('div',m.name||m.id),el('div','فئات السحب:'));(Array.isArray(m.tiers)?m.tiers:[]).forEach(t=>c.append(el('div',Number(t.coins).toLocaleString('en-US')+' نقطة = '+(t.displayLabel||'—'))));c.append(el('div',m.enabled?'مفعّلة':'متوقفة','badge'));const a=el('div','','actions');[['تعديل',()=>editMethod(m)],[m.enabled?'إيقاف':'تفعيل',()=>toggle('withdrawMethods',m.id,!m.enabled)],['حذف',()=>remove('withdrawMethods',m.id)]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});c.append(a);l.append(c)})}
+function setMethodImage(v){const s=imgSrc(v),p=$('methodLogoPreview');if(/^data:/.test(s)){methodImg=s;$('methodLogo').value=''}else{methodImg='';$('methodLogo').value=s}if(s){p.src=s;p.hidden=false}else{p.removeAttribute('src');p.hidden=true}}
+function openMethodSheet(){$('methodForm').classList.add('sheet-open');document.body.style.overflow='hidden';$('methodForm').scrollTop=0}
+function closeMethodSheet(){$('methodForm').classList.remove('sheet-open');document.body.style.overflow=''}
+function editMethod(m){$('methodId').value=m.id;$('methodName').value=m.name||'';setMethodImage(m.logo||'');$('methodEnabled').checked=!!m.enabled;$('methodTitle').textContent='تعديل طريقة سحب';$('tierRows').replaceChildren();(Array.isArray(m.tiers)?m.tiers:[]).forEach(t=>addTierRow(t.coins,t.displayLabel,t));if(!m.tiers?.length)addTierRow(m.minimumWithdrawal||'','');openMethodSheet()}
+function resetMethod(){['methodId','methodName','methodLogo'].forEach(x=>$(x).value='');setMethodImage('');$('methodEnabled').checked=true;$('methodTitle').textContent='إضافة طريقة سحب';$('methodMsg').textContent='';$('tierRows').replaceChildren();[100,250,500,1000,2000,5000].forEach(points=>addTierRow(points,''))}
+$('addTier').onclick=()=>addTierRow();$('cancelMethod').onclick=()=>{resetMethod();closeMethodSheet()};$('closeMethodSheet').onclick=()=>closeMethodSheet();$('addMethodBtn').onclick=()=>{resetMethod();openMethodSheet()};bindImagePicker('methodLogoFile','methodLogoPreview',256,'methodMsg',d=>{methodImg=d;$('methodLogo').value=''});
+$('saveMethod').onclick=async()=>{const id=$('methodId').value,name=$('methodName').value.trim(),logoRaw=$('methodLogo').value.trim(),logo=methodImg||validUrl(logoRaw),tiers=readTiers();if(!name){$('methodMsg').textContent='أدخل اسم طريقة السحب.';$('methodMsg').className='error';return}if(logoRaw&&!logo){$('methodMsg').textContent='رابط الشعار غير صالح.';$('methodMsg').className='error';return}if(tiers.some(t=>t.amountInvalid)){$('methodMsg').textContent='المبلغ في إحدى الفئات غير صالح. أدخل رقمًا أكبر من صفر.';$('methodMsg').className='error';return}if(!tiers.length||tiers.some(t=>!Number.isSafeInteger(t.coins)||t.coins<=0||!t.displayLabel)){$('methodMsg').textContent='أدخل النقاط والمبلغ لكل فئة.';$('methodMsg').className='error';return}if(new Set(tiers.map(t=>t.coins)).size!==tiers.length){$('methodMsg').textContent='لا تكرر عدد النقاط في أكثر من فئة.';$('methodMsg').className='error';return}tiers.sort((a,b)=>a.coins-b.coins);const data={name,tiers,minimumWithdrawal:Math.min(...tiers.map(t=>t.coins)),enabled:$('methodEnabled').checked};if(logo)data.logo=logo;try{if(id)await updateDoc(doc(db,'withdrawMethods',id),data);else await addDoc(collection(db,'withdrawMethods'),data);$('methodMsg').textContent='تم حفظ طريقة السحب وفئاتها.';$('methodMsg').className='success';resetMethod();closeMethodSheet()}catch(e){$('methodMsg').textContent='فشل الحفظ: '+e.message;$('methodMsg').className='error'}};resetMethod();
 const wallProviders=['CPX','Lootably','Torox','OfferToro','AdGate','AdGem','BitLabs','Wannads','Ayet Studios','MyChips','Tapjoy','Fyber','RevU','KiwiWall','TimeWall','Playtime','UPWALL','OfferDaddy','Monlix','MobiVortex','CPAlead','ClickWall','TaskWall','Custom'],providerSelect=$('wallProvider');
 wallProviders.forEach(name=>{const o=document.createElement('option');o.value=name;o.textContent=name;providerSelect.append(o)});
 function currentProvider(){return providerSelect.value==='Custom'?($('wallCustomProvider').value.trim()||'Custom'):providerSelect.value}
-function setProviderUI(p){if(!p){providerSelect.value='';$('wallCustomProvider').value='';$('wallCustomProvider').classList.add('hidden');return}if(wallProviders.includes(p)&&p!=='Custom'){providerSelect.value=p;$('wallCustomProvider').value='';$('wallCustomProvider').classList.add('hidden')}else{providerSelect.value='Custom';$('wallCustomProvider').value=p==='Custom'?'':p;$('wallCustomProvider').classList.remove('hidden')}}
-providerSelect.addEventListener('change',()=>{const custom=providerSelect.value==='Custom';$('wallCustomProvider').classList.toggle('hidden',!custom);if(providerSelect.value&&!custom&&!$('wallName').value.trim())$('wallName').value=providerSelect.value});
-function renderWalls(){const l=$('wallList');l.replaceChildren();if(!walls.length){l.append(el('div','لا توجد جدران عروض.','empty'));return}walls.forEach(w=>{const c=el('article','','item wall-admin-card'),image=safeImageSrc(w.image||w.logo);if(image){const im=document.createElement('img');im.className='wall-admin-image';im.src=image;im.alt=w.name||'Offer wall';c.append(im)}c.append(el('strong',w.name||w.id),el('div','المزوّد: '+(w.provider||'غير محدد')),el('div','الرابط: '+(validUrl(w.url)||'غير صالح')),el('div',w.enabled===true&&validUrl(w.url)?'منشور للمستخدمين':'غير منشور','badge'),el('p','رابط مباشر فقط؛ لا يتم تأكيد مكافآت المزوّد من هذه الصفحة.','muted'));const actions=el('div','','actions');[['تعديل',()=>editWall(w)],[w.enabled?'إيقاف الظهور':'تفعيل الظهور',()=>toggle('offerWalls',w.id,!w.enabled)],['حذف',()=>remove('offerWalls',w.id)]].forEach(([label,fn],i)=>{const b=el('button',label,'btn '+(i===2?'danger':''));b.onclick=fn;actions.append(b)});c.append(actions);l.append(c)})}
-function editWall(w){$('wallId').value=w.id;setProviderUI(w.provider||'');$('wallName').value=w.name||'';$('wallUrl').value=typeof w.url==='string'?w.url:'';$('wallImageExisting').value=w.image||w.logo||'';$('wallImageFile').value='';const src=safeImageSrc(w.image||w.logo);if(src){$('wallImagePreview').src=src;$('wallImagePreview').classList.remove('hidden')}else $('wallImagePreview').classList.add('hidden');$('wallEnabled').checked=w.enabled===true;$('wallTitle').textContent='تعديل جدار عروض';$('wallMsg').textContent=''}
-function resetWall(){['wallId','wallName','wallUrl','wallImageExisting','wallImageFile','wallCustomProvider'].forEach(x=>$(x).value='');$('wallImagePreview').removeAttribute('src');$('wallImagePreview').classList.add('hidden');setProviderUI('');$('wallEnabled').checked=false;$('wallTitle').textContent='إضافة جدار عروض';$('wallMsg').textContent=''}
+function setProviderUI(p){
+ const c=$('wallCustomProvider');
+ if(!p){providerSelect.value='';c.value='';c.classList.add('hidden');return}
+ if(wallProviders.includes(p)&&p!=='Custom'){providerSelect.value=p;c.value='';c.classList.add('hidden')}
+ else{providerSelect.value='Custom';c.value=p==='Custom'?'':p;c.classList.remove('hidden')}
+}
+providerSelect.addEventListener('change',()=>{const n=providerSelect.value;$('wallCustomProvider').classList.toggle('hidden',n!=='Custom');if(n&&n!=='Custom'&&!$('wallName').value.trim())$('wallName').value=n});
+$('wallCustomProvider').addEventListener('change',()=>{const n=$('wallCustomProvider').value.trim();if(n&&!$('wallName').value.trim())$('wallName').value=n});
+const postbackBase=()=>/\.pages\.dev$/.test(location.hostname)?location.origin:'https://tapjoy-elp.pages.dev';
+function updatePostbackBox(id){const box=$('postbackBox');if(!id){box.classList.add('hidden');return}$('postbackUrl').textContent=postbackBase()+'/api/postback/'+id+'?uid={uid}&amount={amount}&txid={txid}&sig={sig}';box.classList.remove('hidden')}
+function setWallImage(v){const s=imgSrc(v),p=$('wallLogoPreview');if(/^data:/.test(s)){wallImg=s;$('wallLogo').value=''}else{wallImg='';$('wallLogo').value=s}if(s){p.src=s;p.hidden=false}else{p.removeAttribute('src');p.hidden=true}}
+function renderWalls(){
+ const l=$('wallList');l.replaceChildren();if(!walls.length)l.append(el('div','لا توجد جدران عروض.','empty'));
+ walls.forEach(w=>{
+  const c=el('article','','item'),logo=imgSrc(w.logo);
+  if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;im.alt=w.name||'logo';c.append(im)}
+  let entrants=0,entries=0,pts=0;
+  users.forEach(u=>{const e=u.wallEntries&&u.wallEntries[w.id],p=u.wallPoints&&Number(u.wallPoints[w.id]);if(e&&e.count){entrants++;entries+=Number(e.count)||0}if(p>0)pts+=p});
+  c.append(el('div',w.name||w.id),el('div','المزوّد: '+(w.provider||'غير محدد')),el('div','النقاط لكل 1: '+(Number(w.rate)>0?Number(w.rate).toLocaleString('en-US'):'غير مضبوط')+' · التحقق: '+(w.verify||'غير مضبوط')),el('div','الرابط: '+(typeof w.url==='string'&&w.url?w.url:'غير مضبوط')),el('div','دخل الجدار: '+entrants.toLocaleString('en-US')+' مستخدم · '+entries.toLocaleString('en-US')+' مرة · نقاط موزّعة: '+pts.toLocaleString('en-US'),'user-sub'),el('div',w.enabled?'ظهور الجدار: مفعّل':'ظهور الجدار: متوقف','badge'));
+  const a=el('div','','actions');
+  [['تعديل',()=>editWall(w)],[w.enabled?'إيقاف الظهور':'تفعيل الظهور',()=>toggle('offerWalls',w.id,!w.enabled)],['حذف',async()=>{if(!confirm('حذف هذا الجدار نهائيًا؟ لا يمكن التراجع.'))return;try{await deleteDoc(doc(db,'offerWalls',w.id));try{await deleteDoc(doc(db,'offerWallSecrets',w.id))}catch(e){}}catch(e){alert('تعذّر الحذف: '+e.message)}}]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});
+  c.append(a);l.append(c)});
+}
+async function markSavedSecret(wallId){const st=$('secretState');st.textContent='';$('wallSecret').placeholder='الصق المفتاح السري من لوحة المزوّد';try{const sn=await getDoc(doc(db,'offerWallSecrets',wallId));if(sn.exists()&&sn.data().secret){$('wallSecret').placeholder='محفوظ ✓ — اتركه فارغًا للإبقاء عليه';st.textContent='✓ المفتاح السري محفوظ.'}else st.textContent='⚠ لا يوجد مفتاح سري محفوظ — لن تُقبل النقاط قبل حفظه.'}catch(e){st.textContent='تعذّر قراءة حالة المفتاح: '+e.message}}
+function editWall(w){$('wallId').value=w.id;setProviderUI(w.provider||'');$('wallName').value=w.name||'';$('wallUrl').value=typeof w.url==='string'?w.url:'';$('wallDesc').value=w.description||'';setWallImage(w.logo||'');$('wallRate').value=Number(w.rate)>0?w.rate:1000;$('wallVerify').value=['key','md5','sha256','hmac'].includes(w.verify)?w.verify:'key';$('wallSecret').value='';$('wallEnabled').checked=!!w.enabled;$('wallTitle').textContent='تعديل جدار عروض';updatePostbackBox(w.id);markSavedSecret(w.id);$('wallMsg').textContent='';$('wallTitle').scrollIntoView({behavior:'smooth',block:'start'})}
+function resetWall(){['wallId','wallName','wallUrl','wallDesc','wallSecret'].forEach(x=>$(x).value='');setWallImage('');setProviderUI('');$('wallRate').value=1000;$('wallVerify').value='key';$('wallEnabled').checked=false;$('wallTitle').textContent='إضافة جدار عروض';$('wallMsg').textContent='';$('secretState').textContent='';updatePostbackBox('')}
 $('cancelWall').onclick=resetWall;
-$('saveWall').onclick=async()=>{const id=$('wallId').value,name=$('wallName').value.trim(),rawUrl=$('wallUrl').value.trim(),url=/^https:\/\//i.test(rawUrl)?validUrl(rawUrl):'',provider=currentProvider(),file=$('wallImageFile').files?.[0];if(!name||!url){$('wallMsg').textContent='أدخل الاسم ورابط HTTPS صحيحًا للجدار.';$('wallMsg').className='error';return}if(!provider|| (provider==='Custom'&&!$('wallCustomProvider').value.trim())){$('wallMsg').textContent='اختر اسم المزوّد أو اكتب اسمًا مخصصًا.';$('wallMsg').className='error';return}try{$('saveWall').disabled=true;$('saveWall').textContent='جارٍ الحفظ…';const image=file?await compressImageFile(file,150000):$('wallImageExisting').value;const data={name,url,provider,enabled:$('wallEnabled').checked,updatedAt:serverTimestamp()};if(image)data.image=image;let savedId=id;if(id)await updateDoc(doc(db,'offerWalls',id),data);else{const ref=await addDoc(collection(db,'offerWalls'),{...data,createdAt:serverTimestamp()});savedId=ref.id}$('wallMsg').textContent='تم حفظ رابط الجدار وصورته. هذا لا يفعّل مكافآت تلقائية بدون Postback موثّق.';$('wallMsg').className='success';resetWall()}catch(e){$('wallMsg').textContent='فشل حفظ الجدار: '+e.message;$('wallMsg').className='error'}finally{$('saveWall').disabled=false;$('saveWall').textContent='حفظ الجدار'}};
+$('copyPostback').onclick=()=>copyText($('postbackUrl').textContent,$('copyPostback'));
+$('genSecret').onclick=()=>{const b=new Uint8Array(24);crypto.getRandomValues(b);$('wallSecret').type='text';$('wallSecret').value=[...b].map(x=>x.toString(16).padStart(2,'0')).join('');$('secretState').textContent='تم توليد مفتاح — احفظ الجدار ثم الصق نفس المفتاح في لوحة المزوّد.'};
+bindImagePicker('wallLogoFile','wallLogoPreview',512,'wallMsg',d=>{wallImg=d;$('wallLogo').value=''});
+$('saveWall').onclick=async()=>{
+ const msg=(t,c)=>{$('wallMsg').textContent=t;$('wallMsg').className=c};
+ const id=$('wallId').value,name=$('wallName').value.trim(),url=validUrl($('wallUrl').value.trim()),lr=$('wallLogo').value.trim(),logo=wallImg||validUrl(lr),provider=currentProvider(),rate=Number($('wallRate').value),verify=$('wallVerify').value,secret=$('wallSecret').value.trim();
+ if(!provider)return msg('اختر مزوّد جدار العروض.','error');
+ if(!name||!url||!/^https:\/\//i.test(url))return msg('أدخل الاسم ورابطًا صحيحًا يبدأ بـ https.','error');
+ if(lr&&!logo)return msg('رابط الصورة غير صالح.','error');
+ if(!(Number.isFinite(rate)&&rate>0&&rate<=1e7))return msg('أدخل عدد نقاط صحيحًا أكبر من صفر.','error');
+ const data={name,url,provider,description:$('wallDesc').value.trim(),rate,verify,integrationType:'postback',enabled:$('wallEnabled').checked,updatedAt:serverTimestamp()};
+ if(logo)data.logo=logo;
+ try{
+  let savedId=id;
+  if(id)await updateDoc(doc(db,'offerWalls',id),data);else{const ref=await addDoc(collection(db,'offerWalls'),{...data,createdAt:serverTimestamp()});savedId=ref.id}
+  $('wallId').value=savedId;
+  if(secret){try{await setDoc(doc(db,'offerWallSecrets',savedId),{secret,provider,updatedAt:serverTimestamp()},{merge:true});$('wallSecret').value='';$('wallSecret').type='password'}catch(se){updatePostbackBox(savedId);return msg('حُفظ الجدار لكن تعذّر حفظ المفتاح السري: '+se.message,'error')}}
+  updatePostbackBox(savedId);markSavedSecret(savedId);$('wallTitle').textContent='تعديل جدار عروض';
+  msg('تم حفظ الجدار. انسخ رابط Postback أدناه وضعه في لوحة المزوّد ليبدأ إرسال النقاط.','success');
+ }catch(e){msg('فشل الحفظ: '+e.message,'error')}
+};
+function renderPoints(){
+ const host=$('pointsBody');if(!host)return;host.replaceChildren();
+ if(pointsErr)host.append(el('div','تعذّر قراءة سجل النقاط: '+pointsErr+' — تأكد أن قواعد Firestore تسمح للمسؤول بقراءة transactions وpostbackLogs.','error'));
+ const tx=offerTx.slice().sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)),total=tx.reduce((sum,t)=>sum+(Number(t.coins)||0),0);
+ const stats=el('div','','pt-stats');
+ [['نقاط وصلت من الجدران',total.toLocaleString('en-US')],['عدد المكافآت',tx.length.toLocaleString('en-US')],['مستخدمون حصلوا على نقاط',new Set(tx.map(t=>t.uid)).size.toLocaleString('en-US')],['Postback مرفوض',postLogs.length.toLocaleString('en-US')]].forEach(([l,v])=>{const d=el('div');d.append(el('span',l),el('b',v));stats.append(d)});
+ host.append(stats);
+ const per=new Map();tx.forEach(t=>{const id=String(t.wallId||t.wallName||'?'),r=per.get(id)||{name:(walls.find(w=>w.id===id)||{}).name||t.wallName||id,pts:0,n:0};r.pts+=Number(t.coins)||0;r.n++;per.set(id,r)});
+ host.append(el('h3','حسب الجدار'));
+ if(!per.size)host.append(el('p','لا توجد نقاط واردة من الجدران بعد. ستظهر هنا فور أن يرسل مزوّد الجدار Postback صحيحًا (يُنسخ رابطه من قائمة الجدران).','muted'));
+ [...per.values()].sort((a,b)=>b.pts-a.pts).forEach(r=>{const row=el('div','','pt-row');const left=el('div',r.name);left.append(el('small',r.n.toLocaleString('en-US')+' مكافأة'));row.append(left,el('b','+'+r.pts.toLocaleString('en-US')));host.append(row)});
+ const who=uid=>{const u=users.find(x=>x.id===uid);return u?(u.publicId||uid.slice(0,8)):String(uid||'').slice(0,8)};
+ if(tx.length){host.append(el('h3','آخر المكافآت'));tx.slice(0,40).forEach(t=>{const row=el('div','','pt-row'),left=el('div',(t.wallName||t.wallId||'جدار')+' ← '+who(t.uid));left.append(el('small',displayDate(t.createdAt)+' · '+String(t.txid||t.id).slice(0,24)));row.append(left,el('b','+'+(Number(t.coins)||0).toLocaleString('en-US')));host.append(row)})}
+ if(postLogs.length){host.append(el('h3','محاولات Postback مرفوضة (آخر '+Math.min(postLogs.length,20)+')'));postLogs.slice(0,20).forEach(g=>{const row=el('div','','pt-row bad'),left=el('div',((walls.find(w=>w.id===g.wallId)||{}).name||g.wallId||'؟')+' — '+(g.result||'مرفوض'));left.append(el('small',displayDate(g.createdAt)+(g.ip?' · IP '+g.ip:'')));row.append(left,el('b','✗'));host.append(row)})}
+}
 async function toggle(col,id,enabled){try{await updateDoc(doc(db,col,id),{enabled})}catch(e){alert('تعذّر تحديث الحالة: '+e.message)}}async function remove(col,id){if(!confirm('هل تريد حذف هذا السجل؟ لا يمكن التراجع.'))return;try{await deleteDoc(doc(db,col,id))}catch(e){alert('تعذّر الحذف: '+e.message)}}
 $('search').addEventListener('input',renderUsers);
 </script></body></html>
