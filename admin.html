@@ -257,10 +257,13 @@ input:focus,textarea:focus,select:focus{outline:2px solid #16bdf2;outline-offset
 .pt-stats span{display:block;font-size:13px;color:#6b5a8e}.pt-stats b{display:block;font-size:24px;margin-top:6px;color:#5b34b0}
 .pt-row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;border:1px solid #e4daf6;border-radius:12px;margin:7px 0;background:#fff;font-size:14px}
 .pt-row b{color:#0d7a3b;white-space:nowrap}.pt-row.bad b{color:#b00c32}.pt-row small{display:block;color:#71879e}
+.srv{padding:11px 12px;border-radius:12px;font-weight:bold;margin:8px 0;line-height:1.7;background:#eef3f8;color:#456}.srv.ok{background:#e7f8ee;color:#0d7a3b}.srv.bad{background:#fff1e0;color:#8a4b00}
+#postbackBox .addr-box{flex-direction:column}#postbackBox .addr-box>button{width:100%}#postbackUrl{font-size:12px;line-height:1.7}
+#wallGuide{background:#fffdf3;border-color:#f1e3a6}#wallGuide div{margin:6px 0;line-height:1.7;font-size:14px}
 </style></head><body>
 <header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header><main>
 <section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><p id="loginMsg" class="muted"></p></section>
-<section id="app" class="hidden"><p class="muted">تم التحقق من حساب المسؤول</p><div id="home" class="dashboard-grid" aria-label="الأقسام الرئيسية">
+<section id="app" class="hidden"><p class="muted">تم التحقق من حساب المسؤول</p><div id="serverStatus" class="srv">جارٍ فحص خادم Cloudflare…</div><div id="home" class="dashboard-grid" aria-label="الأقسام الرئيسية">
 <button type="button" class="menu menu-withdraw" data-panel="withdraw" aria-label="طلبات السحب" aria-expanded="false" onclick="openPanel('withdraw')"><span class="menu-icon">💳</span><span class="menu-copy"><strong>طلبات السحب</strong><small>معلّقة · مدفوعة · مرفوضة</small></span><span class="menu-arrow">←</span></button>
 <button type="button" class="menu menu-users" data-panel="users" aria-label="المستخدمون" aria-expanded="false" onclick="openPanel('users')"><span class="menu-icon">👥</span><span class="menu-copy"><strong>المستخدمون</strong><small>بحث · رصيد · آخر نشاط · حظر</small></span><span class="menu-arrow">←</span></button>
 <button type="button" class="menu menu-methods" data-panel="methods" aria-label="طرق السحب" aria-expanded="false" onclick="openPanel('methods')"><span class="menu-icon">💰</span><span class="menu-copy"><strong>طرق السحب</strong><small>إضافة · تعديل · تشغيل · إيقاف</small></span><span class="menu-arrow">←</span></button>
@@ -269,7 +272,7 @@ input:focus,textarea:focus,select:focus{outline:2px solid #16bdf2;outline-offset
 <section id="withdraw" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2><div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div><div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p></section>
 <section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userList"></div></section>
 <section id="methods" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة طرق السحب</h2><button type="button" id="addMethodBtn" class="primary">＋ إضافة طريقة سحب</button><div class="form" id="methodForm"><button type="button" class="back" id="closeMethodSheet">✕ إغلاق</button><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden"><label>اسم طريقة السحب</label><input id="methodName" placeholder="Binance أو PayPal"><label>صورة الشعار (ارفعها من جهازك)</label><input id="methodLogoFile" type="file" accept="image/*"><img id="methodLogoPreview" class="logo-preview" hidden alt=""><label>أو رابط الصورة (اختياري)</label><input id="methodLogo" type="url" placeholder="https://..." dir="ltr"><h3>فئات السحب</h3><p class="muted">أدخل عدد النقاط والنص الذي سيظهر للمستخدم. صورة الشعار تبقى منفصلة.</p><p class="muted">لكل فئة ثلاث خانات: <b>النقاط</b> التي تُخصم، و<b>المبلغ</b> (مثل 0.25 أو 5) وهو نفسه النص الظاهر للمستخدم ونفسه المبلغ المستحق في طلبات السحب، و<b>العملة</b> (الافتراضي $ ويمكنك كتابة US أو غيره). لا يوجد حد لعدد الفئات: اضغط «＋ إضافة فئة» كما تشاء ثم احفظ.</p><div id="tierRows"></div><button type="button" id="addTier" class="btn">＋ إضافة فئة</button><label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label><button id="saveMethod" class="primary">حفظ طريقة السحب والفئات</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
-<section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2><p class="muted">اربط الجدار بنقاط حقيقية: احفظ الجدار ثم انسخ رابط Postback وضعه في لوحة المزوّد، فتصل النقاط للمستخدم تلقائيًا عبر Cloudflare.</p><div class="form"><h3 id="wallTitle">إضافة جدار عروض</h3><input id="wallId" type="hidden"><label>مزود جدار العروض</label><select id="wallProvider" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="">اختر المزوّد</option></select><input id="wallCustomProvider" class="hidden" placeholder="اكتب اسم المزوّد (بالإنجليزية)"><label>الاسم الظاهر للمستخدم</label><input id="wallName" placeholder="اسم الجدار"><label>رابط الجدار (اكتب {uid} مكان معرّف المستخدم)</label><input id="wallUrl" type="url" dir="ltr" placeholder="https://wall.provider.com/?app=XXX&user_id={uid}"><label>وصف قصير (اختياري)</label><input id="wallDesc" placeholder="أكمل العروض واربح نقاط"><label>صورة الجدار (ارفعها من جهازك)</label><input id="wallLogoFile" type="file" accept="image/*"><img id="wallLogoPreview" class="logo-preview" hidden alt=""><label>أو رابط الصورة (اختياري)</label><input id="wallLogo" type="url" dir="ltr" placeholder="https://..."><label>طريقة التحقق من التوقيع (sig)</label><select id="wallVerify" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="key">key — sig هو المفتاح السري نفسه</option><option value="md5">md5 — md5(txid-secret) مثل CPX</option><option value="sha256">sha256 — sha256(txid-secret)</option><option value="hmac">hmac — HMAC-SHA256(secret, uid|amount|txid)</option></select><label>المفتاح السري (Secret)</label><div class="secret-row"><input id="wallSecret" type="password" autocomplete="off" dir="ltr" placeholder="الصق المفتاح السري من لوحة المزوّد"><button type="button" id="genSecret" class="btn">🎲 توليد</button></div><p id="secretState" class="muted"></p><div id="postbackBox" class="details-box hidden"><strong>رابط Postback — ضعه في لوحة المزوّد</strong><div class="addr-box"><span id="postbackUrl"></span><button type="button" id="copyPostback" class="btn">📋 نسخ</button></div><p class="muted">أسماء المتغيرات تختلف بين المزوّدين (مثل {user_id} و{reward} و{transaction_id}). بدّل {uid} و{amount} و{txid} و{sig} بما يطلبه مزوّدك. قيمة amount تُضاف للمستخدم كنقاط مباشرة، فاضبط عملة المكافأة في لوحة المزوّد بحيث ترسل عدد النقاط.</p></div><label class="check"><input id="wallEnabled" type="checkbox"> مفعّل (يظهر للمستخدمين)</label><button id="saveWall" class="primary">حفظ</button><button id="cancelWall" class="btn">إلغاء</button><p id="wallMsg" class="muted"></p></div><div id="wallList"></div></section>
+<section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2><p class="muted">اربط الجدار بنقاط حقيقية: احفظ الجدار ثم انسخ رابط Postback وضعه في لوحة المزوّد، فتصل النقاط للمستخدم تلقائيًا عبر Cloudflare.</p><div class="form"><h3 id="wallTitle">إضافة جدار عروض</h3><input id="wallId" type="hidden"><label>مزود جدار العروض</label><select id="wallProvider" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="">اختر المزوّد</option></select><input id="wallCustomProvider" class="hidden" placeholder="اكتب اسم المزوّد (بالإنجليزية)"><div id="wallGuide" class="details-box hidden"></div><label>الاسم الظاهر للمستخدم</label><input id="wallName" placeholder="اسم الجدار"><label>رابط الجدار (اكتب {uid} مكان معرّف المستخدم)</label><input id="wallUrl" type="url" dir="ltr" placeholder="https://wall.provider.com/?app=XXX&user_id={uid}"><label>وصف قصير (اختياري)</label><input id="wallDesc" placeholder="أكمل العروض واربح نقاط"><label>صورة الجدار (ارفعها من جهازك)</label><input id="wallLogoFile" type="file" accept="image/*"><img id="wallLogoPreview" class="logo-preview" hidden alt=""><label>أو رابط الصورة (اختياري)</label><input id="wallLogo" type="url" dir="ltr" placeholder="https://..."><label>طريقة التحقق من التوقيع (sig)</label><select id="wallVerify" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="key">key — sig هو المفتاح السري نفسه</option><option value="md5">md5 — md5(txid-secret) مثل CPX</option><option value="sha256">sha256 — sha256(txid-secret)</option><option value="hmac">hmac — HMAC-SHA256(secret, uid|amount|txid)</option></select><label>المفتاح السري (Secret)</label><div class="secret-row"><input id="wallSecret" type="password" autocomplete="off" dir="ltr" placeholder="الصق المفتاح السري من لوحة المزوّد"><button type="button" id="genSecret" class="btn">🎲 توليد</button></div><p id="secretState" class="muted"></p><div id="postbackBox" class="details-box hidden"><strong>رابط Postback — ضعه في لوحة المزوّد</strong><p class="muted">تُملأ أسماء المتغيرات تلقائيًا حسب المزوّد، وعدّلها إن اختلفت في وثائقه:</p><label>متغير معرّف المستخدم</label><input id="wallMUid" dir="ltr"><label>متغير المبلغ (النقاط)</label><input id="wallMAmt" dir="ltr"><label>متغير رقم العملية</label><input id="wallMTx" dir="ltr"><div id="wallMSigRow"><label>متغير التوقيع</label><input id="wallMSig" dir="ltr"></div><div class="addr-box"><span id="postbackUrl"></span><button type="button" id="copyPostback" class="btn">📋 نسخ الرابط</button></div><p class="muted">قيمة amount تُضاف للمستخدم كنقاط مباشرة، فاضبط عملة المكافأة في لوحة المزوّد بحيث ترسل عدد النقاط.</p></div><label class="check"><input id="wallEnabled" type="checkbox"> مفعّل (يظهر للمستخدمين)</label><button id="saveWall" class="primary">حفظ</button><button id="cancelWall" class="btn">إلغاء</button><p id="wallMsg" class="muted"></p></div><div id="wallList"></div></section>
 </section></main><footer class="muted" style="text-align:center;padding:20px">YASJOY Admin • Firebase</footer>
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';
@@ -281,12 +284,25 @@ let users=[],withdrawals=[],methods=[],walls=[],status='pending',unsubs=[],offer
 setPersistence(auth,browserLocalPersistence).catch(console.error);
 $('loginBtn').onclick=async()=>{$('loginMsg').textContent='جارٍ التحقق…';try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value)}catch(e){$('loginMsg').textContent='تعذّر تسجيل الدخول. تحقق من البيانات.';$('loginMsg').className='error'}};
 $('password').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};
-onAuthStateChanged(auth,async u=>{unsubs.forEach(f=>f());unsubs=[];if(!u){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}if(u.uid!==ADMIN_UID){await signOut(auth);$('loginMsg').textContent='هذا الحساب غير مخوّل.';return}$('login').classList.add('hidden');$('app').classList.remove('hidden');
+onAuthStateChanged(auth,async u=>{unsubs.forEach(f=>f());unsubs=[];if(!u){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}if(u.uid!==ADMIN_UID){await signOut(auth);$('loginMsg').textContent='هذا الحساب غير مخوّل.';return}$('login').classList.add('hidden');$('app').classList.remove('hidden');checkServer();
 unsubs.push(onSnapshot(collection(db,'users'),s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));renderUsers();renderWalls()}));
 unsubs.push(onSnapshot(collection(db,'withdrawals'),s=>{withdrawals=s.docs.map(d=>({id:d.id,...d.data()}));renderWithdrawals();renderUsers()},e=>{$('withdrawList').replaceChildren(el('div','تعذّر تحميل طلبات السحب: '+e.message,'error'));console.error('withdrawals listener error:',e)}));
 unsubs.push(onSnapshot(collection(db,'withdrawMethods'),s=>{methods=s.docs.map(d=>({id:d.id,...d.data()}));renderMethods();renderWithdrawals()}));
 unsubs.push(onSnapshot(collection(db,'offerWalls'),s=>{walls=s.docs.map(d=>({id:d.id,...d.data()}));renderWalls()}));
 });
+async function checkServer(){
+ const box=$('serverStatus');box.className='srv';box.textContent='جارٍ فحص خادم Cloudflare…';
+ const bases=[''];if(location.hostname!=='tapjoy-elp.pages.dev')bases.push('https://tapjoy-elp.pages.dev');
+ let msg='',ok=false;
+ for(const b of bases){
+  try{const r=await fetch(b+'/api/health',{cache:'no-store'}),j=await r.json().catch(()=>null);
+   if(!j||typeof j!=='object'||!j.functions){msg='مجلد functions غير منشور على Cloudflare (الرابط /api/health غير موجود). ارفعه في جذر المستودع وأعد النشر.';continue}
+   if(!j.serviceAccount){msg='المتغير FIREBASE_SERVICE_ACCOUNT غير مضاف في Cloudflare (Settings ← Variables and Secrets) — بدونه لا تعمل الدولة وIP والنقاط.'+(j.error?' ('+j.error+')':'');break}
+   if(!j.firestore){msg='الخادم موجود لكن فشل اتصاله بـ Firebase: '+(j.error||'تحقق من صحة JSON حساب الخدمة');break}
+   ok=true;break}catch(e){msg='تعذّر الوصول للخادم: '+e.message}
+ }
+ box.className='srv '+(ok?'ok':'bad');box.textContent=ok?'✓ خادم Cloudflare يعمل — الدولة وIP والنقاط التلقائية فعّالة.':'⚠ '+msg;
+}
 let current='home';function show(id){
  const home=$('home');
  const valid=id==='home'||['withdraw','users','methods','walls'].includes(id);
@@ -580,10 +596,52 @@ function setProviderUI(p){
  if(wallProviders.includes(p)&&p!=='Custom'){providerSelect.value=p;c.value='';c.classList.add('hidden')}
  else{providerSelect.value='Custom';c.value=p==='Custom'?'':p;c.classList.remove('hidden')}
 }
-providerSelect.addEventListener('change',()=>{const n=providerSelect.value;$('wallCustomProvider').classList.toggle('hidden',n!=='Custom');if(n&&n!=='Custom'&&!$('wallName').value.trim())$('wallName').value=n});
+providerSelect.addEventListener('change',()=>{const n=providerSelect.value;$('wallCustomProvider').classList.toggle('hidden',n!=='Custom');const cur=$('wallName').value.trim();if(n&&n!=='Custom'&&(!cur||cur===lastAutoName))$('wallName').value=n;lastAutoName=n;applyPreset(n)});
 $('wallCustomProvider').addEventListener('change',()=>{const n=$('wallCustomProvider').value.trim();if(n&&!$('wallName').value.trim())$('wallName').value=n});
 const postbackBase=()=>/\.pages\.dev$/.test(location.hostname)?location.origin:'https://tapjoy-elp.pages.dev';
-function updatePostbackBox(id){const box=$('postbackBox');if(!id){box.classList.add('hidden');return}$('postbackUrl').textContent=postbackBase()+'/api/postback/'+id+'?uid={uid}&amount={amount}&txid={txid}&sig={sig}';box.classList.remove('hidden')}
+let pendingWallId='',savedSecret='',lastAutoName='';
+function newWallId(){try{pendingWallId=doc(collection(db,'offerWalls')).id}catch(e){pendingWallId=''}}
+const GENERIC={uid:'{user_id}',amt:'{amount}',tx:'{transaction_id}',sig:'{signature}',verify:'key'};
+const PRESETS={
+ CPX:{uid:'{user_id}',amt:'{amount_local}',tx:'{trans_id}',sig:'{secure_hash}',verify:'md5',secretName:'Secure Hash',wall:'https://offers.cpx-research.com/index.php?app_id=APP_ID&ext_user_id={uid}',sure:true},
+ OfferToro:{uid:'[USER_ID]',amt:'[AMOUNT]',tx:'[OID]',verify:'key',secretName:'Secret Key'},
+ AdGem:{uid:'{player_id}',amt:'{amount}',tx:'{transaction_id}',verify:'key'},
+ AdGate:{uid:'{s1}',amt:'{points}',tx:'{tx_id}',verify:'key'},
+ Lootably:{uid:'[userID]',amt:'[currencyReward]',tx:'[transactionID]',verify:'key'}
+};
+const presetFor=p=>Object.assign({},GENERIC,PRESETS[p]||{});
+function setMacros(m){$('wallMUid').value=m.uid||'';$('wallMAmt').value=m.amt||'';$('wallMTx').value=m.tx||'';$('wallMSig').value=m.sig||''}
+function readMacros(){return{uid:$('wallMUid').value.trim(),amt:$('wallMAmt').value.trim(),tx:$('wallMTx').value.trim(),sig:$('wallMSig').value.trim()}}
+function randomSecret(){const b=new Uint8Array(24);crypto.getRandomValues(b);return [...b].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function showGuide(p){
+ const g=$('wallGuide');g.replaceChildren();if(!p){g.classList.add('hidden');return}
+ const pr=presetFor(p),key=$('wallVerify').value==='key';
+ g.append(el('strong','خطوات ربط '+p+' (تلقائية قدر الإمكان)'));
+ [ '1) في لوحة '+p+' أنشئ تطبيقًا/Placement وانسخ رابط الجدار (Offerwall URL).',
+   '2) ألصقه في خانة «رابط الجدار» واكتب {uid} مكان معرّف المستخدم'+(pr.wall?' — مثال: '+pr.wall:'')+'.',
+   '3) في إعدادات Postback/Callback في لوحة '+p+' ألصق «رابط Postback» الظاهر أدناه.',
+   key?'4) المفتاح السري يُولَّد تلقائيًا ويوجد داخل رابط Postback (sig). لا تحتاج نسخه من أي مكان.':'4) انسخ '+(pr.secretName||'Secret')+' من لوحة '+p+' والصقه في خانة «المفتاح السري».',
+   '5) فعّل الجدار واحفظ، ثم جرّب عرضًا صغيرًا للتأكد من وصول النقاط.'
+ ].forEach(t=>g.append(el('div',t)));
+ if(!pr.sure&&PRESETS[p])g.append(el('div','⚠ أسماء المتغيرات هنا هي الصيغة الشائعة لهذا المزوّد؛ طابقها مع صفحة Postback في لوحته وعدّلها في الخانات إن اختلفت.','warn'));
+ if(!PRESETS[p])g.append(el('div','⚠ لا يوجد قالب جاهز لهذا المزوّد؛ استخدمنا أسماء عامة. عدّلها حسب وثائقه.','warn'));
+ g.classList.remove('hidden');
+}
+function applyPreset(p){
+ if(!p){showGuide('');updatePostbackBox();return}
+ const pr=presetFor(p);setMacros(pr);$('wallVerify').value=pr.verify||'key';
+ if(pr.wall)$('wallUrl').placeholder=pr.wall;
+ if(pr.verify==='key'&&!$('wallSecret').value.trim()&&!savedSecret&&!$('wallId').value){$('wallSecret').type='text';$('wallSecret').value=randomSecret();$('secretState').textContent='تم توليد المفتاح السري تلقائيًا — يُحفظ مع الجدار ويدخل في رابط Postback.'}
+ showGuide(p);updatePostbackBox();
+}
+function updatePostbackBox(){
+ const box=$('postbackBox'),id=$('wallId').value||pendingWallId,v=$('wallVerify').value;
+ $('wallMSigRow').classList.toggle('hidden',v==='key');
+ if(!providerSelect.value||!id){box.classList.add('hidden');return}
+ const m=readMacros(),sig=v==='key'?(($('wallSecret').value.trim()||savedSecret)||'SECRET'):(m.sig||'{sig}');
+ $('postbackUrl').textContent=postbackBase()+'/api/postback/'+id+'?uid='+(m.uid||'{uid}')+'&amount='+(m.amt||'{amount}')+'&txid='+(m.tx||'{txid}')+'&sig='+sig;
+ box.classList.remove('hidden');
+}
 function setWallImage(v){const s=imgSrc(v),p=$('wallLogoPreview');if(/^data:/.test(s)){wallImg=s;$('wallLogo').value=''}else{wallImg='';$('wallLogo').value=s}if(s){p.src=s;p.hidden=false}else{p.removeAttribute('src');p.hidden=true}}
 function renderWalls(){
  const l=$('wallList');l.replaceChildren();if(!walls.length)l.append(el('div','لا توجد جدران عروض.','empty'));
@@ -597,13 +655,14 @@ function renderWalls(){
   [['تعديل',()=>editWall(w)],[w.enabled?'إيقاف الظهور':'تفعيل الظهور',()=>toggle('offerWalls',w.id,!w.enabled)],['حذف',async()=>{if(!confirm('حذف هذا الجدار نهائيًا؟ لا يمكن التراجع.'))return;try{await deleteDoc(doc(db,'offerWalls',w.id));try{await deleteDoc(doc(db,'offerWallSecrets',w.id))}catch(e){}}catch(e){alert('تعذّر الحذف: '+e.message)}}]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});
   c.append(a);l.append(c)});
 }
-async function markSavedSecret(wallId){const st=$('secretState');st.textContent='';$('wallSecret').placeholder='الصق المفتاح السري من لوحة المزوّد';try{const sn=await getDoc(doc(db,'offerWallSecrets',wallId));if(sn.exists()&&sn.data().secret){$('wallSecret').placeholder='محفوظ ✓ — اتركه فارغًا للإبقاء عليه';st.textContent='✓ المفتاح السري محفوظ.'}else st.textContent='⚠ لا يوجد مفتاح سري محفوظ — لن تُقبل النقاط قبل حفظه.'}catch(e){st.textContent='تعذّر قراءة حالة المفتاح: '+e.message}}
-function editWall(w){$('wallId').value=w.id;setProviderUI(w.provider||'');$('wallName').value=w.name||'';$('wallUrl').value=typeof w.url==='string'?w.url:'';$('wallDesc').value=w.description||'';setWallImage(w.logo||'');$('wallVerify').value=['key','md5','sha256','hmac'].includes(w.verify)?w.verify:'key';$('wallSecret').value='';$('wallEnabled').checked=!!w.enabled;$('wallTitle').textContent='تعديل جدار عروض';updatePostbackBox(w.id);markSavedSecret(w.id);$('wallMsg').textContent='';$('wallTitle').scrollIntoView({behavior:'smooth',block:'start'})}
-function resetWall(){['wallId','wallName','wallUrl','wallDesc','wallSecret'].forEach(x=>$(x).value='');setWallImage('');setProviderUI('');$('wallVerify').value='key';$('wallEnabled').checked=false;$('wallTitle').textContent='إضافة جدار عروض';$('wallMsg').textContent='';$('secretState').textContent='';updatePostbackBox('')}
+async function markSavedSecret(wallId){const st=$('secretState');st.textContent='';$('wallSecret').placeholder='الصق المفتاح السري من لوحة المزوّد';try{const sn=await getDoc(doc(db,'offerWallSecrets',wallId));if(sn.exists()&&sn.data().secret){savedSecret=sn.data().secret;updatePostbackBox();$('wallSecret').placeholder='محفوظ ✓ — اتركه فارغًا للإبقاء عليه';st.textContent='✓ المفتاح السري محفوظ.'}else st.textContent='⚠ لا يوجد مفتاح سري محفوظ — لن تُقبل النقاط قبل حفظه.'}catch(e){st.textContent='تعذّر قراءة حالة المفتاح: '+e.message}}
+function editWall(w){$('wallId').value=w.id;setProviderUI(w.provider||'');$('wallName').value=w.name||'';$('wallUrl').value=typeof w.url==='string'?w.url:'';$('wallDesc').value=w.description||'';setWallImage(w.logo||'');$('wallVerify').value=['key','md5','sha256','hmac'].includes(w.verify)?w.verify:'key';$('wallSecret').value='';$('wallEnabled').checked=!!w.enabled;$('wallTitle').textContent='تعديل جدار عروض';setMacros(w.macros||presetFor(w.provider));savedSecret='';showGuide(w.provider||'');updatePostbackBox();markSavedSecret(w.id);$('wallMsg').textContent='';$('wallTitle').scrollIntoView({behavior:'smooth',block:'start'})}
+function resetWall(){['wallId','wallName','wallUrl','wallDesc','wallSecret'].forEach(x=>$(x).value='');setWallImage('');setProviderUI('');$('wallVerify').value='key';$('wallEnabled').checked=false;$('wallTitle').textContent='إضافة جدار عروض';$('wallMsg').textContent='';$('secretState').textContent='';newWallId();savedSecret='';$('wallSecret').type='password';setMacros(presetFor(''));showGuide('');updatePostbackBox()}
 $('cancelWall').onclick=resetWall;
 $('copyPostback').onclick=()=>copyText($('postbackUrl').textContent,$('copyPostback'));
-$('genSecret').onclick=()=>{const b=new Uint8Array(24);crypto.getRandomValues(b);$('wallSecret').type='text';$('wallSecret').value=[...b].map(x=>x.toString(16).padStart(2,'0')).join('');$('secretState').textContent='تم توليد مفتاح — احفظ الجدار ثم الصق نفس المفتاح في لوحة المزوّد.'};
+$('genSecret').onclick=()=>{$('wallSecret').type='text';$('wallSecret').value=randomSecret();updatePostbackBox();$('secretState').textContent='تم توليد مفتاح — احفظ الجدار ثم الصق نفس المفتاح في لوحة المزوّد.'};
 bindImagePicker('wallLogoFile','wallLogoPreview',512,'wallMsg',d=>{wallImg=d;$('wallLogo').value=''});
+['wallMUid','wallMAmt','wallMTx','wallMSig','wallSecret'].forEach(i=>$(i).addEventListener('input',updatePostbackBox));$('wallVerify').addEventListener('change',()=>{showGuide(providerSelect.value);updatePostbackBox()});resetWall();
 $('saveWall').onclick=async()=>{
  const msg=(t,c)=>{$('wallMsg').textContent=t;$('wallMsg').className=c};
  const id=$('wallId').value,name=$('wallName').value.trim(),url=validUrl($('wallUrl').value.trim()),lr=$('wallLogo').value.trim(),logo=wallImg||validUrl(lr),provider=currentProvider(),rate=1,verify=$('wallVerify').value,secret=$('wallSecret').value.trim();
@@ -611,13 +670,14 @@ $('saveWall').onclick=async()=>{
  if(!name||!url||!/^https:\/\//i.test(url))return msg('أدخل الاسم ورابطًا صحيحًا يبدأ بـ https.','error');
  if(lr&&!logo)return msg('رابط الصورة غير صالح.','error');
  if(!(Number.isFinite(rate)&&rate>0&&rate<=1e7))return msg('أدخل عدد نقاط صحيحًا أكبر من صفر.','error');
- const data={name,url,provider,description:$('wallDesc').value.trim(),rate,verify,integrationType:'postback',enabled:$('wallEnabled').checked,updatedAt:serverTimestamp()};
+ const data={name,url,provider,description:$('wallDesc').value.trim(),rate,verify,macros:readMacros(),integrationType:'postback',enabled:$('wallEnabled').checked,updatedAt:serverTimestamp()};
  if(logo)data.logo=logo;
  try{
-  let savedId=id;
-  if(id)await updateDoc(doc(db,'offerWalls',id),data);else{const ref=await addDoc(collection(db,'offerWalls'),{...data,createdAt:serverTimestamp()});savedId=ref.id}
+  let savedId=id||pendingWallId;
+  if(!savedId)return msg('تعذّر إنشاء معرّف للجدار.','error');
+  if(id)await updateDoc(doc(db,'offerWalls',id),data);else await setDoc(doc(db,'offerWalls',savedId),{...data,createdAt:serverTimestamp()});
   $('wallId').value=savedId;
-  if(secret){try{await setDoc(doc(db,'offerWallSecrets',savedId),{secret,provider,updatedAt:serverTimestamp()},{merge:true});$('wallSecret').value='';$('wallSecret').type='password'}catch(se){updatePostbackBox(savedId);return msg('حُفظ الجدار لكن تعذّر حفظ المفتاح السري: '+se.message,'error')}}
+  if(secret){try{await setDoc(doc(db,'offerWallSecrets',savedId),{secret,provider,updatedAt:serverTimestamp()},{merge:true});savedSecret=secret;$('wallSecret').value='';$('wallSecret').type='password'}catch(se){updatePostbackBox(savedId);return msg('حُفظ الجدار لكن تعذّر حفظ المفتاح السري: '+se.message,'error')}}
   updatePostbackBox(savedId);markSavedSecret(savedId);$('wallTitle').textContent='تعديل جدار عروض';
   msg('تم حفظ الجدار. انسخ رابط Postback أدناه وضعه في لوحة المزوّد ليبدأ إرسال النقاط.','success');
  }catch(e){msg('فشل الحفظ: '+e.message,'error')}
