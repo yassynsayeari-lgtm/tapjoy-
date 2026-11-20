@@ -100,6 +100,20 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 @keyframes splashSlide{0%{transform:translateX(-110%)}100%{transform:translateX(260%)}}
 @keyframes coinFloat{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-16px) rotate(10deg)}}
 @media(prefers-reduced-motion:reduce){.splash-card,.splash-bar i,.wall-splash .fc{animation:none}}
+/* ===== wall cards: 2-column grid, square image tile ===== */
+.offers{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;overflow:visible!important;scroll-snap-type:none!important;padding:4px 2px 12px}
+.offers>.offer,.offers>.empty-offers{flex:none;grid-column:auto;scroll-snap-align:none}
+.offers>.empty-offers{grid-column:1/-1}
+.offer{padding:14px;border-radius:24px;border:1px solid #d5edff;box-shadow:0 6px 16px #74bce833;text-align:center}
+.offer-hero{height:auto;aspect-ratio:1/.9;border-radius:20px;background:#e3f2ff;padding:0}
+.offer-hero img{padding:10px;border-radius:16px}
+.offer-hero .hero-fallback{font-size:54px}
+.offer-body{padding:12px 0 0}
+.offer-body h3{font-size:19px;margin:0}
+.offer-body p{display:none}
+.offer-body .earn{margin-top:12px;padding:13px 4px;font-size:16px;border-radius:30px}
+.offer-dots{display:none}
+@media(max-width:390px){.offer{padding:10px}.offer-body h3{font-size:16px}}
 </style>
 </head>
 <body>
@@ -299,7 +313,7 @@ function renderOfferWalls(snapshot){
   const letter=()=>{const f=document.createElement("span");f.className="hero-fallback";f.textContent=name.charAt(0).toUpperCase();hero.replaceChildren(f)};
   if(logo){const img=document.createElement("img");img.alt=name+" logo";img.loading="lazy";img.onerror=letter;img.src=logo;hero.appendChild(img)}else letter();
   const body=document.createElement("div");body.className="offer-body";const title=document.createElement("h3"),description=document.createElement("p");title.textContent=name;description.textContent=typeof wall.description==="string"&&wall.description.trim()?wall.description.trim():"Complete offers and get rewards";
-  const button=document.createElement("button");button.className="earn";button.textContent=enabled?"🪙 Earn coins ›":"Currently unavailable";button.disabled=!enabled;button.addEventListener("click",()=>openOffer(url,name,enabled,wall.id,logo));
+  const button=document.createElement("button");button.className="earn";button.textContent=enabled?"Earn coins":"Currently unavailable";button.disabled=!enabled;button.addEventListener("click",()=>openOffer(url,name,enabled,wall.id,logo));
   body.append(title,description,button);card.append(hero,body);host.appendChild(card);
   if(dots){const d=document.createElement("i");dots.appendChild(d)}
  }
