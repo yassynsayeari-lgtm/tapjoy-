@@ -5,7 +5,7 @@
 import { handler, json, HttpError, verifyIdToken, getDoc, write, commit, mustCommit, clientGeo, isMissing } from '../_lib/fb.js';
 
 const cut = (v, n) => String(v === undefined || v === null ? '' : v).replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, n);
-const DEVICE_FIELDS = { ua: 300, platform: 60, platformVersion: 30, model: 60, brand: 60, lang: 20, langs: 100, tz: 60, screen: 24, dpr: 8, cores: 4, mem: 6, touch: 3, conn: 20, standalone: 5, vendor: 60, app: 20 };
+const DEVICE_FIELDS = { ua: 300, platform: 60, platformVersion: 30, model: 60, brand: 60, lang: 20, langs: 100, tz: 60, screen: 24, dpr: 8, cores: 4, mem: 6, touch: 3, conn: 20, standalone: 5, vendor: 60, app: 20, fp: 40, gpu: 100, webdriver: 5 };
 
 export const onRequest = handler(async ({ request, env }) => {
   if (request.method !== 'POST') throw new HttpError(405, 'Use POST');
@@ -64,9 +64,13 @@ export const onRequest = handler(async ({ request, env }) => {
     if (user[fam] !== ip) set.push([[fam], ip]);
   }
   const cf = request.cf || {};
-  const net = { asn: cf.asn, org: cf.asOrganization, city: cf.city, region: cf.region, tz: cf.timezone, continent: cf.continent, colo: cf.colo };
-  const oldNet = user.net && typeof user.net === 'object' ? user.net : {};
-  for (const [k, v] of Object.entries(net)) { const c = cut(v, 80); if (c && String(oldNet[k] ?? '') !== c) set.push([['net', k], c]); }
+  const net = { asn: cf.asn, org: cf.asOrganization, city: cf.city, region: cf.region, tz: cf.timezone, continent: cf.continent, colo: cf.colo, country: cf.country };
+  const famKey = ip.includes(':') ? 'net6' : 'net4';
+  for (const key of ['net', ip ? famKey : null]) {
+    if (!key) continue;
+    const oldNet = user[key] && typeof user[key] === 'object' ? user[key] : {};
+    for (const [k, v] of Object.entries(net)) { const c = cut(v, 80); if (c && String(oldNet[k] ?? '') !== c) set.push([[key, k], c]); }
+  }
   const dev = body && typeof body.device === 'object' && body.device ? body.device : {};
   const oldDev = user.device && typeof user.device === 'object' ? user.device : {};
   let devChanged = false;
