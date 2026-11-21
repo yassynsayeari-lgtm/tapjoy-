@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#dff4ff">
 <title>YASJOY - Earn Rewards</title>
 <style>
@@ -138,8 +138,67 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .offers>.offer:last-child:nth-child(odd){grid-column:1/-1}
 .offers>.offer:last-child:nth-child(odd) .offer-hero{aspect-ratio:21/9!important}
 .offer-body .earn{white-space:nowrap}
+
+/* ===== wall cards v3: swipeable carousel (like a native app) ===== */
+.offers{display:flex!important;flex-wrap:nowrap;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory!important;gap:12px;padding:4px 4px 14px!important;scroll-padding:0 4px;scrollbar-width:none;overscroll-behavior-x:contain}
+.offers::-webkit-scrollbar{display:none}
+.offers>.offer{flex:0 0 clamp(146px,41vw,200px)!important;grid-column:auto!important;scroll-snap-align:start!important;padding:9px!important;border-radius:20px;transition:transform .15s ease,box-shadow .15s ease;animation:offerIn .45s ease both}
+.offers>.offer:nth-child(2){animation-delay:.05s}.offers>.offer:nth-child(3){animation-delay:.1s}.offers>.offer:nth-child(4){animation-delay:.15s}
+.offers>.offer:active{transform:scale(.97)}
+.offers>.empty-offers{flex:0 0 100%!important}
+.offers>.offer:last-child:nth-child(odd) .offer-hero{aspect-ratio:16/9!important}
+.offer-hero{aspect-ratio:16/9!important;border-radius:14px!important;background:#e3f2ff}
+.offer-hero img{object-fit:cover!important;padding:0!important;border-radius:14px!important}
+.offer-hero .hero-fallback{font-size:40px}
+.offer-body{padding:9px 0 0!important}
+.offer-body h3{font-size:16px!important;font-weight:800}
+.offer-body .earn{margin-top:9px!important;padding:11px 4px!important;font-size:14.5px!important;border-radius:26px!important;display:flex;align-items:center;justify-content:center;gap:5px}
+.offer-body .earn:active:not(:disabled){transform:scale(.96)}
+.offer-dots{display:flex!important;justify-content:center;gap:7px;margin:0 0 8px}
+@keyframes offerIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* ===== native-app feel ===== */
+html{-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
+body{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation;overscroll-behavior-y:none}
+input,textarea,[contenteditable],.selectable{-webkit-user-select:text;user-select:text}
+img{-webkit-user-drag:none;user-drag:none}
+button,.menu-item,nav button{cursor:pointer;transition:transform .12s ease,opacity .12s ease}
+button:active:not(:disabled){transform:scale(.97)}
+.wall-bar{padding-top:calc(10px + env(safe-area-inset-top))}
+body{padding-bottom:env(safe-area-inset-bottom)}
+/* ===== app themes (set from the admin app) ===== */
+html[data-theme="candy"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Cg fill=%22%23ff4f9a%22 fill-opacity=%220.2%22%3E%3Cpath transform=%22translate(8 10) scale(0.9)%22 d=%22M10 5C8 0 0 1 2 8c1.5 4 8 8 8 8s6.500-4 8-8C20 1 12 0 10 5z%22/%3E%3Cpath transform=%22translate(50 48) scale(0.7)%22 d=%22M10 5C8 0 0 1 2 8c1.5 4 8 8 8 8s6.500-4 8-8C20 1 12 0 10 5z%22/%3E%3Ccircle cx=%2252%22 cy=%2212%22 r=%224%22/%3E%3Ccircle cx=%2214%22 cy=%2258%22 r=%223.5%22/%3E%3Ccircle cx=%2270%22 cy=%2230%22 r=%222.5%22/%3E%3C/g%3E%3C/svg%3E");--bg:linear-gradient(160deg,#ffd9ec,#fff0f6 50%,#ffdcee);--card:#ffffff;--cardb:#ffc4de;--txt:#5a1a3c;--mut:#a0597f;--acc:#ff4f9a;--acc2:#ff9a5c;--onacc:#ffffff;--hero:linear-gradient(130deg,#ff5fa2,#ff8fb8 55%,#ffb36b);--chip:#ffeef6;--nav:rgba(255,255,255,.95);color-scheme:light}
+html[data-theme="mint"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Cg fill=%22%231fb877%22 fill-opacity=%220.22%22%3E%3Cpath transform=%22translate(8 18) rotate(-30)%22 d=%22M0 0C6 -10 18 -10 22 0C18 10 6 10 0 0z%22/%3E%3Cpath transform=%22translate(46 56) rotate(30)%22 d=%22M0 0C6 -10 18 -10 22 0C18 10 6 10 0 0z%22/%3E%3Ccircle cx=%2258%22 cy=%2214%22 r=%223.5%22/%3E%3Ccircle cx=%2216%22 cy=%2262%22 r=%223%22/%3E%3C/g%3E%3C/svg%3E");--bg:linear-gradient(160deg,#d3f6e3,#f1fff7 50%,#d9f4e8);--card:#ffffff;--cardb:#b6ebcb;--txt:#124a33;--mut:#5b8f78;--acc:#1fb877;--acc2:#0f9ec9;--onacc:#ffffff;--hero:linear-gradient(130deg,#18b36f,#4fd6a0 55%,#27a8d8);--chip:#eafaf2;--nav:rgba(255,255,255,.95);color-scheme:light}
+html[data-theme="sunny"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Cg fill=%22%23ff9a00%22 fill-opacity=%220.24%22%3E%3Cpolygon transform=%22translate(18 18)%22 points=%220,-11 3.3,-3.3 11,-2.2 5.5,2.8 6.6,11 0,5.5 -6.6,11 -5.5,2.8 -11,-2.2 -3.3,-3.3%22/%3E%3Cpolygon transform=%22translate(58 52)%22 points=%220,-9 2.7,-2.7 9,-1.8 4.5,2.2 5.4,9 0,4.5 -5.4,9 -4.5,2.2 -9,-1.8 -2.7,-2.7%22/%3E%3Ccircle cx=%2256%22 cy=%2214%22 r=%224%22/%3E%3Ccircle cx=%2214%22 cy=%2260%22 r=%223.5%22/%3E%3C/g%3E%3C/svg%3E");--bg:linear-gradient(160deg,#ffefb8,#fff8dc 50%,#ffe4a8);--card:#fffdf6;--cardb:#ffd98a;--txt:#5c3a00;--mut:#a07a30;--acc:#ff9a00;--acc2:#ff5d5d;--onacc:#ffffff;--hero:linear-gradient(130deg,#ffa600,#ffcf4a 55%,#ff6f61);--chip:#fff4d6;--nav:rgba(255,252,240,.96);color-scheme:light}
+html[data-theme="lavender"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Cg fill=%22%238a5cf6%22 fill-opacity=%220.2%22%3E%3Cpolygon points=%2218,8 28,18 18,28 8,18%22/%3E%3Cpolygon points=%2258,42 66,50 58,58 50,50%22/%3E%3Ccircle cx=%2258%22 cy=%2214%22 r=%223%22/%3E%3Ccircle cx=%2216%22 cy=%2260%22 r=%223.5%22/%3E%3Cpath d=%22M40 30h8M44 26v8%22/%3E%3C/g%3E%3C/svg%3E");--bg:linear-gradient(160deg,#e6dcff,#f8f3ff 50%,#e9defc);--card:#ffffff;--cardb:#d6c7ff;--txt:#3a2470;--mut:#8470b5;--acc:#8a5cf6;--acc2:#e65cc2;--onacc:#ffffff;--hero:linear-gradient(130deg,#7b4ff0,#a883ff 55%,#e65cc2);--chip:#f1ebff;--nav:rgba(255,255,255,.95);color-scheme:light}
+html[data-theme="sky"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Cg fill=%22%231aa3f0%22 fill-opacity=%220.2%22%3E%3Cg transform=%22translate(4 8)%22%3E%3Ccircle cx=%228%22 cy=%2210%22 r=%228%22/%3E%3Ccircle cx=%2220%22 cy=%226%22 r=%2210%22/%3E%3Ccircle cx=%2232%22 cy=%2211%22 r=%227%22/%3E%3Crect x=%222%22 y=%2210%22 width=%2236%22 height=%228%22 rx=%224%22/%3E%3C/g%3E%3Cg transform=%22translate(40 48)%22%3E%3Ccircle cx=%228%22 cy=%2210%22 r=%228%22/%3E%3Ccircle cx=%2220%22 cy=%226%22 r=%2210%22/%3E%3Ccircle cx=%2232%22 cy=%2211%22 r=%227%22/%3E%3Crect x=%222%22 y=%2210%22 width=%2236%22 height=%228%22 rx=%224%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");--bg:linear-gradient(160deg,#cfeeff,#f0faff 50%,#d4ecff);--card:#ffffff;--cardb:#b9e2fa;--txt:#0d3b66;--mut:#5f87a8;--acc:#1aa3f0;--acc2:#5b7cfa;--onacc:#ffffff;--hero:linear-gradient(130deg,#1496e8,#4cc3ff 55%,#6f8cff);--chip:#e8f6ff;--nav:rgba(255,255,255,.95);color-scheme:light}
+html[data-theme="galaxy"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.32%22%3E%3Cpolygon transform=%22translate(16 16)%22 points=%220,-7 2.1,-2.1 7,-1.4 3.5,1.8 4.2,7 0,3.5 -4.2,7 -3.5,1.8 -7,-1.4 -2.1,-2.1%22/%3E%3Cpolygon transform=%22translate(56 44)%22 points=%220,-5 1.5,-1.5 5,-1.0 2.5,1.2 3.0,5 0,2.5 -3.0,5 -2.5,1.2 -5,-1.0 -1.5,-1.5%22/%3E%3Ccircle cx=%2240%22 cy=%2212%22 r=%222%22/%3E%3Ccircle cx=%2212%22 cy=%2258%22 r=%222.5%22/%3E%3Ccircle cx=%2266%22 cy=%2216%22 r=%221.8%22/%3E%3Ccircle cx=%2230%22 cy=%2240%22 r=%221.5%22/%3E%3Cpolygon transform=%22translate(32 68)%22 points=%220,-4 1.2,-1.2 4,-0.8 2.0,1.0 2.4,4 0,2.0 -2.4,4 -2.0,1.0 -4,-0.8 -1.2,-1.2%22/%3E%3C/g%3E%3C/svg%3E");--bg:linear-gradient(160deg,#2c2266,#3d2b82 50%,#512f80);--card:#3b3079;--cardb:#5d4fae;--txt:#f1eeff;--mut:#bdb4ea;--acc:#ffd166;--acc2:#ff7eb6;--onacc:#2a1a00;--hero:linear-gradient(130deg,#6c4cf0,#a05af0 55%,#ff6fb0);--chip:#473b8c;--nav:rgba(54,44,112,.96);color-scheme:dark}
+html[data-theme="wine"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Cg fill=%22%23ffc857%22 fill-opacity=%220.26%22%3E%3Cpolygon points=%2220,9 31,20 20,31 9,20%22/%3E%3Cpolygon points=%2260,49 71,60 60,71 49,60%22/%3E%3Cpolygon points=%2260,16 64,20 60,24 56,20%22/%3E%3Cpolygon points=%2220,56 24,60 20,64 16,60%22/%3E%3C/g%3E%3C/svg%3E");--bg:linear-gradient(160deg,#5c1632,#7c1f42 50%,#6a1a3c);--card:#70214a;--cardb:#a64a6c;--txt:#fff0f4;--mut:#e3adc0;--acc:#ffc857;--acc2:#ff7a9a;--onacc:#2a1a00;--hero:linear-gradient(130deg,#b3123f,#e0405f 55%,#ff8a5c);--chip:#802c55;--nav:rgba(100,26,60,.96);color-scheme:dark}
+html[data-theme="forest"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Cg fill=%22%23c8f5dc%22 fill-opacity=%220.22%22%3E%3Cpath transform=%22translate(6 22) rotate(-35)%22 d=%22M0 0C6 -10 18 -10 22 0C18 10 6 10 0 0z%22/%3E%3Cpath transform=%22translate(44 60) rotate(35)%22 d=%22M0 0C6 -10 18 -10 22 0C18 10 6 10 0 0z%22/%3E%3Cpath transform=%22translate(50 10) rotate(10)%22 d=%22M0 0C6 -10 18 -10 22 0C18 10 6 10 0 0z%22/%3E%3Ccircle cx=%2218%22 cy=%2262%22 r=%223%22/%3E%3C/g%3E%3C/svg%3E");--bg:linear-gradient(160deg,#154f3a,#1f6b4b 50%,#185a40);--card:#206148;--cardb:#418f6e;--txt:#eafff4;--mut:#a8dbc2;--acc:#ffd166;--acc2:#6ee7b7;--onacc:#2a1a00;--hero:linear-gradient(130deg,#12a06a,#3fd49a 55%,#e8c24a);--chip:#2b7456;--nav:rgba(24,86,62,.96);color-scheme:dark}
+html[data-theme="ocean"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Cg fill=%22%23bfeeff%22 fill-opacity=%220.2%22%3E%3Cpath d=%22M0 20q10-12 20 0t20 0t20 0t20 0%22 fill=%22none%22 stroke=%22%23fff%22 stroke-width=%223%22 stroke-opacity=%22.6%22/%3E%3Cpath d=%22M0 60q10-12 20 0t20 0t20 0t20 0%22 fill=%22none%22 stroke=%22%23fff%22 stroke-width=%223%22 stroke-opacity=%22.6%22/%3E%3C/g%3E%3C/svg%3E");--bg:linear-gradient(160deg,#10496f,#146a8d 50%,#0f5a86);--card:#18618b;--cardb:#3b90b9;--txt:#eaf8ff;--mut:#a3d3ea;--acc:#5ee6d0;--acc2:#ffd166;--onacc:#06324a;--hero:linear-gradient(130deg,#0f8fd8,#18c3d6 55%,#5ee6b0);--chip:#1f73a1;--nav:rgba(19,88,130,.96);color-scheme:dark}
+html[data-theme]:not([data-theme="classic"]) body{background-image:var(--pat),var(--bg)!important;background-size:80px 80px,cover!important;background-attachment:fixed!important;color:var(--txt)}
+html[data-theme]:not([data-theme="classic"]) .brand{color:var(--acc)}
+html[data-theme]:not([data-theme="classic"]) .balance{background:var(--card);color:var(--txt)}
+html[data-theme]:not([data-theme="classic"]) .banner,html[data-theme]:not([data-theme="classic"]) .coins-card,html[data-theme]:not([data-theme="classic"]) .wall-bar{background:var(--hero)!important}
+html[data-theme]:not([data-theme="classic"]) .section-title,html[data-theme]:not([data-theme="classic"]) .panel,html[data-theme]:not([data-theme="classic"]) .panel h2,html[data-theme]:not([data-theme="classic"]) .offer-body h3,html[data-theme]:not([data-theme="classic"]) .offer h3,html[data-theme]:not([data-theme="classic"]) .withdraw-method,html[data-theme]:not([data-theme="classic"]) .amount,html[data-theme]:not([data-theme="classic"]) .social,html[data-theme]:not([data-theme="classic"]) .id-box,html[data-theme]:not([data-theme="classic"]) .terms-card{color:var(--txt)}
+html[data-theme]:not([data-theme="classic"]) .subtitle,html[data-theme]:not([data-theme="classic"]) .small,html[data-theme]:not([data-theme="classic"]) .offer p,html[data-theme]:not([data-theme="classic"]) .empty-offers,html[data-theme]:not([data-theme="classic"]) .nav{color:var(--mut)}
+html[data-theme]:not([data-theme="classic"]) .offer,html[data-theme]:not([data-theme="classic"]) .panel,html[data-theme]:not([data-theme="classic"]) .empty-offers,html[data-theme]:not([data-theme="classic"]) .terms-card,html[data-theme]:not([data-theme="classic"]) .banned-card{background:var(--card)!important;border-color:var(--cardb)}
+html[data-theme]:not([data-theme="classic"]) .offer-hero{background:var(--chip)!important}
+html[data-theme]:not([data-theme="classic"]) .earn:not(:disabled),html[data-theme]:not([data-theme="classic"]) .terms-accept{background:var(--acc)!important;color:var(--onacc)!important}
+html[data-theme]:not([data-theme="classic"]) .primary{background:linear-gradient(110deg,var(--acc),var(--acc2))!important;color:var(--onacc)!important}
+html[data-theme]:not([data-theme="classic"]) .offer-dots i{background:var(--cardb)}
+html[data-theme]:not([data-theme="classic"]) .offer-dots i.on{background:var(--acc)}
+html[data-theme]:not([data-theme="classic"]) .withdraw-method,html[data-theme]:not([data-theme="classic"]) .amount,html[data-theme]:not([data-theme="classic"]) .social,html[data-theme]:not([data-theme="classic"]) .id-box,html[data-theme]:not([data-theme="classic"]) input,html[data-theme]:not([data-theme="classic"]) select{background:var(--chip)!important;border-color:var(--cardb)!important;color:var(--txt)}
+html[data-theme]:not([data-theme="classic"]) .withdraw-method.selected,html[data-theme]:not([data-theme="classic"]) .amount.selected{border-color:var(--acc)!important}
+html[data-theme]:not([data-theme="classic"]) .bottom{background:var(--nav)}
+html[data-theme]:not([data-theme="classic"]) .nav.active{color:var(--acc)}
+html[data-theme]:not([data-theme="classic"]) .terms-card h2,html[data-theme]:not([data-theme="classic"]) #appSplash h1,html[data-theme]:not([data-theme="classic"]) .wall-splash h2{color:var(--acc)}
+html[data-theme]:not([data-theme="classic"]) .banned-screen,html[data-theme]:not([data-theme="classic"]) #appSplash,html[data-theme]:not([data-theme="classic"]) .wall-splash{background-image:var(--pat),var(--bg)!important;background-size:80px 80px,cover!important}
+html[data-theme]:not([data-theme="classic"]) .banned-card p{color:var(--mut)}
+html[data-theme]:not([data-theme="classic"]) .wall-bar strong,html[data-theme]:not([data-theme="classic"]) .wall-bar button{color:#fff}
+.no-nav .bottom{display:none!important}.no-nav{padding-bottom:24px!important}
+html[data-theme]:not([data-theme="classic"]) .offer,html[data-theme]:not([data-theme="classic"]) .panel{box-shadow:0 8px 24px #0002}
 </style>
-</head>
+<script>try{var __t=localStorage.getItem("yj_theme");if(__t)document.documentElement.setAttribute("data-theme",__t)}catch(e){}</script></head>
 <body>
 <div id="appSplash" role="status" aria-live="polite"><span class="sp-c a">🪙</span><span class="sp-c b">⭐</span><span class="sp-c c">💰</span><span class="sp-c d">🪙</span><div class="sp-logo">⭐</div><h1>YASJOY 👑</h1><p>Loading your rewards…</p><div class="sp-bar"><i></i></div></div>
 <script>window.__sp={user:false,walls:false,t0:Date.now()};window.splashDone=function(k){if(k)window.__sp[k]=true;if(!(window.__sp.user&&window.__sp.walls)&&k!=='force')return;var wait=Math.max(0,1300-(Date.now()-window.__sp.t0));setTimeout(function(){var e=document.getElementById('appSplash');if(e)e.classList.add('done');setTimeout(function(){if(e&&e.parentNode)e.parentNode.removeChild(e)},800)},wait)};setTimeout(function(){window.splashDone('force')},9000);</script>
@@ -179,7 +238,7 @@ document.getElementById('termsAccept').addEventListener('click',async()=>{
 });
 document.getElementById('termsDecline').addEventListener('click',()=>{alert('You cannot use YASJOY without accepting the terms.');});
 checkTerms();
-function showPage(id){if(document.getElementById("termsGate")?.hidden===false)return;if(document.getElementById("bannedScreen")?.hidden===false)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id);if(page)page.classList.add('active');document.getElementById('navHome').classList.toggle('active',id==='home');document.getElementById('navProfile').classList.toggle('active',id==='profile');window.scrollTo(0,0);refreshBalance()}
+function showPage(id){if(document.getElementById("termsGate")?.hidden===false)return;if(document.getElementById("bannedScreen")?.hidden===false)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id);if(page)page.classList.add('active');document.getElementById('navHome').classList.toggle('active',id==='home');document.getElementById('navProfile').classList.toggle('active',id==='profile');document.body.classList.toggle('no-nav',id==='withdraw');window.scrollTo(0,0);refreshBalance()}
 function refreshBalance(){document.getElementById('balance').textContent=balance.toLocaleString();document.getElementById('withdrawBalance').textContent=balance.toLocaleString()}
 function selectAmount(button,coins){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins}
 let pendingOffer=null,wallTimer=null;
@@ -259,6 +318,7 @@ import {getFirestore,doc,getDoc,setDoc,updateDoc,onSnapshot,serverTimestamp,coll
 import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 const firebaseConfig={apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",authDomain:"yasjoy.firebaseapp.com",projectId:"yasjoy",storageBucket:"yasjoy.firebasestorage.app",messagingSenderId:"967065409063",appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"};
 const app=getApps().length?getApp():initializeApp(firebaseConfig),db=getFirestore(app),auth=getAuth(app);
+try{onSnapshot(doc(db,"settings","appTheme"),snap=>{const t=snap.exists()&&typeof snap.data().theme==="string"?snap.data().theme:"classic";if(!/^[a-z]{3,12}$/.test(t))return;document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("yj_theme",t)}catch(e){}},()=>{})}catch(e){}
 let currentYasjoyUser=null;
 const IMG_OK=/^(?:https:\/\/\S+|data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+\/=]+)$/i;
 const isImg=v=>typeof v==='string'&&IMG_OK.test(v);
@@ -347,11 +407,11 @@ function renderOfferWalls(snapshot){
   const letter=()=>{const f=document.createElement("span");f.className="hero-fallback";f.textContent=name.charAt(0).toUpperCase();hero.replaceChildren(f)};
   if(logo){const img=document.createElement("img");img.alt=name+" logo";img.loading="lazy";img.onerror=letter;img.src=logo;hero.appendChild(img)}else letter();
   const body=document.createElement("div");body.className="offer-body";const title=document.createElement("h3"),description=document.createElement("p");title.textContent=name;description.textContent=typeof wall.description==="string"&&wall.description.trim()?wall.description.trim():"Complete offers and get rewards";
-  const button=document.createElement("button");button.className="earn";button.textContent=enabled?"Earn coins":"Currently unavailable";button.disabled=!enabled;button.addEventListener("click",()=>openOffer(url,name,enabled,wall.id,logo));
+  const button=document.createElement("button");button.className="earn";button.textContent=enabled?"Earn coins ➜":"Currently unavailable";button.disabled=!enabled;button.addEventListener("click",()=>openOffer(url,name,enabled,wall.id,logo));
   body.append(title,description,button);card.append(hero,body);host.appendChild(card);
-  if(dots){const d=document.createElement("i");dots.appendChild(d)}
+  if(dots){const d=document.createElement("i"),idx=dots.children.length;d.onclick=()=>{const c=host.children[idx];c&&host.scrollTo({left:c.offsetLeft-host.offsetLeft-4,behavior:'smooth'})};dots.appendChild(d)}
  }
- const mark=()=>{if(!dots)return;const i=Math.max(0,Math.min(walls.length-1,Math.round(host.scrollLeft/Math.max(1,host.clientWidth))));[...dots.children].forEach((d,k)=>d.classList.toggle("on",k===i))};
+ const mark=()=>{if(!dots)return;const step=(host.children[1]?host.children[1].offsetLeft-host.children[0].offsetLeft:host.clientWidth)||1,i=Math.max(0,Math.min(walls.length-1,Math.round(host.scrollLeft/step)));[...dots.children].forEach((d,k)=>d.classList.toggle("on",k===i))};
  host.onscroll=mark;mark();
 }
 let stopUserListener=null;
