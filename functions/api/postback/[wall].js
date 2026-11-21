@@ -85,7 +85,7 @@ export const onRequest = handler(async ({ request, env, params: routeParams }) =
         [['provider'], clean(wall.provider)], [['txid'], txid], [['amount'], amount], [['rate'], rate]],
       ts: [['createdAt']], exists: false,
     }),
-    write(env, `users/${uid}`, { inc: [[['balance'], coins], [['offerPoints'], coins], [['wallPoints', wallId], coins]], ts: [['lastOfferAt']], exists: true }),
+    write(env, `users/${uid}`, { inc: [[['balance'], coins], [['offerPoints'], coins], [['offerCount'], 1], [['wallPoints', wallId], coins]], ts: [['lastOfferAt']], exists: true }),
   ]);
   if (r.ok) return text('OK');
   if (isAlreadyExists(r)) return text('OK duplicate');
