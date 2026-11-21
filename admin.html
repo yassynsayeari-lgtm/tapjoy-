@@ -456,7 +456,6 @@ function appendUserOfferInfo(u,box){
  info.append(el('h4','🛡 فحص الاحتيال ومنع التكرار'));
  const verdict=el('div',score>=3?'🚨 درجة الخطورة: عالية ('+score+')':score>=1?'⚠ درجة الخطورة: متوسطة ('+score+')':'✅ درجة الخطورة: منخفضة — لا توجد مؤشرات','geo-row risk-'+lvl);info.append(verdict);
  flags.forEach(x=>{const row=el('div','','geo-row');row.append(el('b','⚠ '+x.t));if(x.d)row.append(el('div',x.d,'muted'));info.append(row)});
- info.append(detailLine('معرّف المستخدم الممرَّر للجدار',u.id),detailLine('عدد العروض المكتملة',Number(u.offerCount)||0),detailLine('نقاط الجدران الكلية',(Number(u.offerPoints)||0).toLocaleString('en-US')),detailLine('آخر مكافأة جدار',u.lastOfferAt?displayDate(u.lastOfferAt):'لا يوجد'));
  info.append(el('p','• كل Transaction ID يُقبل مرة واحدة فقط؛ إعادة إرسال الإشعار تُتجاهل تلقائيًا ولا تُدفع مرتين. • بصمة الجهاز مبنية على مواصفات الجهاز (الشاشة والمعالج والذاكرة وGPU) وهي أقرب بديل في الويب لمعرّف الجهاز، لأن GAID وIDFA وكشف الروت غير متاحة لصفحات الويب.','muted'));
  // ---- 2) country
  const geo=sec('sec-geo','🌍 الدولة وسجل التغيّر');
@@ -468,6 +467,7 @@ function appendUserOfferInfo(u,box){
  log.forEach(([k,e])=>{const t=e.type==='first'?'أول دولة مسجّلة':e.type==='return'?'عودة للدولة':'تغيّر الدولة';const row=el('div','','geo-row');row.append(el('b',t+': '),el('span',(e.from?cname(e.from)+' ← ':'')+cname(e.to)),el('div',displayDate(e.at||new Date(Number(k)))+(e.ip?' · IP '+e.ip:''),'muted'));geo.append(row)});
  // ---- 3) walls and points
  const w=sec('sec-wall','🎁 الجدران والنقاط');
+ w.append(detailLine('معرّف المستخدم الممرَّر للجدار',u.id),detailLine('عدد العروض المكتملة',Number(u.offerCount)||0),detailLine('نقاط الجدران الكلية',(Number(u.offerPoints)||0).toLocaleString('en-US')),detailLine('آخر مكافأة جدار',u.lastOfferAt?displayDate(u.lastOfferAt):'لا يوجد'));
  const rows=new Map(),entries=u.wallEntries&&typeof u.wallEntries==='object'?u.wallEntries:{},pts=u.wallPoints&&typeof u.wallPoints==='object'?u.wallPoints:{};
  const nameOf=id=>{const x=walls.find(y=>y.id===id);return (x&&x.name)||(entries[id]&&entries[id].name)||id};
  Object.keys(entries).forEach(id=>rows.set(id,{name:nameOf(id),count:Number(entries[id]&&entries[id].count)||0,last:entries[id]&&entries[id].lastAt,points:0}));
