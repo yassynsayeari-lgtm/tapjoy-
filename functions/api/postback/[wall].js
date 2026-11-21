@@ -8,6 +8,8 @@
 //   md5    : sig === md5(txid + '-' + secret)
 //   sha256 : sig === sha256(txid + '-' + secret)
 //   hmac   : sig === HMAC_SHA256(secret, uid + '|' + amount + '|' + txid)
+//   tapjoy : sig === md5(id:snuid:currency:secret)   (Tapjoy currency callback: appends snuid, currency, id, verifier itself)
+// Parameter names are flexible: uid|snuid|user_id..., amount|currency|reward|points..., txid|id|trans_id|transaction_id..., sig|verifier|hash|signature...
 import { handler, text, HttpError, getDoc, write, commit, isAlreadyExists, isMissing, mustCommit,
   md5Hex, sha256Hex, hmacSha256Hex, timingSafeEqual, isUid } from '../../_lib/fb.js';
 
@@ -41,7 +43,12 @@ export const onRequest = handler(async ({ request, env, params: routeParams }) =
   const wallId = clean(routeParams && routeParams.wall);
   if (!isUid(wallId)) return text('ERROR: bad wall', 400);
   const p = await params(request);
-  const uid = clean(p.uid), txid = clean(p.txid), sig = clean(p.sig), amountRaw = clean(p.amount);
+  const pick = (names) => { for (const n of names) if (p[n] !== undefined && clean(p[n]) !== '') return clean(p[n]); return ''; };
+  const uid = pick(['uid', 'snuid', 'user_id', 'userid', 'userId', 'sub_id', 'subid', 'player_id']),
+    txid = pick(['txid', 'id', 'trans_id', 'transaction_id', 'transactionId', 'txn_id', 'tid', 'oid', 'tx']),
+    sig = pick(['sig', 'verifier', 'hash', 'signature', 'secure_hash', 'mac']),
+    amountRaw = pick(['amount', 'currency', 'reward', 'points', 'virtual_currency', 'amount_local', 'value', 'val']);
+  const logP = { uid, txid, amount: amountRaw };
 
   const wall = await getDoc(env, `offerWalls/${wallId}`);
   if (!wall) return text('ERROR: unknown wall', 404);
@@ -56,18 +63,19 @@ export const onRequest = handler(async ({ request, env, params: routeParams }) =
   else if (mode === 'md5') expected = md5Hex(txid + '-' + secret);
   else if (mode === 'sha256') expected = await sha256Hex(txid + '-' + secret);
   else if (mode === 'hmac') expected = await hmacSha256Hex(secret, uid + '|' + amountRaw + '|' + txid);
+  else if (mode === 'tapjoy') expected = md5Hex(txid + ':' + uid + ':' + amountRaw + ':' + secret);
   else return text('ERROR: wall verify mode is invalid', 503);
   const ok = sig && (mode === 'key' ? timingSafeEqual(sig, expected) : timingSafeEqual(sig.toLowerCase(), expected.toLowerCase()));
-  if (!ok) { await log(env, wallId, 'bad_signature', p, request); return text('ERROR: invalid signature', 403); }
+  if (!ok) { await log(env, wallId, 'bad_signature', logP, request); return text('ERROR: invalid signature', 403); }
 
   // ---- validate ----
-  if (!isUid(uid) || !txid || txid.length > 200) { await log(env, wallId, 'bad_request', p, request); return text('ERROR: bad request', 400); }
+  if (!isUid(uid) || !txid || txid.length > 200) { await log(env, wallId, 'bad_request', logP, request); return text('ERROR: bad request', 400); }
   const amount = Number(amountRaw);
-  if (!Number.isFinite(amount)) { await log(env, wallId, 'bad_amount', p, request); return text('ERROR: bad amount', 400); }
+  if (!Number.isFinite(amount)) { await log(env, wallId, 'bad_amount', logP, request); return text('ERROR: bad amount', 400); }
   const rate = Number(wall.rate) > 0 ? Number(wall.rate) : 1;
   const coins = Math.round(amount * rate);
   if (coins <= 0) return text('OK ignored');             // reversals / zero rewards are not credited
-  if (!Number.isSafeInteger(coins) || coins > MAX_POINTS) { await log(env, wallId, 'amount_too_large', p, request); return text('ERROR: amount too large', 400); }
+  if (!Number.isSafeInteger(coins) || coins > MAX_POINTS) { await log(env, wallId, 'amount_too_large', logP, request); return text('ERROR: amount too large', 400); }
 
   // ---- credit once (transaction id is the idempotency key) ----
   const txDoc = `offer_${wallId}_${txid.replace(/[^A-Za-z0-9_-]/g, '_').slice(0, 150)}`;
@@ -81,7 +89,7 @@ export const onRequest = handler(async ({ request, env, params: routeParams }) =
   ]);
   if (r.ok) return text('OK');
   if (isAlreadyExists(r)) return text('OK duplicate');
-  if (isMissing(r)) { await log(env, wallId, 'user_not_found', p, request); return text('ERROR: user not found', 404); }
+  if (isMissing(r)) { await log(env, wallId, 'user_not_found', logP, request); return text('ERROR: user not found', 404); }
   mustCommit(r, 'Crediting points');
   return text('OK');
 });
