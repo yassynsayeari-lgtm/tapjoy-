@@ -132,6 +132,12 @@ main{max-width:720px;margin:auto;padding:0 18px}.page{display:none}.page.active{
 .coins-card{background:linear-gradient(120deg,#078fce 0%,#16bdf2 55%,#dc143c 140%);color:#fff;border-radius:22px;padding:22px;text-align:center;font-size:28px;box-shadow:0 10px 24px #16bdf244}
 .coins-card .cc-label{font-size:17px;opacity:.95}
 .coins-card.docked{margin:14px 0;padding:14px;font-size:24px;border-radius:18px}
+/* ===== wall cards v2: wide & short ===== */
+.offer-hero{aspect-ratio:16/9!important;height:auto!important}
+.offer-hero img{object-fit:contain;padding:8px!important}
+.offers>.offer:last-child:nth-child(odd){grid-column:1/-1}
+.offers>.offer:last-child:nth-child(odd) .offer-hero{aspect-ratio:21/9!important}
+.offer-body .earn{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -232,7 +238,7 @@ function copyId(){if(!userId){alert('Your User ID is still loading.');return}if(
 function dockCoins(down){
  const card=document.getElementById('coinsCard'),list=document.getElementById('withdrawMethodsList'),anchor=document.getElementById('coinsAnchor');
  if(!card||!list||!anchor)return;
- if(down){list.insertAdjacentElement('afterend',card);card.classList.add('docked')}
+ if(down){const btn=document.getElementById('showMethodsBtn');(btn||list).insertAdjacentElement('afterend',card);card.classList.add('docked')}
  else{anchor.insertAdjacentElement('beforebegin',card);card.classList.remove('docked')}
 }
 function showWithdrawalMethods(){
@@ -383,10 +389,18 @@ async function recordGeoClient(userRef,existing){
   await updateDoc(userRef,payload);
  }catch(e){console.warn('Could not save country/IP:',e)}
 }
+async function deviceFingerprint(d){
+ let gpu='';try{const c=document.createElement('canvas'),gl=c.getContext('webgl')||c.getContext('experimental-webgl');if(gl){const e=gl.getExtension('WEBGL_debug_renderer_info');gpu=e?String(gl.getParameter(e.UNMASKED_RENDERER_WEBGL)||''):String(gl.getParameter(gl.RENDERER)||'')}}catch(e){}
+ d.gpu=gpu;
+ const raw=[d.platform,d.screen,d.dpr,d.cores,d.mem,d.touch,gpu,d.tz,d.lang].join('|');
+ try{const h=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));d.fp=[...new Uint8Array(h)].slice(0,12).map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){}
+ return d;
+}
 async function deviceInfo(){
  const n=navigator,d={ua:n.userAgent,platform:n.platform||'',lang:n.language,langs:(n.languages||[]).join(','),tz:(Intl.DateTimeFormat().resolvedOptions()||{}).timeZone||'',screen:screen.width+'x'+screen.height,dpr:window.devicePixelRatio,cores:n.hardwareConcurrency,mem:n.deviceMemory,touch:n.maxTouchPoints,conn:(n.connection&&n.connection.effectiveType)||'',standalone:matchMedia('(display-mode: standalone)').matches,vendor:n.vendor||''};
  try{if(n.userAgentData){d.brand=(n.userAgentData.brands||[]).map(b=>b.brand+' '+b.version).join(', ');const h=await n.userAgentData.getHighEntropyValues(['model','platformVersion','platform']);d.model=h.model||'';d.platformVersion=h.platformVersion||'';if(h.platform)d.platform=h.platform}}catch(e){}
- return d;
+ d.webdriver=!!n.webdriver;
+ return deviceFingerprint(d);
 }
 async function recordGeoServer(user){
  const token=await user.getIdToken(),bases=[''],body=JSON.stringify({device:await deviceInfo().catch(()=>({}))});
