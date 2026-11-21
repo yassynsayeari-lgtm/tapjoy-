@@ -268,6 +268,16 @@ input:focus,textarea:focus,select:focus{outline:2px solid #16bdf2;outline-offset
 .sec{border-radius:14px;margin:12px 0;padding:12px}.sec>strong{display:block;font-size:17px;margin-bottom:6px}
 .sec-info{background:#f1f9ff;border:1px solid #bfe0f5}.sec-geo{background:#fff6ec;border:1px solid #f1d2a8}.sec-wall{background:#f3f0ff;border:1px solid #d6cdf5}
 .sec h4{margin:10px 0 4px;color:#516b85}.sec .geo-row{padding:8px 10px;margin:6px 0;border-radius:10px;background:#fff;border:1px solid #f1e0c4;font-size:14px;line-height:1.7}
+.step{background:#fff;border:1px solid #cfe7f5;border-radius:18px;padding:14px;margin:12px 0;box-shadow:0 6px 16px rgba(30,113,160,.07)}
+.step-h{display:flex;align-items:center;gap:10px;font-weight:900;font-size:17px;color:#0b4a8e;margin-bottom:8px}
+.step-h .num{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#16bdf2,#dc143c);color:#fff;display:grid;place-items:center;font-size:15px;flex:0 0 auto}
+details.how{background:#fffdf3;border:1px solid #f1e3a6;border-radius:14px;padding:12px;margin:10px 0}details.how summary{font-weight:900;color:#7a5a00}details.how div{margin:8px 0;line-height:1.8;font-size:14px}
+.wcard{display:flex;flex-direction:column;gap:10px}.wcard-top{display:flex;gap:12px;align-items:center}
+.wcard-top img,.wcard-top .wl{width:68px;height:68px;border-radius:16px;object-fit:contain;background:#eaf6ff;border:1px solid #cfe7f5;display:grid;place-items:center;font-size:30px;font-weight:900;color:#0b6aa3;flex:0 0 auto}
+.wcard-top h3{margin:0;font-size:19px}.wcard-top small{color:#5d7690}
+.pill{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:bold}.pill.on{background:#e7f8ee;color:#0d7a3b}.pill.off{background:#fde8ec;color:#b00c32}
+.wstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.wstats div{background:#f3edff;border-radius:12px;padding:9px 4px;text-align:center}.wstats span{display:block;font-size:11px;color:#6b5a8e}.wstats b{display:block;font-size:17px;color:#5b34b0}
+.risk-high{background:#ffe5ea!important;border-color:#f3b4c1!important}.risk-mid{background:#fff6dd!important;border-color:#f1dca0!important}.risk-low{background:#e7f8ee!important;border-color:#b9e4c8!important}
 </style></head><body>
 <header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header><main>
 <section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><p id="loginMsg" class="muted"></p></section>
@@ -281,7 +291,21 @@ input:focus,textarea:focus,select:focus{outline:2px solid #16bdf2;outline-offset
 <section id="withdraw" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2><div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div><div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p></section>
 <section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userFilters" class="chips"></div><div id="userList"></div></section>
 <section id="methods" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة طرق السحب</h2><button type="button" id="addMethodBtn" class="primary">＋ إضافة طريقة سحب</button><div class="form" id="methodForm"><button type="button" class="back" id="closeMethodSheet">✕ إغلاق</button><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden"><label>اسم طريقة السحب</label><input id="methodName" placeholder="Binance أو PayPal"><label>صورة الشعار (ارفعها من جهازك)</label><input id="methodLogoFile" type="file" accept="image/*"><img id="methodLogoPreview" class="logo-preview" hidden alt=""><label>أو رابط الصورة (اختياري)</label><input id="methodLogo" type="url" placeholder="https://..." dir="ltr"><h3>فئات السحب</h3><p class="muted">أدخل عدد النقاط والنص الذي سيظهر للمستخدم. صورة الشعار تبقى منفصلة.</p><p class="muted">لكل فئة ثلاث خانات: <b>النقاط</b> التي تُخصم، و<b>المبلغ</b> (مثل 0.25 أو 5) وهو نفسه النص الظاهر للمستخدم ونفسه المبلغ المستحق في طلبات السحب، و<b>العملة</b> (الافتراضي $ ويمكنك كتابة US أو غيره). لا يوجد حد لعدد الفئات: اضغط «＋ إضافة فئة» كما تشاء ثم احفظ.</p><div id="tierRows"></div><button type="button" id="addTier" class="btn">＋ إضافة فئة</button><label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label><button id="saveMethod" class="primary">حفظ طريقة السحب والفئات</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
-<section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2><p class="muted">اربط الجدار بنقاط حقيقية: احفظ الجدار ثم انسخ رابط Postback وضعه في لوحة المزوّد، فتصل النقاط للمستخدم تلقائيًا عبر Cloudflare.</p><div class="form"><h3 id="wallTitle">إضافة جدار عروض</h3><input id="wallId" type="hidden"><label>مزود جدار العروض</label><select id="wallProvider" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="">اختر المزوّد</option></select><input id="wallCustomProvider" class="hidden" placeholder="اكتب اسم المزوّد (بالإنجليزية)"><div id="wallGuide" class="details-box hidden"></div><label>الاسم الظاهر للمستخدم</label><input id="wallName" placeholder="اسم الجدار"><label>رابط الجدار (اكتب {uid} مكان معرّف المستخدم)</label><input id="wallUrl" type="url" dir="ltr" placeholder="https://wall.provider.com/?app=XXX&user_id={uid}"><label>وصف قصير (اختياري)</label><input id="wallDesc" placeholder="أكمل العروض واربح نقاط"><label>صورة الجدار (ارفعها من جهازك)</label><input id="wallLogoFile" type="file" accept="image/*"><img id="wallLogoPreview" class="logo-preview" hidden alt=""><label>أو رابط الصورة (اختياري)</label><input id="wallLogo" type="url" dir="ltr" placeholder="https://..."><label>طريقة التحقق من التوقيع (sig)</label><select id="wallVerify" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="key">key — sig هو المفتاح السري نفسه</option><option value="md5">md5 — md5(txid-secret) مثل CPX</option><option value="sha256">sha256 — sha256(txid-secret)</option><option value="hmac">hmac — HMAC-SHA256(secret, uid|amount|txid)</option><option value="tapjoy">tapjoy — verifier = md5(id:snuid:currency:secret)</option></select><label>المفتاح السري (Secret)</label><div class="secret-row"><input id="wallSecret" type="password" autocomplete="off" dir="ltr" placeholder="الصق المفتاح السري من لوحة المزوّد"><button type="button" id="genSecret" class="btn">🎲 توليد</button></div><p id="secretState" class="muted"></p><div id="postbackBox" class="details-box hidden"><strong>رابط Postback — ضعه في لوحة المزوّد</strong><p class="muted">تُملأ أسماء المتغيرات تلقائيًا حسب المزوّد، وعدّلها إن اختلفت في وثائقه:</p><label>متغير معرّف المستخدم</label><input id="wallMUid" dir="ltr"><label>متغير المبلغ (النقاط)</label><input id="wallMAmt" dir="ltr"><label>متغير رقم العملية</label><input id="wallMTx" dir="ltr"><div id="wallMSigRow"><label>متغير التوقيع</label><input id="wallMSig" dir="ltr"></div><div class="addr-box"><span id="postbackUrl"></span><button type="button" id="copyPostback" class="btn">📋 نسخ الرابط</button></div><p class="muted">قيمة amount تُضاف للمستخدم كنقاط مباشرة، فاضبط عملة المكافأة في لوحة المزوّد بحيث ترسل عدد النقاط.</p></div><label class="check"><input id="wallEnabled" type="checkbox"> مفعّل (يظهر للمستخدمين)</label><button id="saveWall" class="primary">حفظ</button><button id="cancelWall" class="btn">إلغاء</button><p id="wallMsg" class="muted"></p></div><div id="wallList"></div></section>
+<section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2>
+<details class="how"><summary>📘 شرح مفصّل: كيف أضيف جدارًا؟</summary>
+<div><b>1) في موقع المزوّد</b> (CPX أو Tapjoy أو غيرهما): أنشئ حسابًا كناشر (Publisher) ثم أضف تطبيقًا جديدًا. سيعطيك المزوّد مفاتيح مثل App ID وأحيانًا Secret Key.</div>
+<div><b>2) هنا في اللوحة:</b> اختر المزوّد ثم الصق المفاتيح فقط. يبني التطبيق تلقائيًا رابط الجدار والاسم ونوع التحقق وأسماء المتغيرات.</div>
+<div><b>3) الشكل:</b> ارفع صورة الجدار من جهازك (اختياري) واكتب وصفًا قصيرًا.</div>
+<div><b>4) Postback:</b> بعد اختيار المزوّد يظهر «رابط Postback». انسخه وضعه في إعدادات المزوّد (Postback / Callback URL). هذا ما يجعل النقاط تصل للمستخدم تلقائيًا.</div>
+<div><b>5) التفعيل:</b> فعّل الجدار ثم احفظ. افتح تطبيق المستخدم، ادخل الجدار، وأكمل عرضًا بسيطًا للتأكد من وصول النقاط.</div>
+<div><b>ملاحظات:</b> ما يعطيه المزوّد كنقاط يُضاف للمستخدم كما هو. كل رقم عملية يُقبل مرة واحدة فقط فلا يتكرر الدفع. وإن ظهر في السجل «invalid signature» فالمفتاح السري غير مطابق.</div></details>
+<div class="form"><h3 id="wallTitle">إضافة جدار عروض</h3><input id="wallId" type="hidden">
+<div class="step"><div class="step-h"><span class="num">1</span>المزوّد</div><select id="wallProvider" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="">اختر المزوّد</option></select><input id="wallCustomProvider" class="hidden" placeholder="اكتب اسم المزوّد (بالإنجليزية)"><div id="wallGuide" class="details-box hidden"></div></div>
+<div class="step"><div class="step-h"><span class="num">2</span>مفاتيح المزوّد</div><div id="wallKeys"></div><div id="secretGroup" class="hidden"><label id="secretLabel">المفتاح السري (Secret)</label><input id="wallSecret" type="password" autocomplete="off" dir="ltr" placeholder="الصق المفتاح السري من لوحة المزوّد"><p id="secretState" class="muted"></p></div><label>رابط الجدار (يُبنى تلقائيًا — يمكنك تعديله)</label><input id="wallUrl" type="url" dir="ltr" placeholder="https://..."><p class="muted">{uid} هو مكان معرّف المستخدم، ويستبدله التطبيق تلقائيًا.</p></div>
+<div class="step"><div class="step-h"><span class="num">3</span>الشكل</div><label>الاسم الظاهر للمستخدم</label><input id="wallName" placeholder="اسم الجدار"><label>وصف قصير (اختياري)</label><input id="wallDesc" placeholder="Complete offers and earn coins"><label>صورة الجدار (ارفعها من جهازك)</label><input id="wallLogoFile" type="file" accept="image/*"><img id="wallLogoPreview" class="logo-preview" hidden alt=""><label>أو رابط الصورة (اختياري)</label><input id="wallLogo" type="url" dir="ltr" placeholder="https://..."></div>
+<div class="step"><div class="step-h"><span class="num">4</span>رابط Postback (ضعه في لوحة المزوّد)</div><div id="postbackBox" class="hidden"><div class="addr-box"><span id="postbackUrl"></span><button type="button" id="copyPostback" class="btn">📋 نسخ الرابط</button></div><p class="muted">ما يرسله المزوّد في amount يُضاف للمستخدم كنقاط مباشرة.</p></div><p id="pbHint" class="muted">اختر المزوّد ليظهر الرابط.</p>
+<details class="how"><summary>⚙️ إعدادات متقدمة (تُضبط تلقائيًا)</summary><label>طريقة التحقق</label><select id="wallVerify" style="width:100%;padding:12px;border:1px solid #d4dfeb;border-radius:9px;margin:7px 0 12px;font-size:15px"><option value="key">key — sig هو المفتاح السري نفسه</option><option value="md5">md5 — md5(txid-secret) مثل CPX</option><option value="sha256">sha256 — sha256(txid-secret)</option><option value="hmac">hmac — HMAC-SHA256(secret, uid|amount|txid)</option><option value="tapjoy">tapjoy — verifier = md5(id:snuid:currency:secret)</option></select><label>متغير معرّف المستخدم</label><input id="wallMUid" dir="ltr"><label>متغير المبلغ (النقاط)</label><input id="wallMAmt" dir="ltr"><label>متغير رقم العملية</label><input id="wallMTx" dir="ltr"><div id="wallMSigRow"><label>متغير التوقيع</label><input id="wallMSig" dir="ltr"></div><button type="button" id="genSecret" class="btn">🎲 توليد مفتاح سري جديد (للمزوّدين بلا توقيع)</button></details></div>
+<div class="step"><div class="step-h"><span class="num">5</span>التفعيل</div><label class="check"><input id="wallEnabled" type="checkbox"> مفعّل (يظهر للمستخدمين)</label><button id="saveWall" class="primary">حفظ الجدار</button><button id="cancelWall" class="btn">إلغاء</button><p id="wallMsg" class="muted"></p></div></div><div id="wallList"></div></section>
 </section></main><footer class="muted" style="text-align:center;padding:20px">YASJOY Admin • Firebase</footer>
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';
@@ -390,18 +414,50 @@ async function deleteUserCompletely(u,btn){
   }catch(e){console.error('delete user error:',e);alert('تعذّر حذف المستخدم: '+e.message);btn.disabled=false;btn.textContent='حذف المستخدم نهائيًا'}
  }
 }
+const CONT={AS:'آسيا',EU:'أوروبا',AF:'أفريقيا',NA:'أمريكا الشمالية',SA:'أمريكا الجنوبية',OC:'أوقيانوسيا',AN:'القارة القطبية'};
+const HOST_RE=/(ovh|amazon|aws|google (cloud|llc)|digitalocean|hetzner|m247|vultr|linode|choopa|leaseweb|contabo|microsoft|azure|oracle|datacamp|nordvpn|expressvpn|proton|mullvad|surfshark|cyberghost|packethub|quadranet|zenlayer|vpn|hosting|datacenter|data center|colo|server|cloud)/i;
+const EMU_RE=/(sdk_gphone|emulator|generic_x86|android sdk built|genymotion|google_sdk|bluestacks|nox|ldplayer)/i;
+function tzLabel(tz){if(!tz)return '';try{return tz+' — الوقت هناك الآن: '+new Date().toLocaleTimeString('ar',{timeZone:tz,hour:'2-digit',minute:'2-digit'})}catch(e){return tz}}
+function riskFlags(u){
+ const f=[],dev=u.device&&typeof u.device==='object'?u.device:{},net=u.net||{},n4=u.net4||{},n6=u.net6||{},others=users.filter(x=>x.id!==u.id);
+ const ips=[u.ip,u.ipv4,u.ipv6,u.previousIp].filter(Boolean),nm=x=>x.publicId||String(x.id).slice(0,8);
+ const sameDev=dev.fp?others.filter(x=>x.device&&x.device.fp===dev.fp):[];
+ if(sameDev.length)f.push({lvl:2,t:'حسابات أخرى على نفس الجهاز ('+sameDev.length+')',d:sameDev.slice(0,8).map(nm).join('، ')});
+ const sameIp=others.filter(x=>[x.ip,x.ipv4,x.ipv6,x.previousIp].some(v=>v&&ips.includes(v)));
+ if(sameIp.length)f.push({lvl:1,t:'حسابات أخرى على نفس عنوان IP ('+sameIp.length+')',d:sameIp.slice(0,8).map(nm).join('، ')});
+ const host=[net.org,n4.org,n6.org].filter(Boolean).find(o=>HOST_RE.test(o));
+ if(host)f.push({lvl:2,t:'شبكة استضافة/VPN محتملة',d:host});
+ if(n4.country&&n6.country&&n4.country!==n6.country)f.push({lvl:2,t:'اختلاف دولة IPv4 عن IPv6 (غالبًا VPN)',d:n4.country+' ≠ '+n6.country});
+ const tzs=[n4.tz,n6.tz,net.tz].filter(Boolean);
+ if(dev.tz&&tzs.length&&!tzs.includes(dev.tz))f.push({lvl:1,t:'منطقة الجهاز الزمنية لا تطابق الشبكة',d:dev.tz+' ≠ '+tzs[0]});
+ if(EMU_RE.test((dev.ua||'')+' '+(dev.model||''))||dev.webdriver==='true'||/(swiftshader|llvmpipe|virtualbox|vmware|android emulator)/i.test(dev.gpu||''))f.push({lvl:2,t:'محاكي أو أداة آلية محتملة',d:dev.gpu||dev.model||dev.ua||''});
+ const nlog=u.geoLog&&typeof u.geoLog==='object'?Object.values(u.geoLog).filter(e=>e&&e.type!=='first').length:0;
+ if(nlog>=2)f.push({lvl:1,t:'تغيّر الدولة '+nlog+' مرات',d:''});
+ const cr=u.createdAt&&(u.createdAt.toDate?u.createdAt.toDate():new Date(u.createdAt)),hrs=cr&&!isNaN(cr)?Math.max(1,(Date.now()-cr.getTime())/36e5):0,oc=Number(u.offerCount)||0;
+ if(oc>=10&&hrs&&oc/hrs>10)f.push({lvl:2,t:'سرعة إتمام عروض غير طبيعية',d:oc+' عرضًا خلال '+Math.round(hrs)+' ساعة'});
+ return f;
+}
 function appendUserOfferInfo(u,box){
  const sec=(cls,title)=>{const d=el('div','','sec '+cls);d.append(el('strong',title));box.append(d);return d};
  const cname=code=>{const c=countryInfo({countryCode:code});return ((c.flag?c.flag+' ':'')+(c.name||c.code||'؟')).trim()};
- const dev=u.device&&typeof u.device==='object'?u.device:{},net=u.net&&typeof u.net==='object'?u.net:{};
+ const dev=u.device&&typeof u.device==='object'?u.device:{},net=u.net&&typeof u.net==='object'?u.net:{},n4=u.net4||{},n6=u.net6||{};
  // ---- 1) user information
  const info=sec('sec-info','🧾 معلومات المستخدم');
  info.append(detailLine('المعرّف العام',u.publicId),detailLine('Firebase UID',u.id),detailLine('تاريخ التسجيل',u.createdAt?displayDate(u.createdAt):''),detailLine('آخر نشاط',u.lastActiveAt?displayDate(u.lastActiveAt):''));
- info.append(el('h4','🌐 الشبكة'));
- info.append(detailLine('IP الحالي (الشبكة)',userIp(u)),detailLine('IPv4',u.ipv4),detailLine('IPv6',u.ipv6),detailLine('IP السابق',u.previousIp||'لا يوجد'),detailLine('وقت آخر IP',u.ipAt?displayDate(u.ipAt):''),detailLine('مزوّد الشبكة',net.org),detailLine('رقم الشبكة (ASN)',net.asn),detailLine('المدينة / المنطقة',[net.city,net.region].filter(Boolean).join(' / ')),detailLine('المنطقة الزمنية',net.tz||dev.tz),detailLine('القارة',net.continent));
+ info.append(el('h4','🌐 عناوين IP'));
+ info.append(detailLine('IP الحالي',userIp(u)),detailLine('IPv4',u.ipv4),detailLine('IPv6',u.ipv6),detailLine('IP السابق',u.previousIp||'لا يوجد'),detailLine('وقت آخر تغيّر IP',u.ipAt?displayDate(u.ipAt):''));
+ const netBlock=(title,n)=>{if(!(n.org||n.city||n.country||n.tz))return;info.append(el('h4',title));info.append(detailLine('مزوّد الشبكة',n.org),detailLine('رقم الشبكة (ASN)',n.asn),detailLine('دولة هذا الـIP',n.country?cname(n.country):''),detailLine('المدينة',n.city),detailLine('المنطقة / المحافظة',n.region&&n.region!==n.city?n.region:''),detailLine('المنطقة الزمنية',tzLabel(n.tz)),detailLine('القارة',CONT[n.continent]||n.continent))};
+ if(n4.org||n4.city||n4.country||n6.org||n6.city||n6.country){netBlock('🛰 شبكة IPv4',n4);netBlock('🛰 شبكة IPv6',n6)}else netBlock('🛰 الشبكة',net);
+ info.append(el('p','المدينة والمنطقة تقديرية من عنوان IP وقد تختلف عن موقع المستخدم الحقيقي (خاصة مع Starlink وVPN).','muted'));
  info.append(el('h4','📱 الجهاز'));
- info.append(detailLine('الجهاز / الموديل',[dev.brand&&dev.model?'':dev.brand,dev.model].filter(Boolean).join(' ')||dev.brand),detailLine('النظام',[dev.platform,dev.platformVersion].filter(Boolean).join(' ')),detailLine('المتصفح (User-Agent)',dev.ua),detailLine('الشاشة',dev.screen),detailLine('كثافة الشاشة (DPR)',dev.dpr),detailLine('أنوية المعالج',dev.cores),detailLine('الذاكرة (GB)',dev.mem),detailLine('نقاط اللمس',dev.touch),detailLine('اللغة',[dev.lang,dev.langs].filter(Boolean).join(' · ')),detailLine('نوع الاتصال',dev.conn),detailLine('وضع التطبيق المثبّت',dev.standalone==='true'?'نعم':dev.standalone==='false'?'لا':''),detailLine('آخر تحديث لمعلومات الجهاز',u.deviceAt?displayDate(u.deviceAt):''));
- info.append(el('p','ملاحظة: المتصفح لا يكشف عنوان IP الداخلي للجهاز؛ المسجّل هو عنوان الشبكة العام كما يراه الخادم (IPv4 وIPv6 عند توفرهما).','muted'));
+ info.append(detailLine('الجهاز / الموديل',[dev.brand&&dev.model?'':dev.brand,dev.model].filter(Boolean).join(' ')||dev.brand),detailLine('النظام',[dev.platform,dev.platformVersion].filter(Boolean).join(' ')),detailLine('المتصفح (User-Agent)',dev.ua),detailLine('بطاقة الرسوم (GPU)',dev.gpu),detailLine('بصمة الجهاز',dev.fp),detailLine('الشاشة',dev.screen),detailLine('كثافة الشاشة (DPR)',dev.dpr),detailLine('أنوية المعالج',dev.cores),detailLine('الذاكرة (GB)',dev.mem),detailLine('نقاط اللمس',dev.touch),detailLine('اللغة',[dev.lang,dev.langs].filter(Boolean).join(' · ')),detailLine('المنطقة الزمنية للجهاز',dev.tz),detailLine('نوع الاتصال',dev.conn),detailLine('وضع التطبيق المثبّت',dev.standalone==='true'?'نعم':dev.standalone==='false'?'لا':''),detailLine('آخر تحديث لمعلومات الجهاز',u.deviceAt?displayDate(u.deviceAt):''));
+ // ---- fraud / duplicates
+ const flags=riskFlags(u),score=flags.reduce((s,x)=>s+x.lvl,0),lvl=score>=3?'high':score>=1?'mid':'low';
+ info.append(el('h4','🛡 فحص الاحتيال ومنع التكرار'));
+ const verdict=el('div',score>=3?'🚨 درجة الخطورة: عالية ('+score+')':score>=1?'⚠ درجة الخطورة: متوسطة ('+score+')':'✅ درجة الخطورة: منخفضة — لا توجد مؤشرات','geo-row risk-'+lvl);info.append(verdict);
+ flags.forEach(x=>{const row=el('div','','geo-row');row.append(el('b','⚠ '+x.t));if(x.d)row.append(el('div',x.d,'muted'));info.append(row)});
+ info.append(detailLine('معرّف المستخدم الممرَّر للجدار',u.id),detailLine('عدد العروض المكتملة',Number(u.offerCount)||0),detailLine('نقاط الجدران الكلية',(Number(u.offerPoints)||0).toLocaleString('en-US')),detailLine('آخر مكافأة جدار',u.lastOfferAt?displayDate(u.lastOfferAt):'لا يوجد'));
+ info.append(el('p','• كل Transaction ID يُقبل مرة واحدة فقط؛ إعادة إرسال الإشعار تُتجاهل تلقائيًا ولا تُدفع مرتين. • بصمة الجهاز مبنية على مواصفات الجهاز (الشاشة والمعالج والذاكرة وGPU) وهي أقرب بديل في الويب لمعرّف الجهاز، لأن GAID وIDFA وكشف الروت غير متاحة لصفحات الويب.','muted'));
  // ---- 2) country
  const geo=sec('sec-geo','🌍 الدولة وسجل التغيّر');
  geo.append(detailLine('الدولة الثابتة (أول تسجيل)',u.countryCode?cname(u.countryCode):'غير معروفة'),detailLine('آخر دولة مرصودة',u.lastCountryCode?cname(u.lastCountryCode):''),detailLine('حالة الحساب',banLabel(u)));
@@ -634,93 +690,120 @@ function setProviderUI(p){
  if(wallProviders.includes(p)&&p!=='Custom'){providerSelect.value=p;c.value='';c.classList.add('hidden')}
  else{providerSelect.value='Custom';c.value=p==='Custom'?'':p;c.classList.remove('hidden')}
 }
-providerSelect.addEventListener('change',()=>{const n=providerSelect.value;$('wallCustomProvider').classList.toggle('hidden',n!=='Custom');const cur=$('wallName').value.trim();if(n&&n!=='Custom'&&(!cur||cur===lastAutoName))$('wallName').value=n;lastAutoName=n;applyPreset(n)});
-$('wallCustomProvider').addEventListener('change',()=>{const n=$('wallCustomProvider').value.trim();if(n&&!$('wallName').value.trim())$('wallName').value=n});
 const postbackBase=()=>/\.pages\.dev$/.test(location.hostname)?location.origin:'https://tapjoy-elp.pages.dev';
-let pendingWallId='',savedSecret='',lastAutoName='';
+let pendingWallId='',savedSecret='',lastAutoName='',urlManual=false;
 function newWallId(){try{pendingWallId=doc(collection(db,'offerWalls')).id}catch(e){pendingWallId=''}}
-const GENERIC={uid:'{user_id}',amt:'{amount}',tx:'{transaction_id}',sig:'{signature}',verify:'key'};
-const PRESETS={
- CPX:{uid:'{user_id}',amt:'{amount_local}',tx:'{trans_id}',sig:'{secure_hash}',verify:'md5',secretName:'Secure Hash',wall:'https://offers.cpx-research.com/index.php?app_id=APP_ID&ext_user_id={uid}',sure:true},
- OfferToro:{uid:'[USER_ID]',amt:'[AMOUNT]',tx:'[OID]',verify:'key',secretName:'Secret Key'},
- AdGem:{uid:'{player_id}',amt:'{amount}',tx:'{transaction_id}',verify:'key'},
- AdGate:{uid:'{s1}',amt:'{points}',tx:'{tx_id}',verify:'key'},
- Lootably:{uid:'[userID]',amt:'[currencyReward]',tx:'[transactionID]',verify:'key'},
- Tapjoy:{uid:'[snuid]',amt:'[currency]',tx:'[id]',sig:'[verifier]',verify:'tapjoy',secretName:'Secret Key الخاص بالتطبيق',sure:true,tapjoy:true}
+const GEN_MAC={uid:'{user_id}',amt:'{amount}',tx:'{transaction_id}',sig:'{signature}'};
+const BR_MAC={uid:'[USER_ID]',amt:'[AMOUNT]',tx:'[OID]',sig:''};
+const WALLCFG={
+ CPX:{ids:[['appId','App ID','12345']],secret:'required',secretName:'Secure Hash',verify:'md5',mac:{uid:'{user_id}',amt:'{amount_local}',tx:'{trans_id}',sig:'{secure_hash}'},url:k=>'https://offers.cpx-research.com/index.php?app_id='+k.appId+'&ext_user_id={uid}',where:'لوحة CPX Research ← Apps ← تطبيقك: انسخ App ID. ومن إعدادات Postback انسخ Secure Hash.',sure:true},
+ Tapjoy:{ids:[['appId','App ID','xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx']],secret:'required',secretName:'Secret Key (Tapjoy)',verify:'tapjoy',mac:{uid:'[snuid]',amt:'[currency]',tx:'[id]',sig:'[verifier]'},url:k=>'https://ws.tapjoyads.com/get_offers/webpage?app_id='+k.appId+'&udid={uid}&publisher_user_id={uid}&device_type=android',where:'لوحة Tapjoy ← Apps ← تطبيقك ← App Info: انسخ App ID و Secret Key. وفي Currency ← Callback URL ألصق رابط Postback.',warn:'Tapjoy يعمل أساسًا عبر SDK داخل تطبيقات أندرويد/iOS. رابط الويب هذا هو واجهة Tapjoy القديمة وقد لا يكون مفعّلًا لحسابك؛ اطلب من دعم Tapjoy تفعيل Web Offerwall، وإلا لن يعرض عروضًا.',sure:true},
+ OfferToro:{ids:[['pubId','Publisher ID','1234'],['appId','App ID','5678']],secret:'auto',verify:'key',mac:BR_MAC,url:k=>'https://www.offertoro.com/ifr/show/'+k.pubId+'/{uid}/'+k.appId,where:'لوحة OfferToro ← Publisher ID في الصفحة الرئيسية، وApp ID من صفحة التطبيق. Postback في إعدادات التطبيق.'},
+ Torox:{ids:[['pubId','Publisher ID','1234'],['appId','App ID','5678']],secret:'auto',verify:'key',mac:BR_MAC,url:k=>'https://torox.io/ifr/show/'+k.pubId+'/{uid}/'+k.appId,where:'لوحة Torox ← Publisher ID وApp ID من صفحة التطبيق، وPostback من إعداداته.'},
+ AdGem:{ids:[['appId','App ID','1234']],secret:'auto',verify:'key',mac:{uid:'{player_id}',amt:'{amount}',tx:'{transaction_id}',sig:''},url:k=>'https://api.adgem.com/v1/wall?appid='+k.appId+'&playerid={uid}',where:'لوحة AdGem ← Apps ← تطبيقك: انسخ App ID. وPostback من Monetization ← Postback.'},
+ AdGate:{ids:[['wallCode','Wall Code','xxxxx']],secret:'auto',verify:'key',mac:{uid:'{s1}',amt:'{points}',tx:'{tx_id}',sig:''},url:k=>'https://wall.adgaterewards.com/'+k.wallCode+'/{uid}',where:'لوحة AdGate Rewards ← Offer Walls ← انسخ Wall Code (الجزء من رابط الجدار). وPostback من إعدادات الجدار.'},
+ Lootably:{ids:[['placementId','Placement ID','xxxxxxxx']],secret:'auto',verify:'key',mac:{uid:'[userID]',amt:'[currencyReward]',tx:'[transactionID]',sig:''},url:k=>'https://wall.lootably.com/?placementID='+k.placementId+'&sid={uid}',where:'لوحة Lootably ← Placements ← انسخ Placement ID. وPostback من إعدادات الـPlacement.'},
+ BitLabs:{ids:[['token','App Token','xxxxxxxx']],secret:'auto',verify:'key',mac:GEN_MAC,url:k=>'https://web.bitlabs.ai/?uid={uid}&token='+k.token,where:'لوحة BitLabs ← Apps ← انسخ App Token. وفي Callback ألصق رابط Postback.'},
+ Wannads:{ids:[['apiKey','API Key','xxxxxxxx']],secret:'auto',verify:'key',mac:GEN_MAC,url:k=>'https://earn.wannads.com/wall?apiKey='+k.apiKey+'&userId={uid}',where:'لوحة Wannads ← Properties ← انسخ API Key. وPostback من إعدادات الـProperty.'}
 };
-const presetFor=p=>Object.assign({},GENERIC,PRESETS[p]||{});
+const cfg=p=>WALLCFG[p]||{ids:[],secret:'auto',verify:'key',mac:GEN_MAC,url:null,where:'انسخ رابط الجدار الكامل من لوحة '+(p||'المزوّد')+' والصقه في خانة «رابط الجدار» واكتب {uid} مكان معرّف المستخدم.',manual:true};
+const readKeys=()=>{const o={};$('wallKeys').querySelectorAll('input[data-k]').forEach(i=>{o[i.dataset.k]=i.value.trim()});return o};
+function rebuildUrl(){if(urlManual)return;const c=cfg(providerSelect.value);if(!c.url)return;const k=readKeys();$('wallUrl').value=c.ids.every(x=>k[x[0]])?c.url(k):''}
+function renderKeyInputs(p,values){
+ const c=cfg(p),host=$('wallKeys');host.replaceChildren();
+ c.ids.forEach(([k,label,ph])=>{const l=el('label',label),i=document.createElement('input');i.dataset.k=k;i.placeholder=ph||'';i.dir='ltr';i.autocomplete='off';i.value=(values&&values[k])||'';i.addEventListener('input',()=>{rebuildUrl();updatePostbackBox()});host.append(l,i)});
+ if(!c.ids.length&&p)host.append(el('p','هذا المزوّد بلا قالب جاهز: ألصق رابط الجدار كاملًا أدناه.','muted'));
+ $('secretGroup').classList.toggle('hidden',c.secret!=='required');$('secretLabel').textContent=c.secretName||'المفتاح السري (Secret)';
+}
 function setMacros(m){$('wallMUid').value=m.uid||'';$('wallMAmt').value=m.amt||'';$('wallMTx').value=m.tx||'';$('wallMSig').value=m.sig||''}
 function readMacros(){return{uid:$('wallMUid').value.trim(),amt:$('wallMAmt').value.trim(),tx:$('wallMTx').value.trim(),sig:$('wallMSig').value.trim()}}
 function randomSecret(){const b=new Uint8Array(24);crypto.getRandomValues(b);return [...b].map(x=>x.toString(16).padStart(2,'0')).join('')}
 function showGuide(p){
  const g=$('wallGuide');g.replaceChildren();if(!p){g.classList.add('hidden');return}
- const pr=presetFor(p),key=$('wallVerify').value==='key',tj=$('wallVerify').value==='tapjoy';
- g.append(el('strong','خطوات ربط '+p+' (تلقائية قدر الإمكان)'));
- [ '1) في لوحة '+p+' أنشئ تطبيقًا/Placement وانسخ رابط الجدار (Offerwall URL).',
-   '2) ألصقه في خانة «رابط الجدار» واكتب {uid} مكان معرّف المستخدم'+(pr.wall?' — مثال: '+pr.wall:'')+'.',
-   tj?'3) في Tapjoy: Dashboard ← التطبيق ← Currency ← Callback URL، ألصق الرابط الظاهر أدناه. Tapjoy يضيف بنفسه snuid وcurrency وid وverifier.':'3) في إعدادات Postback/Callback في لوحة '+p+' ألصق «رابط Postback» الظاهر أدناه.',
-   tj?'4) انسخ «'+(pr.secretName||'Secret Key')+'» من لوحة Tapjoy والصقه في خانة «المفتاح السري».':key?'4) المفتاح السري يُولَّد تلقائيًا ويوجد داخل رابط Postback (sig). لا تحتاج نسخه من أي مكان.':'4) انسخ '+(pr.secretName||'Secret')+' من لوحة '+p+' والصقه في خانة «المفتاح السري».',
-   '5) فعّل الجدار واحفظ، ثم جرّب عرضًا صغيرًا للتأكد من وصول النقاط.'
+ const c=cfg(p),v=$('wallVerify').value;
+ g.append(el('strong','خطوات ربط '+p));
+ [ '1) أنشئ تطبيقًا في لوحة '+p+'.','2) '+c.where,'3) الصق المفاتيح في «مفاتيح المزوّد» بالأسفل — يُبنى رابط الجدار تلقائيًا.','4) انسخ «رابط Postback» (الخطوة 4) وضعه في إعدادات '+p+'.',
+   c.secret==='required'?'5) الصق '+(c.secretName||'Secret')+' في خانة المفتاح السري.':'5) المفتاح السري يُولَّد تلقائيًا ويدخل في رابط Postback — لا تحتاج نسخه.','6) فعّل الجدار واحفظ، ثم جرّب عرضًا صغيرًا.'
  ].forEach(t=>g.append(el('div',t)));
- if(tj)g.append(el('div','⚠ مهم: Tapjoy يعمل غالبًا عبر SDK داخل تطبيق أندرويد/iOS. إذا لم يعطك رابط جدار ويب (Web Offerwall) فلن تعمل صفحة الويب هذه معه؛ ضع الرابط فقط إن وفّره لك Tapjoy.','warn'));
- if(!pr.sure&&PRESETS[p])g.append(el('div','⚠ أسماء المتغيرات هنا هي الصيغة الشائعة لهذا المزوّد؛ طابقها مع صفحة Postback في لوحته وعدّلها في الخانات إن اختلفت.','warn'));
- if(!PRESETS[p])g.append(el('div','⚠ لا يوجد قالب جاهز لهذا المزوّد؛ استخدمنا أسماء عامة. عدّلها حسب وثائقه.','warn'));
+ if(c.warn)g.append(el('div','⚠ '+c.warn,'warn'));
+ else if(!c.sure&&!c.manual)g.append(el('div','⚠ الرابط وأسماء المتغيرات مبنية على الصيغة الشائعة لهذا المزوّد؛ قارنها مع وثائقه وعدّل الرابط أو المتغيرات (إعدادات متقدمة) إن اختلفت.','warn'));
+ if(c.manual)g.append(el('div','⚠ لا يوجد قالب جاهز لهذا المزوّد: استخدمنا أسماء عامة للمتغيرات، عدّلها من «إعدادات متقدمة».','warn'));
  g.classList.remove('hidden');
 }
-function applyPreset(p){
- if(!p){showGuide('');updatePostbackBox();return}
- const pr=presetFor(p);setMacros(pr);$('wallVerify').value=pr.verify||'key';
- if(pr.wall)$('wallUrl').placeholder=pr.wall;
- if(pr.verify==='key'&&!$('wallSecret').value.trim()&&!savedSecret&&!$('wallId').value){$('wallSecret').type='text';$('wallSecret').value=randomSecret();$('secretState').textContent='تم توليد المفتاح السري تلقائيًا — يُحفظ مع الجدار ويدخل في رابط Postback.'}
- showGuide(p);updatePostbackBox();
+function applyPreset(p,keepValues){
+ if(!p){renderKeyInputs('',null);showGuide('');updatePostbackBox();return}
+ const c=cfg(p);renderKeyInputs(p,keepValues);setMacros(c.mac);$('wallVerify').value=c.verify;
+ if(!$('wallDesc').value.trim())$('wallDesc').value='Complete offers and earn coins';
+ if(c.verify==='key'&&!$('wallSecret').value.trim()&&!savedSecret&&!$('wallId').value)$('wallSecret').value=randomSecret();
+ urlManual=false;rebuildUrl();showGuide(p);updatePostbackBox();
 }
 function updatePostbackBox(){
  const box=$('postbackBox'),id=$('wallId').value||pendingWallId,v=$('wallVerify').value;
- $('wallMSigRow').classList.toggle('hidden',v==='key'||v==='tapjoy');$('wallMSigRow').parentElement.querySelectorAll('#wallMUid,#wallMAmt,#wallMTx').forEach(i=>{i.previousElementSibling.classList.toggle('hidden',v==='tapjoy');i.classList.toggle('hidden',v==='tapjoy')});
- if(!providerSelect.value||!id){box.classList.add('hidden');return}
- if(v==='tapjoy'){$('postbackUrl').textContent=postbackBase()+'/api/postback/'+id;box.classList.remove('hidden');return}
+ $('wallMSigRow').classList.toggle('hidden',v==='key'||v==='tapjoy');
+ if(!providerSelect.value||!id){box.classList.add('hidden');$('pbHint').classList.remove('hidden');return}
+ $('pbHint').classList.add('hidden');box.classList.remove('hidden');
+ if(v==='tapjoy'){$('postbackUrl').textContent=postbackBase()+'/api/postback/'+id;return}
  const m=readMacros(),sig=v==='key'?(($('wallSecret').value.trim()||savedSecret)||'SECRET'):(m.sig||'{sig}');
  $('postbackUrl').textContent=postbackBase()+'/api/postback/'+id+'?uid='+(m.uid||'{uid}')+'&amount='+(m.amt||'{amount}')+'&txid='+(m.tx||'{txid}')+'&sig='+sig;
- box.classList.remove('hidden');
 }
+providerSelect.addEventListener('change',()=>{const n=providerSelect.value;$('wallCustomProvider').classList.toggle('hidden',n!=='Custom');const cur=$('wallName').value.trim();if(n&&n!=='Custom'&&(!cur||cur===lastAutoName))$('wallName').value=n;lastAutoName=n;applyPreset(n&&n!=='Custom'?n:(n?'Custom':''))});
+$('wallCustomProvider').addEventListener('change',()=>{const n=$('wallCustomProvider').value.trim();if(n&&!$('wallName').value.trim())$('wallName').value=n});
+$('wallUrl').addEventListener('input',e=>{if(e.isTrusted)urlManual=true});
 function setWallImage(v){const s=imgSrc(v),p=$('wallLogoPreview');if(/^data:/.test(s)){wallImg=s;$('wallLogo').value=''}else{wallImg='';$('wallLogo').value=s}if(s){p.src=s;p.hidden=false}else{p.removeAttribute('src');p.hidden=true}}
 function renderWalls(){
  const l=$('wallList');l.replaceChildren();if(!walls.length)l.append(el('div','لا توجد جدران عروض.','empty'));
  walls.forEach(w=>{
-  const c=el('article','','item'),logo=imgSrc(w.logo);
-  if(logo){const im=document.createElement('img');im.className='logo';im.src=logo;im.alt=w.name||'logo';c.append(im)}
+  const c=el('article','','item wcard'),top=el('div','','wcard-top'),logo=imgSrc(w.logo);
+  if(logo){const im=document.createElement('img');im.src=logo;im.alt=w.name||'logo';top.append(im)}else top.append(el('div',String(w.name||'?').charAt(0).toUpperCase(),'wl'));
+  const t=el('div');t.append(el('h3',w.name||w.id),el('small',w.provider||'مزوّد غير محدد'),el('div'),el('span',w.enabled?'ظاهر للمستخدمين':'متوقف','pill '+(w.enabled?'on':'off')));top.append(t);c.append(top);
   let entrants=0,entries=0,pts=0;
   users.forEach(u=>{const e=u.wallEntries&&u.wallEntries[w.id],p=u.wallPoints&&Number(u.wallPoints[w.id]);if(e&&e.count){entrants++;entries+=Number(e.count)||0}if(p>0)pts+=p});
-  c.append(el('div',w.name||w.id),el('div','المزوّد: '+(w.provider||'غير محدد')),el('div','التحقق: '+(w.verify||'غير مضبوط')),el('div','الرابط: '+(typeof w.url==='string'&&w.url?w.url:'غير مضبوط')),el('div','دخل الجدار: '+entrants.toLocaleString('en-US')+' مستخدم · '+entries.toLocaleString('en-US')+' مرة · نقاط موزّعة: '+pts.toLocaleString('en-US'),'user-sub'),el('div',w.enabled?'ظهور الجدار: مفعّل':'ظهور الجدار: متوقف','badge'));
-  const a=el('div','','actions');
-  [['تعديل',()=>editWall(w)],[w.enabled?'إيقاف الظهور':'تفعيل الظهور',()=>toggle('offerWalls',w.id,!w.enabled)],['حذف',async()=>{if(!confirm('حذف هذا الجدار نهائيًا؟ لا يمكن التراجع.'))return;try{await deleteDoc(doc(db,'offerWalls',w.id));try{await deleteDoc(doc(db,'offerWallSecrets',w.id))}catch(e){}}catch(e){alert('تعذّر الحذف: '+e.message)}}]].forEach(([t,f],i)=>{const b=el('button',t,'btn '+(i===2?'danger':''));b.onclick=f;a.append(b)});
-  c.append(a);l.append(c)});
+  const st=el('div','','wstats');[['مستخدمون دخلوا',entrants],['مرات الدخول',entries],['نقاط موزّعة',pts]].forEach(([k,v])=>{const d=el('div');d.append(el('span',k),el('b',Number(v).toLocaleString('en-US')));st.append(d)});c.append(st);
+  c.append(el('div','التحقق: '+(w.verify||'—')+' · الرابط: '+(typeof w.url==='string'&&w.url?w.url:'غير مضبوط'),'muted'));
+  const act=el('div','','actions');
+  [['تعديل',()=>editWall(w)],[w.enabled?'إيقاف الظهور':'تفعيل الظهور',()=>toggle('offerWalls',w.id,!w.enabled)],['حذف',async()=>{if(!confirm('حذف هذا الجدار نهائيًا؟ لا يمكن التراجع.'))return;try{await deleteDoc(doc(db,'offerWalls',w.id));try{await deleteDoc(doc(db,'offerWallSecrets',w.id))}catch(e){}}catch(e){alert('تعذّر الحذف: '+e.message)}}]].forEach(([t2,f],i)=>{const b=el('button',t2,'btn '+(i===2?'danger':''));b.onclick=f;act.append(b)});
+  c.append(act);l.append(c)});
 }
 async function markSavedSecret(wallId){const st=$('secretState');st.textContent='';$('wallSecret').placeholder='الصق المفتاح السري من لوحة المزوّد';try{const sn=await getDoc(doc(db,'offerWallSecrets',wallId));if(sn.exists()&&sn.data().secret){savedSecret=sn.data().secret;updatePostbackBox();$('wallSecret').placeholder='محفوظ ✓ — اتركه فارغًا للإبقاء عليه';st.textContent='✓ المفتاح السري محفوظ.'}else st.textContent='⚠ لا يوجد مفتاح سري محفوظ — لن تُقبل النقاط قبل حفظه.'}catch(e){st.textContent='تعذّر قراءة حالة المفتاح: '+e.message}}
-function editWall(w){$('wallId').value=w.id;setProviderUI(w.provider||'');$('wallName').value=w.name||'';$('wallUrl').value=typeof w.url==='string'?w.url:'';$('wallDesc').value=w.description||'';setWallImage(w.logo||'');$('wallVerify').value=['key','md5','sha256','hmac'].includes(w.verify)?w.verify:'key';$('wallSecret').value='';$('wallEnabled').checked=!!w.enabled;$('wallTitle').textContent='تعديل جدار عروض';setMacros(w.macros||presetFor(w.provider));savedSecret='';showGuide(w.provider||'');updatePostbackBox();markSavedSecret(w.id);$('wallMsg').textContent='';$('wallTitle').scrollIntoView({behavior:'smooth',block:'start'})}
-function resetWall(){['wallId','wallName','wallUrl','wallDesc','wallSecret'].forEach(x=>$(x).value='');setWallImage('');setProviderUI('');$('wallVerify').value='key';$('wallEnabled').checked=false;$('wallTitle').textContent='إضافة جدار عروض';$('wallMsg').textContent='';$('secretState').textContent='';newWallId();savedSecret='';$('wallSecret').type='password';setMacros(presetFor(''));showGuide('');updatePostbackBox()}
+function editWall(w){
+ $('wallId').value=w.id;setProviderUI(w.provider||'');savedSecret='';
+ applyPreset(providerSelect.value&&providerSelect.value!=='Custom'?providerSelect.value:(providerSelect.value?'Custom':''),w.keys||{});
+ $('wallName').value=w.name||'';lastAutoName=w.provider||'';$('wallDesc').value=w.description||'';setWallImage(w.logo||'');
+ $('wallUrl').value=typeof w.url==='string'?w.url:'';urlManual=true;
+ if(['key','md5','sha256','hmac','tapjoy'].includes(w.verify))$('wallVerify').value=w.verify;
+ if(w.macros)setMacros(w.macros);
+ $('wallSecret').value='';$('wallEnabled').checked=!!w.enabled;$('wallTitle').textContent='تعديل جدار عروض';$('wallMsg').textContent='';
+ updatePostbackBox();markSavedSecret(w.id);$('wallTitle').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function resetWall(){['wallId','wallName','wallUrl','wallDesc','wallSecret'].forEach(x=>$(x).value='');setWallImage('');setProviderUI('');$('wallEnabled').checked=false;$('wallTitle').textContent='إضافة جدار عروض';$('wallMsg').textContent='';$('secretState').textContent='';newWallId();savedSecret='';lastAutoName='';urlManual=false;$('wallSecret').type='password';$('wallVerify').value='key';setMacros(GEN_MAC);renderKeyInputs('',null);showGuide('');updatePostbackBox()}
 $('cancelWall').onclick=resetWall;
 $('copyPostback').onclick=()=>copyText($('postbackUrl').textContent,$('copyPostback'));
-$('genSecret').onclick=()=>{$('wallSecret').type='text';$('wallSecret').value=randomSecret();updatePostbackBox();$('secretState').textContent='تم توليد مفتاح — احفظ الجدار ثم الصق نفس المفتاح في لوحة المزوّد.'};
+$('genSecret').onclick=()=>{$('wallSecret').type='text';$('wallSecret').value=randomSecret();updatePostbackBox();$('wallMsg').textContent='تم توليد مفتاح جديد — احفظ الجدار ثم حدّث رابط Postback في لوحة المزوّد.';$('wallMsg').className='muted'};
 bindImagePicker('wallLogoFile','wallLogoPreview',512,'wallMsg',d=>{wallImg=d;$('wallLogo').value=''});
-['wallMUid','wallMAmt','wallMTx','wallMSig','wallSecret'].forEach(i=>$(i).addEventListener('input',updatePostbackBox));$('wallVerify').addEventListener('change',()=>{showGuide(providerSelect.value);updatePostbackBox()});resetWall();
+['wallMUid','wallMAmt','wallMTx','wallMSig','wallSecret'].forEach(i=>$(i).addEventListener('input',updatePostbackBox));
+$('wallVerify').addEventListener('change',()=>{showGuide(providerSelect.value);updatePostbackBox()});
+resetWall();
 $('saveWall').onclick=async()=>{
  const msg=(t,c)=>{$('wallMsg').textContent=t;$('wallMsg').className=c};
- const id=$('wallId').value,name=$('wallName').value.trim(),url=validUrl($('wallUrl').value.trim()),lr=$('wallLogo').value.trim(),logo=wallImg||validUrl(lr),provider=currentProvider(),rate=1,verify=$('wallVerify').value,secret=$('wallSecret').value.trim();
+ const id=$('wallId').value,provider=currentProvider(),c=cfg(providerSelect.value),keys=readKeys(),secret=$('wallSecret').value.trim();
  if(!provider)return msg('اختر مزوّد جدار العروض.','error');
- if(!name||!url||!/^https:\/\//i.test(url))return msg('أدخل الاسم ورابطًا صحيحًا يبدأ بـ https.','error');
+ const missing=c.ids.filter(x=>!keys[x[0]]);if(missing.length)return msg('أدخل: '+missing.map(x=>x[1]).join('، ')+'.','error');
+ if(c.secret==='required'&&!secret&&!savedSecret)return msg('أدخل '+(c.secretName||'المفتاح السري')+' من لوحة المزوّد.','error');
+ rebuildUrl();
+ const name=$('wallName').value.trim()||provider,url=validUrl($('wallUrl').value.trim()),lr=$('wallLogo').value.trim(),logo=wallImg||validUrl(lr),verify=$('wallVerify').value;
+ if(!url||!/^https:\/\//i.test(url))return msg('رابط الجدار غير صحيح (يجب أن يبدأ بـ https).','error');
  if(lr&&!logo)return msg('رابط الصورة غير صالح.','error');
- if(!(Number.isFinite(rate)&&rate>0&&rate<=1e7))return msg('أدخل عدد نقاط صحيحًا أكبر من صفر.','error');
- const data={name,url,provider,description:$('wallDesc').value.trim(),rate,verify,macros:readMacros(),integrationType:'postback',enabled:$('wallEnabled').checked,updatedAt:serverTimestamp()};
+ const data={name,url,provider,description:$('wallDesc').value.trim(),rate:1,verify,keys,macros:readMacros(),integrationType:'postback',enabled:$('wallEnabled').checked,updatedAt:serverTimestamp()};
  if(logo)data.logo=logo;
  try{
   let savedId=id||pendingWallId;
   if(!savedId)return msg('تعذّر إنشاء معرّف للجدار.','error');
   if(id)await updateDoc(doc(db,'offerWalls',id),data);else await setDoc(doc(db,'offerWalls',savedId),{...data,createdAt:serverTimestamp()});
   $('wallId').value=savedId;
-  if(secret){try{await setDoc(doc(db,'offerWallSecrets',savedId),{secret,provider,updatedAt:serverTimestamp()},{merge:true});savedSecret=secret;$('wallSecret').value='';$('wallSecret').type='password'}catch(se){updatePostbackBox(savedId);return msg('حُفظ الجدار لكن تعذّر حفظ المفتاح السري: '+se.message,'error')}}
-  updatePostbackBox(savedId);markSavedSecret(savedId);$('wallTitle').textContent='تعديل جدار عروض';
-  msg('تم حفظ الجدار. انسخ رابط Postback أدناه وضعه في لوحة المزوّد ليبدأ إرسال النقاط.','success');
+  const toSave=secret||(!savedSecret&&verify==='key'?randomSecret():'');
+  if(toSave){try{await setDoc(doc(db,'offerWallSecrets',savedId),{secret:toSave,provider,updatedAt:serverTimestamp()},{merge:true});savedSecret=toSave;$('wallSecret').value='';$('wallSecret').type='password'}catch(se){updatePostbackBox();return msg('حُفظ الجدار لكن تعذّر حفظ المفتاح السري: '+se.message,'error')}}
+  updatePostbackBox();markSavedSecret(savedId);$('wallTitle').textContent='تعديل جدار عروض';
+  msg('✓ تم حفظ الجدار. انسخ رابط Postback (الخطوة 4) وضعه في لوحة المزوّد ليبدأ إرسال النقاط.','success');
  }catch(e){msg('فشل الحفظ: '+e.message,'error')}
 };
 async function toggle(col,id,enabled){try{await updateDoc(doc(db,col,id),{enabled})}catch(e){alert('تعذّر تحديث الحالة: '+e.message)}}async function remove(col,id){if(!confirm('هل تريد حذف هذا السجل؟ لا يمكن التراجع.'))return;try{await deleteDoc(doc(db,col,id))}catch(e){alert('تعذّر الحذف: '+e.message)}}
