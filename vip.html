@@ -52,6 +52,17 @@ input:focus{border-color:var(--gold)}
 .coin{position:absolute;top:-40px;font-size:28px;animation:fall linear forwards}
 @keyframes pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
 @keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+
+.gbtn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;margin-top:16px;padding:15px;border:0;border-radius:16px;background:#fff;color:#1f1f1f;font-weight:800;font-size:16px;box-shadow:0 8px 18px #0004;cursor:pointer}
+.gbtn svg{width:22px;height:22px}.gbtn:disabled{opacity:.6}
+select{width:100%;padding:14px;border-radius:14px;border:1.5px solid var(--line);background:#16245c;color:var(--ink);font-size:16px;outline:none}
+.seg{display:flex;background:#16245c;border-radius:14px;padding:4px;margin-bottom:6px}.seg button{flex:1;border:0;background:none;color:var(--mut);padding:10px;border-radius:11px;font-weight:800}.seg button.on{background:linear-gradient(110deg,#ffd24a,#ff9f1a);color:#3a1d00}
+.numbox{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#16245c;border:1.5px dashed var(--gold);border-radius:16px;padding:12px 14px}.numbox b{font-size:24px;letter-spacing:2px;color:var(--gold);direction:ltr}
+.numbox button{border:0;background:var(--gold);color:#3a1d00;font-weight:800;border-radius:12px;padding:9px 14px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #ffffff14}.kv:last-child{border:0}.kv span{color:var(--mut)}.kv b{text-align:right;word-break:break-word}
+.note{color:var(--mut);font-size:13px;line-height:1.5}
+.sus{min-height:100vh;display:grid;place-content:center;text-align:center;padding:30px}.sus .em{font-size:72px}.sus h2{color:var(--bad);margin:8px 0}
+.spin{min-height:100vh;display:grid;place-items:center;font-size:56px;animation:pulse 1.2s infinite}@keyframes pulse{50%{opacity:.4;transform:scale(.92)}}
 </style>
 </head>
 <body>
@@ -59,118 +70,189 @@ input:focus{border-color:var(--gold)}
 <symbol id="sealSvg" viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="#ffd24a" stroke="#b8860b" stroke-width="4"/><circle cx="60" cy="60" r="46" fill="none" stroke="#b8860b" stroke-width="2" stroke-dasharray="3 4"/><circle cx="60" cy="60" r="38" fill="#2fbf6b"/><path d="M42 61l13 13 24-28" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </defs></svg>
 
-<section id="login">
- <div class="logo">👑</div><h1>YASJOY VIP</h1><p>Sign in with your private number</p>
+<section id="splash" class="spin">👑</section>
+
+<section id="login" class="hidden">
+ <div class="logo">👑</div><h1>YASJOY VIP</h1><p>Your private account for points &amp; payments</p>
  <div class="card">
-  <label for="num">Private number (IP)</label><input id="num" inputmode="numeric" autocomplete="off" placeholder="9-digit number" maxlength="12">
-  <label for="pin">PIN</label><input id="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="6-digit PIN" maxlength="12">
-  <button class="btn" id="loginBtn">Sign in</button><p class="msg" id="loginMsg"></p>
+  <button class="gbtn" id="gBtn"><svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>Continue with Google</button>
+  <p class="msg" id="loginMsg"></p>
+  <p class="note">Each VIP account is linked to one Google account. If you delete the app, just sign in again with the same Google account and your PIN — nothing is lost.</p>
  </div>
 </section>
+
+<section id="setup" class="hidden"><div class="wrap">
+ <div class="top"><div class="brand">👑 VIP</div><div class="who"><b id="setupMail"></b></div><button class="icon" id="setupOut" aria-label="Sign out">⎋</button></div>
+ <div class="seg"><button id="segNew" class="on">New account</button><button id="segRec">Recover account</button></div>
+ <div class="card" id="newBox">
+  <h3>Create your VIP account</h3>
+  <label for="fName">Your name</label><input id="fName" maxlength="40" autocomplete="off" placeholder="Name you want to be paid under">
+  <label for="fMethod">Where should we pay you?</label>
+  <select id="fMethod"><option>Binance</option><option>Payeer</option><option>PayPal</option><option>USDT (TRC20)</option><option>PUBG UC</option><option>Free Fire Diamonds</option><option value="__other">Other…</option></select>
+  <input id="fOther" class="hidden" maxlength="30" placeholder="Wallet / service name" style="margin-top:8px">
+  <label for="fWallet" id="fWalletLbl">Wallet number / ID (optional)</label><input id="fWallet" maxlength="80" autocomplete="off" placeholder="Wallet number, address or ID">
+  <label for="fPin">Choose a PIN (4–8 digits)</label><input id="fPin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password" placeholder="PIN">
+  <label for="fPin2">Repeat the PIN</label><input id="fPin2" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password" placeholder="PIN again">
+  <p class="note">Your private number is created automatically. The PIN is required for every operation — remember it, only the admin can reset it.</p>
+  <button class="btn" id="regBtn">Create account</button><p class="msg" id="regMsg"></p>
+ </div>
+ <div class="card hidden" id="recBox">
+  <h3>Recover your account</h3>
+  <p class="note">Use this if you deleted the app after the admin reset your account, or the admin gave you a recovery code.</p>
+  <label for="rNum">Your private number</label><input id="rNum" inputmode="numeric" maxlength="12" autocomplete="off">
+  <label for="rCode">Recovery code from the admin</label><input id="rCode" inputmode="numeric" maxlength="12" autocomplete="off">
+  <label for="rPin">New PIN (4–8 digits)</label><input id="rPin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password">
+  <button class="btn" id="recBtn">Recover</button><p class="msg" id="recMsg"></p>
+ </div>
+</div></section>
+
+<section id="pinScr" class="hidden">
+ <div style="min-height:100vh;display:grid;align-content:center;padding:24px 18px"><div class="logo" style="text-align:center;font-size:60px">🔐</div><h1 id="pinHello" style="text-align:center;color:var(--gold);margin:6px 0">Welcome back</h1><p style="text-align:center;color:var(--mut);margin:0">Enter your PIN to continue</p>
+ <div class="card"><label for="pinIn">PIN</label><input id="pinIn" type="password" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="••••••"><button class="btn" id="pinBtn">Unlock</button><p class="msg" id="pinMsg"></p><button class="btn ghost" id="pinOut">Use another Google account</button></div></div>
+</section>
+
+<section id="susp" class="hidden sus"><div class="em">⛔</div><h2>Account suspended</h2><p id="suspTxt" style="max-width:320px">This account is suspended by the admin.</p><button class="btn ghost" id="suspOut" style="max-width:260px;margin:18px auto 0">Sign out</button></section>
 
 <div id="app" class="hidden">
  <div class="wrap">
   <div class="top"><div class="brand">👑 VIP</div><div class="who"><b id="who">—</b><span id="whoNum"></span></div><button class="icon" id="refresh" aria-label="Refresh">⟳</button></div>
 
   <section id="tabPoints">
-   <div class="card hero"><small>AVAILABLE POINTS</small><div class="pts" id="pts">0</div><div class="usd" id="usd">$0.00</div>
+   <div class="card hero"><small>YOUR POINTS</small><div class="pts" id="pts">0</div><div class="usd" id="usd">$0.00</div>
     <div class="chips"><span class="chip">👥 <b id="accs">0</b> accounts used</span><span class="chip">1 USD = 1,000 pts</span></div></div>
+   <div class="card"><h3>Your private number (IP)</h3><div class="numbox"><b id="myNum">—</b><button id="copyNum">Copy</button></div>
+    <p class="note" style="margin:10px 0 0">In the user app open <b>Withdraw your points → IP Withdrawal Request</b>, enter this number and your PIN. All coins are converted into points here. The admin pays you manually and the account is reset to zero.</p></div>
    <div class="card"><h3>Points received</h3><div id="transfers"></div></div>
   </section>
 
-  <section id="tabWd" class="hidden">
-   <div class="card"><h3>Request a withdrawal</h3>
-    <div class="row"><small style="color:var(--mut)">Available: <b id="avail" style="color:var(--ink)">0</b> pts</small><small style="color:var(--mut)">Min: <b id="minpts" style="color:var(--ink)">10,000</b> pts (<span id="minusd">$10.00</span>)</small></div>
-    <label for="wdPts">Points to withdraw</label><input id="wdPts" inputmode="numeric" placeholder="e.g. 10000"><small id="wdUsd" style="color:var(--gold)"></small>
-    <label for="wdDet">Where should we pay you?</label><input id="wdDet" placeholder="PayPal email / USDT address / bank details" maxlength="200">
-    <button class="btn" id="wdBtn">Request withdrawal</button><button class="btn ghost" id="wdAll" type="button">Withdraw all</button><p class="msg" id="wdMsg"></p></div>
-   <div class="card"><h3>Withdrawals</h3><div id="wdList"></div></div>
-   <div class="card"><h3>🧾 Invoices</h3><div id="invList"></div></div>
+  <section id="tabPay" class="hidden">
+   <div class="card"><h3>🧾 Payments</h3><p class="note" style="margin-top:0">Every time the admin pays you, a paid invoice is added here.</p><div id="invList"></div></div>
+  </section>
+
+  <section id="tabProfile" class="hidden">
+   <div class="card"><h3>Your account</h3>
+    <div class="kv"><span>Name</span><b id="pName"></b></div><div class="kv"><span>Pay to</span><b id="pMethod"></b></div><div class="kv"><span>Wallet / ID</span><b id="pWallet"></b></div><div class="kv"><span>Google</span><b id="pMail"></b></div><div class="kv"><span>Private number</span><b id="pNum"></b></div>
+    <p class="note">To change your name, wallet or PIN, contact the admin.</p>
+    <button class="btn ghost" id="bOut2">Sign out</button></div>
   </section>
  </div>
- <nav class="tabbar"><button id="bPoints" class="on"><span>🪙</span>Points</button><button id="bWd"><span>💸</span>Withdrawals</button><button id="bOut"><span>🚪</span>Sign out</button></nav>
+ <nav class="tabbar"><button id="bPoints" class="on"><span>🪙</span>Points</button><button id="bPay"><span>🧾</span>Payments</button><button id="bProf"><span>👤</span>Account</button></nav>
 </div>
 
-<div id="paid" class="hidden" role="dialog" aria-live="polite"><div class="box"><svg class="seal"><use href="#sealSvg"/></svg><h2>Payment sent!</h2><p id="paidAmt" style="font-size:26px;font-weight:900"></p><p id="paidInv" style="color:var(--mut)"></p><button class="btn" id="paidOk">Great</button></div></div>
+<div id="paid" class="hidden" role="dialog" aria-live="polite"><div class="box"><svg class="seal"><use href="#sealSvg"/></svg><h2>You have been paid!</h2><p id="paidAmt" style="font-size:26px;font-weight:900"></p><p id="paidInv" style="color:var(--mut)"></p><button class="btn" id="paidOk">Great</button></div></div>
 
-<script>
-(function(){
-'use strict';
-const $=id=>document.getElementById(id),LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
-let creds=null,data=null,timer=null,busy=false;
+<script type="module">
+import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {getAuth,GoogleAuthProvider,signInWithPopup,signInWithRedirect,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+const firebaseConfig={apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",authDomain:"yasjoy.firebaseapp.com",projectId:"yasjoy",storageBucket:"yasjoy.firebasestorage.app",messagingSenderId:"967065409063",appId:"1:967065409063:web:4f7b882cc38f17ec8a2002"};
+const app=getApps().length?getApp():initializeApp(firebaseConfig),auth=getAuth(app);
+const $=id=>document.getElementById(id),SS={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}},del(k){try{sessionStorage.removeItem(k)}catch(e){}}};
+const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let user=null,pin=SS.get('vip_pin')||'',data=null,timer=null,busy=false;
 const fmt=n=>(Math.floor(Number(n)||0)).toLocaleString('en-US');
 const usd=p=>'$'+(Math.floor(Math.max(0,Math.floor(Number(p)||0))/10)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const when=v=>{if(!v)return '';const d=new Date(v);return isNaN(d)?'':d.toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'})};
 function el(t,txt,c){const n=document.createElement(t);if(txt!==undefined)n.textContent=txt;if(c)n.className=c;return n}
-async function api(path,body){const r=await fetch('/api/vip/'+path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok||!j.ok)throw new Error(j.error||('Error '+r.status));return j}
+const SCREENS=['splash','login','setup','pinScr','susp','app'];
+function screen(id){SCREENS.forEach(s=>$(s).classList.toggle('hidden',s!==id))}
+const say=(id,t,cls)=>{const m=$(id);m.textContent=t||'';m.className='msg'+(cls?' '+cls:'')};
+async function api(path,body){
+ const token=await user.getIdToken();
+ const r=await fetch('/api/vip/'+path,{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify(body||{})});
+ const j=await r.json().catch(()=>({}));
+ if(!r.ok||j.ok===false){const e=new Error(j.error||('Error '+r.status));e.status=r.status;e.data=j;throw e}
+ return j;
+}
 function seal(){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('class','seal');const u=document.createElementNS('http://www.w3.org/2000/svg','use');u.setAttribute('href','#sealSvg');s.append(u);return s}
 function rain(){const box=$('paid');for(let i=0;i<22;i++){const c=el('span',['🪙','💰','💵','✨'][i%4],'coin');c.style.left=(Math.random()*100)+'%';c.style.animationDuration=(2.4+Math.random()*2.6)+'s';c.style.animationDelay=(Math.random()*1.2)+'s';box.append(c);setTimeout(()=>c.remove(),7000)}}
-function showPaid(w){$('paidAmt').textContent=fmt(w.points)+' pts = '+usd(w.points);$('paidInv').textContent=w.invoiceNo?'Invoice '+w.invoiceNo:'';$('paid').classList.remove('hidden');rain()}
+function showPaid(v){$('paidAmt').textContent=fmt(v.points)+' pts = '+usd(v.points);$('paidInv').textContent=v.invoiceNo?'Invoice '+v.invoiceNo:'';$('paid').classList.remove('hidden');rain()}
 function checkPaid(){
- const key='vip_seen_'+creds.number,seenRaw=LS.get(key),paid=data.withdrawals.filter(w=>w.status==='paid');
- if(seenRaw===null){LS.set(key,JSON.stringify(paid.map(w=>w.id)));return}
- let seen=[];try{seen=JSON.parse(seenRaw)||[]}catch(e){}
- const fresh=paid.filter(w=>!seen.includes(w.id));
- if(fresh.length){LS.set(key,JSON.stringify(paid.map(w=>w.id)));showPaid(fresh[0])}
+ const key='vip_seen_'+data.account.number,raw=LS.get(key),ids=data.invoices.map(v=>v.invoiceNo);
+ if(raw===null){LS.set(key,JSON.stringify(ids));return}
+ let seen=[];try{seen=JSON.parse(raw)||[]}catch(e){}
+ const fresh=data.invoices.filter(v=>!seen.includes(v.invoiceNo));
+ if(fresh.length){LS.set(key,JSON.stringify(ids));showPaid(fresh[0])}
 }
 function render(){
  const a=data.account;
  $('who').textContent=a.name||'VIP';$('whoNum').textContent='#'+a.number;
- $('pts').textContent=fmt(a.points);$('usd').textContent=usd(a.points);$('accs').textContent=fmt(a.accounts);
- $('avail').textContent=fmt(a.points);$('minpts').textContent=fmt(a.minPoints);$('minusd').textContent=a.minUsd;
+ $('pts').textContent=fmt(a.points);$('usd').textContent=usd(a.points);$('accs').textContent=fmt(a.accounts);$('myNum').textContent=a.number;
+ $('pName').textContent=a.name;$('pMethod').textContent=a.method||'—';$('pWallet').textContent=a.walletNumber||'—';$('pMail').textContent=a.email||'—';$('pNum').textContent=a.number;
  const tr=$('transfers');tr.replaceChildren();
- if(!data.transfers.length)tr.append(el('div','No points received yet. Send your points from the user app using “IP Withdrawal Request”.','empty'));
+ if(!data.transfers.length)tr.append(el('div','No points received yet.','empty'));
  data.transfers.forEach(t=>{const i=el('div','','item'),r=el('div','','row');r.append(el('span','+'+fmt(t.points)+' pts','big'),el('b',t.usd));i.append(r,el('small',(t.from?'From '+t.from+' · ':'')+when(t.createdAt)));tr.append(i)});
- const wl=$('wdList');wl.replaceChildren();
- if(!data.withdrawals.length)wl.append(el('div','No withdrawals yet.','empty'));
- data.withdrawals.forEach(w=>{const i=el('div','','item'),r=el('div','','row'),left=el('div');left.append(el('div',fmt(w.points)+' pts','big'),el('b',w.usd));
-  const right=w.status==='paid'?seal():el('span',w.status==='pending'?'⏳ Pending':'✖ Rejected','pill '+w.status);r.append(left,right);i.append(r,el('small',when(w.createdAt)+(w.details?' · '+w.details:'')));
-  if(w.status==='paid'){i.append(el('span','✓ PAID · '+(w.invoiceNo||''),'pill paid'));if(w.reference)i.append(el('small','Reference: '+w.reference))}
-  if(w.status==='rejected')i.append(el('small','Rejected — the points were returned to your balance.'));
-  wl.append(i)});
  const il=$('invList');il.replaceChildren();
- if(!data.invoices.length)il.append(el('div','Invoices appear here after a payment.','empty'));
- data.invoices.forEach(v=>{const i=el('div','','item'),r=el('div','','row');r.append(el('b','🧾 '+v.invoiceNo),el('b',v.usd));i.append(r,el('small',fmt(v.points)+' pts · '+when(v.createdAt)+(v.reference?' · Ref '+v.reference:'')));il.append(i)});
- updateWd();
+ if(!data.invoices.length)il.append(el('div','No payments yet.','empty'));
+ data.invoices.forEach(v=>{const i=el('div','','item'),r=el('div','','row'),left=el('div');left.append(el('div',fmt(v.points)+' pts','big'),el('b',v.usd));r.append(left,seal());i.append(r,el('span','✓ PAID · '+(v.invoiceNo||''),'pill paid'),el('small',when(v.createdAt)+(v.method?' · '+v.method:'')+(v.walletNumber?' · '+v.walletNumber:'')));if(v.reference)i.append(el('small','Reference: '+v.reference));il.append(i)});
 }
-function updateWd(){const p=Number($('wdPts').value.replace(/[^\d]/g,''))||0;$('wdUsd').textContent=p?'= '+usd(p):''}
+function suspended(j){
+ const until=j&&j.until?new Date(j.until).toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'}):'';
+ $('suspTxt').textContent='This account is suspended by the admin.'+(j&&j.reason?' Reason: '+j.reason+'.':'')+(until?' Until: '+until+'.':'');
+ clearInterval(timer);screen('susp');
+}
 async function load(silent){
- if(busy||!creds)return;busy=true;
- try{data=await api('me',creds);render();checkPaid();$('login').classList.add('hidden');$('app').classList.remove('hidden')}
- catch(e){if(!silent||/Wrong number/.test(e.message)){if(/Wrong number/.test(e.message)){signOut(true);$('loginMsg').textContent=e.message;$('loginMsg').className='msg bad'}}}
- finally{busy=false}
+ if(busy||!user)return;busy=true;
+ try{
+  const j=await api('me',pin?{pin}:{});
+  if(j.state==='register'){$('setupMail').textContent=j.email||'';segTab(false);screen('setup')}
+  else if(j.state==='recover'){$('setupMail').textContent=j.email||'';segTab(true);say('recMsg','The admin reset your account. Enter your number, the recovery code and a new PIN.');screen('setup')}
+  else if(j.state==='pin'){$('pinHello').textContent='Welcome back'+(j.name?', '+j.name:'');screen('pinScr');setTimeout(()=>$('pinIn').focus(),50)}
+  else if(j.state==='ready'){SS.set('vip_pin',pin);data=j;render();checkPaid();screen('app');startPoll()}
+ }catch(e){
+  if(e.data&&e.data.suspended)suspended(e.data);
+  else if(e.status===401&&pin){pin='';SS.del('vip_pin');screen('pinScr');say('pinMsg',e.message,'bad')}
+  else if(!silent){screen('login');say('loginMsg',e.message,'bad')}
+ }finally{busy=false}
 }
-function signOut(keepMsg){creds=null;data=null;LS.del('vip_creds');clearInterval(timer);$('app').classList.add('hidden');$('login').classList.remove('hidden');$('pin').value='';if(!keepMsg)$('loginMsg').textContent=''}
-function start(){clearInterval(timer);timer=setInterval(()=>{if(!document.hidden)load(true)},15000)}
-$('loginBtn').onclick=async()=>{
- const number=$('num').value.trim(),pin=$('pin').value.trim(),m=$('loginMsg'),b=$('loginBtn');
- if(!/^\d{6,12}$/.test(number)||!pin){m.textContent='Enter your number and PIN';m.className='msg bad';return}
- b.disabled=true;m.textContent='Signing in…';m.className='msg';creds={number,pin};
- try{data=await api('me',creds);LS.set('vip_creds',JSON.stringify(creds));render();checkPaid();m.textContent='';$('login').classList.add('hidden');$('app').classList.remove('hidden');start()}
- catch(e){creds=null;m.textContent=e.message;m.className='msg bad'}finally{b.disabled=false}
+function startPoll(){clearInterval(timer);timer=setInterval(()=>{if(!document.hidden)load(true)},15000)}
+function segTab(rec){$('newBox').classList.toggle('hidden',rec);$('recBox').classList.toggle('hidden',!rec);$('segNew').classList.toggle('on',!rec);$('segRec').classList.toggle('on',rec)}
+$('segNew').onclick=()=>segTab(false);$('segRec').onclick=()=>segTab(true);
+const GAME=/pubg|free ?fire|uc|diamond/i;
+function methodChanged(){const v=$('fMethod').value,other=v==='__other';$('fOther').classList.toggle('hidden',!other);const g=GAME.test(other?$('fOther').value:v);$('fWalletLbl').textContent=g?'Player ID (required)':'Wallet number / address (optional)';$('fWallet').placeholder=g?'Your in-game ID':'Wallet number, address or ID'}
+$('fMethod').onchange=methodChanged;$('fOther').oninput=methodChanged;
+
+$('gBtn').onclick=async()=>{
+ const b=$('gBtn');b.disabled=true;say('loginMsg','Opening Google…');
+ const p=new GoogleAuthProvider();p.setCustomParameters({prompt:'select_account'});
+ try{await signInWithPopup(auth,p);say('loginMsg','')}
+ catch(e){
+  if(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'){try{await signInWithRedirect(auth,p);return}catch(e2){e=e2}}
+  if(e.code==='auth/popup-closed-by-user'||e.code==='auth/cancelled-popup-request')say('loginMsg','');
+  else if(e.code==='auth/operation-not-allowed')say('loginMsg','Google sign-in is not enabled yet (Firebase → Authentication → Sign-in method → Google).','bad');
+  else if(e.code==='auth/unauthorized-domain')say('loginMsg','This domain is not authorized in Firebase (Authentication → Settings → Authorized domains).','bad');
+  else say('loginMsg',e.message||'Sign-in failed','bad');
+ }finally{b.disabled=false}
 };
+$('regBtn').onclick=async()=>{
+ const name=$('fName').value.trim(),sel=$('fMethod').value,method=sel==='__other'?$('fOther').value.trim():sel,wallet=$('fWallet').value.trim(),p1=$('fPin').value.trim(),p2=$('fPin2').value.trim();
+ if(name.length<2)return say('regMsg','Enter your name','bad');
+ if(method.length<2)return say('regMsg','Enter the wallet name','bad');
+ if(GAME.test(method)&&wallet.length<3)return say('regMsg','Enter your player ID','bad');
+ if(!/^\d{4,8}$/.test(p1))return say('regMsg','PIN must be 4 to 8 digits','bad');
+ if(p1!==p2)return say('regMsg','The two PINs do not match','bad');
+ $('regBtn').disabled=true;say('regMsg','Creating…');
+ try{await api('register',{name,method,walletNumber:wallet,pin:p1});pin=p1;SS.set('vip_pin',pin);say('regMsg','');await load(false)}
+ catch(e){say('regMsg',e.message,'bad')}finally{$('regBtn').disabled=false}
+};
+$('recBtn').onclick=async()=>{
+ const number=$('rNum').value.trim(),code=$('rCode').value.trim(),p=$('rPin').value.trim();
+ if(!/^\d{6,12}$/.test(number)||!code)return say('recMsg','Enter your number and the recovery code','bad');
+ if(!/^\d{4,8}$/.test(p))return say('recMsg','PIN must be 4 to 8 digits','bad');
+ $('recBtn').disabled=true;say('recMsg','Recovering…');
+ try{await api('recover',{number,code,pin:p});pin=p;SS.set('vip_pin',pin);say('recMsg','');await load(false)}
+ catch(e){say('recMsg',e.message,'bad')}finally{$('recBtn').disabled=false}
+};
+$('pinBtn').onclick=async()=>{const p=$('pinIn').value.trim();if(!/^\d{4,8}$/.test(p))return say('pinMsg','Enter your PIN','bad');pin=p;say('pinMsg','Checking…');busy=false;await load(false);$('pinIn').value=''};
+$('pinIn').addEventListener('keydown',e=>{if(e.key==='Enter')$('pinBtn').click()});
+const out=async()=>{pin='';SS.del('vip_pin');data=null;clearInterval(timer);try{await signOut(auth)}catch(e){}};
+$('pinOut').onclick=out;$('setupOut').onclick=out;$('suspOut').onclick=out;$('bOut2').onclick=out;
 $('refresh').onclick=()=>load(false);
-$('bOut').onclick=()=>signOut(false);
-function tab(w){$('tabPoints').classList.toggle('hidden',w!=='p');$('tabWd').classList.toggle('hidden',w!=='w');$('bPoints').classList.toggle('on',w==='p');$('bWd').classList.toggle('on',w==='w');window.scrollTo(0,0)}
-$('bPoints').onclick=()=>tab('p');$('bWd').onclick=()=>tab('w');
-$('wdPts').oninput=updateWd;
-$('wdAll').onclick=()=>{if(data){$('wdPts').value=Math.floor(data.account.points);updateWd()}};
-$('wdBtn').onclick=async()=>{
- const m=$('wdMsg'),b=$('wdBtn'),pts=Number($('wdPts').value.replace(/[^\d]/g,'')),det=$('wdDet').value.trim();
- m.className='msg bad';
- if(!pts){m.textContent='Enter the points to withdraw';return}
- if(data&&pts<data.account.minPoints){m.textContent='Minimum withdrawal is '+fmt(data.account.minPoints)+' points ('+data.account.minUsd+')';return}
- if(data&&pts>data.account.points){m.textContent='You do not have enough points';return}
- if(det.length<4){m.textContent='Enter where we should pay you';return}
- if(!confirm('Withdraw '+fmt(pts)+' points ('+usd(pts)+')?'))return;
- b.disabled=true;m.textContent='Sending…';m.className='msg';
- try{await api('withdraw',{...creds,points:pts,details:det});m.textContent='✓ Request sent. You will see the payment here once it is paid.';m.className='msg ok';$('wdPts').value='';updateWd();await load(false)}
- catch(e){m.textContent=e.message;m.className='msg bad'}finally{b.disabled=false}
-};
-$('paidOk').onclick=()=>$('paid').classList.add('hidden');
+$('copyNum').onclick=async()=>{try{await navigator.clipboard.writeText($('myNum').textContent);$('copyNum').textContent='Copied ✓'}catch(e){$('copyNum').textContent='Select & copy'}setTimeout(()=>$('copyNum').textContent='Copy',1600)};
+function tab(w){[['p','tabPoints','bPoints'],['y','tabPay','bPay'],['a','tabProfile','bProf']].forEach(([k,s,b])=>{$(s).classList.toggle('hidden',k!==w);$(b).classList.toggle('on',k===w)});window.scrollTo(0,0)}
+$('bPoints').onclick=()=>tab('p');$('bPay').onclick=()=>tab('y');$('bProf').onclick=()=>tab('a');
+$('paidOk').onclick=()=>{$('paid').classList.add('hidden');tab('y')};
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load(true)});
-try{const c=JSON.parse(LS.get('vip_creds')||'null');if(c&&c.number&&c.pin){creds=c;$('num').value=c.number;load(true).then(start)}}catch(e){}
-})();
+onAuthStateChanged(auth,u=>{user=u;if(!u){clearInterval(timer);screen('login');return}load(false)});
 </script>
 </body>
 </html>
