@@ -1,12 +1,12 @@
-// POST /api/vip/transfer   body: {"number":"<third-app number>"}   (Authorization: Bearer <user Firebase ID token>)
+// POST /api/vip/transfer   body: {"number":"<third-app number>","pin":"<that account's PIN>"}   (Authorization: Bearer <user Firebase ID token>)
 // Moves ALL of a VIP-enabled user's coins to a third-app (VIP) account. Atomic, server-side, cannot be forged by the client.
 import { handler, json, HttpError, verifyIdToken, readJson, getDoc, getDocMeta, commit, write, mustCommit } from '../../_lib/fb.js';
-import { cleanNumber, usd, rid, vipSettings, isConflict } from '../../_lib/vip.js';
+import { cleanNumber, cleanPin, checkPin, suspension, suspendedError, usd, rid, vipSettings, isConflict } from '../../_lib/vip.js';
 
 export const onRequest = handler(async ({ request, env }) => {
   if (request.method !== 'POST') throw new HttpError(405, 'Use POST');
   const { uid } = await verifyIdToken(env, request);
-  const number = cleanNumber((await readJson(request)).number);
+  const body = await readJson(request), number = cleanNumber(body.number), pin = cleanPin(body.pin);
   for (let attempt = 0; attempt < 4; attempt++) {
     const user = await getDocMeta(env, `users/${uid}`);
     if (!user) throw new HttpError(404, 'User not found');
@@ -14,7 +14,9 @@ export const onRequest = handler(async ({ request, env }) => {
     if (user.data.vipAllowed !== true) throw new HttpError(403, 'IP withdrawal is not enabled for your account');
     if (!(await vipSettings(env)).enabled) throw new HttpError(403, 'IP withdrawal is currently unavailable');
     const acc = await getDoc(env, `vipAccounts/${number}`);
-    if (!acc || acc.enabled === false) throw new HttpError(404, 'This third-app IP was not found');
+    if (!acc) throw new HttpError(404, 'This third-app IP was not found');
+    const susp = suspension(acc); if (susp) throw suspendedError(susp);
+    await checkPin(env, number, acc, pin);
     const bal = Math.floor(Number(user.data.balance) || 0);
     if (bal <= 0) throw new HttpError(400, 'You have no coins to transfer');
     const member = await getDoc(env, `vipAccounts/${number}/members/${uid}`);
