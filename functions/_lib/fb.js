@@ -148,6 +148,12 @@ export async function getDoc(env, path) {
   if (!r.ok) throw new HttpError(502, 'Firestore read failed: ' + ((r.body && r.body.error && r.body.error.message) || r.status));
   return fromFields(r.body.fields);
 }
+export async function getDocMeta(env, path) {
+  const r = await gfetch(env, `https://firestore.googleapis.com/v1/${docName(env, path)}`);
+  if (r.status === 404) return null;
+  if (!r.ok) throw new HttpError(502, 'Firestore read failed: ' + ((r.body && r.body.error && r.body.error.message) || r.status));
+  return { data: fromFields(r.body.fields), updateTime: r.body.updateTime };
+}
 export async function queryEq(env, collectionId, field, value, limit = 500) {
   const r = await gfetch(env, `https://firestore.googleapis.com/v1/${fsRoot(env)}/documents:runQuery`, {
     method: 'POST',
@@ -157,7 +163,7 @@ export async function queryEq(env, collectionId, field, value, limit = 500) {
   return (r.body || []).filter((x) => x.document).map((x) => ({ id: x.document.name.split('/').pop(), path: x.document.name.split('/documents/')[1], data: fromFields(x.document.fields) }));
 }
 /** Build one Firestore write. set: [[segs,value]], ts: [segs] (server time), inc: [[segs,number]], exists: true|false|undefined */
-export function write(env, path, { set = [], ts = [], inc = [], exists } = {}) {
+export function write(env, path, { set = [], ts = [], inc = [], exists, updateTime } = {}) {
   const fields = {}, mask = [];
   for (const [segs, val] of set) {
     let cur = fields;
@@ -170,7 +176,8 @@ export function write(env, path, { set = [], ts = [], inc = [], exists } = {}) {
   ts.forEach((segs) => tr.push({ fieldPath: fp(...segs), setToServerValue: 'REQUEST_TIME' }));
   inc.forEach(([segs, n]) => tr.push({ fieldPath: fp(...segs), increment: Number.isInteger(n) ? { integerValue: String(n) } : { doubleValue: n } }));
   if (tr.length) w.updateTransforms = tr;
-  if (exists !== undefined) w.currentDocument = { exists };
+  if (updateTime) w.currentDocument = { updateTime };
+  else if (exists !== undefined) w.currentDocument = { exists };
   return w;
 }
 export const del = (env, path) => ({ delete: docName(env, path) });
@@ -186,6 +193,10 @@ const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart
 export const sha256Hex = async (s) => hex(await crypto.subtle.digest('SHA-256', te.encode(s)));
 export async function hmacSha256Hex(key, msg) {
   const k = await crypto.subtle.importKey('raw', te.encode(key), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  return hex(await crypto.subtle.sign('HMAC', k, te.encode(msg)));
+}
+export async function hmacSha1Hex(key, msg) {
+  const k = await crypto.subtle.importKey('raw', te.encode(key), { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
   return hex(await crypto.subtle.sign('HMAC', k, te.encode(msg)));
 }
 export function timingSafeEqual(a, b) {
