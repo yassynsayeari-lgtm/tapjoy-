@@ -313,6 +313,21 @@ html[data-mode="dark"] :is(.ok,.success,.pt-row b){color:#7ff0b4!important}html[
 .vcard code{background:#0001;border-radius:8px;padding:2px 8px;direction:ltr;display:inline-block;user-select:all}
 .vcard input{margin:0}.chk{display:flex;gap:8px;align-items:center;margin:8px 0}.chk input{width:auto}
 html[data-mode="dark"] .vcard{background:var(--surf)!important;border-color:var(--line)!important}html[data-mode="dark"] .vcard .big{color:#ffd166}html[data-mode="dark"] .vcard .pill{background:#6b5a22;color:#ffe9a8}html[data-mode="dark"] .vcard .pill.paid{background:#1f5f4a;color:#c9f5df}html[data-mode="dark"] .vcard .pill.rejected{background:#7d2540;color:#ffd5df}
+
+.vip-hero{display:flex;gap:14px;align-items:center;padding:16px;border-radius:22px;background:linear-gradient(135deg,#2a1a5e,#5b2a86 55%,#b0762a);color:#fff;margin:6px 0 12px;box-shadow:0 10px 24px #2a1a5e55}
+.vip-hero h2{margin:0;color:#ffe08a!important}.vip-hero p{margin:2px 0 0;opacity:.85;font-size:14px}.vip-crown{font-size:46px;filter:drop-shadow(0 4px 8px #0006)}
+.vip-totals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 12px}.vip-totals>div{background:linear-gradient(160deg,#fff7d6,#ffe9a8);border:1px solid #f0cf6a;border-radius:16px;padding:10px;text-align:center}.vip-totals small{display:block;color:#8a6a10;font-weight:700}.vip-totals b{font-size:18px;color:#5a3d00}
+.vcard.gold{position:relative;border:2px solid transparent;background:linear-gradient(#fffdf4,#fffdf4) padding-box,linear-gradient(135deg,#f5c542,#b8860b 50%,#ffe08a) border-box;box-shadow:0 8px 20px #b8860b33}
+.vcard.gold.susp{background:linear-gradient(#fff4f6,#fff4f6) padding-box,linear-gradient(135deg,#d21e50,#7d1a3a) border-box}
+.vcard .ribbon{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.vcard .ribbon h4{font-size:19px}
+.vcard .pill.susp{background:#ffe0e6;color:#a30d32}.vcard .pill.recov{background:#e8defc;color:#4b2a9a}
+.vcard .code{font-size:20px;font-weight:800;letter-spacing:2px;color:#4b2a9a}
+.vcard .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.vcard select{margin:0}
+.vcard .sub{border-top:1px dashed #e7cf88;padding-top:9px;display:grid;gap:7px}
+html[data-mode="dark"] .vip-totals>div{background:var(--surf2)!important;border-color:var(--line)!important}html[data-mode="dark"] .vip-totals small{color:var(--mut)}html[data-mode="dark"] .vip-totals b{color:#ffd166}
+html[data-mode="dark"] .vcard.gold{background:linear-gradient(var(--surf),var(--surf)) padding-box,linear-gradient(135deg,#f5c542,#b8860b 50%,#ffe08a) border-box!important}
+html[data-mode="dark"] .vcard.gold.susp{background:linear-gradient(var(--surf),var(--surf)) padding-box,linear-gradient(135deg,#d21e50,#7d1a3a) border-box!important}
+html[data-mode="dark"] .vcard .pill.susp{background:#7d2540;color:#ffd5df}html[data-mode="dark"] .vcard .pill.recov{background:#4b3a8a;color:#e2d8ff}html[data-mode="dark"] .vcard .code{color:#cbb8ff}
 </style><script>try{var __m=localStorage.getItem("yj_admin_mode");if(__m)document.documentElement.setAttribute("data-mode",__m)}catch(e){}</script></head><body>
 <header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header><main>
 <section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><p id="loginMsg" class="muted"></p></section>
@@ -327,14 +342,15 @@ html[data-mode="dark"] .vcard{background:var(--surf)!important;border-color:var(
 <section id="withdraw" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2><div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div><div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p></section>
 <section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userFilters" class="chips"></div><div id="userList"></div></section>
 <section id="methods" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إعدادات تطبيق المستخدم</h2><div class="step" id="themeBox"><div class="step-h">🎨 سمات تطبيق المستخدم</div><p class="muted">اختر شكل تطبيق المستخدم بالكامل (ألوان ونقوش). يتحول تطبيق المسؤول تلقائيًا إلى عكسه: سمة ليلية ← تطبيقك نهاري، وسمة نهارية ← تطبيقك ليلي. «الكلاسيكي» هو الشكل الحالي بدون تغيير.</p><div class="theme-grid" id="themeGrid"></div><p id="themeMsg" class="muted"></p></div><h3>💰 طرق السحب</h3><button type="button" id="addMethodBtn" class="primary">＋ إضافة طريقة سحب</button><div class="form" id="methodForm"><button type="button" class="back" id="closeMethodSheet">✕ إغلاق</button><h3 id="methodTitle">إضافة طريقة سحب</h3><input id="methodId" type="hidden"><label>اسم طريقة السحب</label><input id="methodName" placeholder="Binance أو PayPal"><label>صورة الشعار (ارفعها من جهازك)</label><input id="methodLogoFile" type="file" accept="image/*"><img id="methodLogoPreview" class="logo-preview" hidden alt=""><label>أو رابط الصورة (اختياري)</label><input id="methodLogo" type="url" placeholder="https://..." dir="ltr"><h3>فئات السحب</h3><p class="muted">أدخل عدد النقاط والنص الذي سيظهر للمستخدم. صورة الشعار تبقى منفصلة.</p><p class="muted">لكل فئة ثلاث خانات: <b>النقاط</b> التي تُخصم، و<b>المبلغ</b> (مثل 0.25 أو 5) وهو نفسه النص الظاهر للمستخدم ونفسه المبلغ المستحق في طلبات السحب، و<b>العملة</b> (الافتراضي $ ويمكنك كتابة US أو غيره). لا يوجد حد لعدد الفئات: اضغط «＋ إضافة فئة» كما تشاء ثم احفظ.</p><div id="tierRows"></div><button type="button" id="addTier" class="btn">＋ إضافة فئة</button><label class="check"><input id="methodEnabled" type="checkbox" checked> مفعّلة</label><button id="saveMethod" class="primary">حفظ طريقة السحب والفئات</button><button id="cancelMethod" class="btn">إلغاء</button><p id="methodMsg" class="muted"></p></div><div id="methodList"></div></section>
-<section id="vip" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>⭐ المميزون (التطبيق الثالث)</h2>
+<section id="vip" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button>
+<div class="vip-hero"><div class="vip-crown">👑</div><div><h2>المميزون</h2><p>التطبيق الثالث · الحسابات والنقاط والفواتير</p></div></div>
+<div class="vip-totals"><div><small>الحسابات</small><b id="vipTotAcc">0</b></div><div><small>مستحق للدفع</small><b id="vipTotUsd">$0.00</b></div><div><small>مدفوع</small><b id="vipTotPaid">$0.00</b></div></div>
 <div class="step"><div class="step-h">⚙️ الإعدادات</div>
-<label class="chk"><input type="checkbox" id="vipEnabled" checked> إظهار قائمة «IP Withdrawal Request» للمستخدمين المميزين</label>
-<label for="vipMin">أقل مبلغ سحب في التطبيق الثالث (نقاط)</label><input id="vipMin" inputmode="numeric" value="10000"><p id="vipMinUsd" class="muted"></p>
-<button id="vipSaveSet" class="btn">حفظ الإعدادات</button><p id="vipSetMsg" class="muted"></p>
-<p class="muted">1 دولار = 1000 نقطة. رابط التطبيق الثالث: <b>/vip</b>. لتفعيل قائمة IP لمستخدم: المستخدمون ← عرض التفاصيل أو زر «⭐ تفعيل IP Withdrawal».</p></div>
-<div class="step"><div class="step-h">➕ حساب مميز جديد</div><input id="vipName" placeholder="اسم المميز"><button id="vipCreate" class="primary">إنشاء رقم خاص + PIN</button><p id="vipCreateMsg" class="muted"></p></div>
-<div class="tabs"><button class="tab active" onclick="vipTab('requests',this)">طلبات السحب</button><button class="tab" onclick="vipTab('accounts',this)">الحسابات</button><button class="tab" onclick="vipTab('invoices',this)">الفواتير</button></div>
+<label class="chk"><input type="checkbox" id="vipEnabled" checked> إظهار قائمة «IP Withdrawal Request» للمستخدمين المميزين في تطبيق المستخدم</label>
+<button id="vipSaveSet" class="btn">حفظ</button><p id="vipSetMsg" class="muted"></p>
+<p class="muted">1 دولار = 1000 نقطة. رابط التطبيق الثالث: <b>/vip</b>. كل مميز يسجّل بنفسه بحساب Google ويختار اسمه ومحفظته وPIN، ويُنشأ رقمه الخاص تلقائيًا. لتفعيل قائمة IP لمستخدم: المستخدمون ← «⭐ تفعيل IP Withdrawal».</p></div>
+<div class="tabs"><button class="tab active" onclick="vipTab('accounts',this)">الحسابات</button><button class="tab" onclick="vipTab('invoices',this)">الفواتير</button></div>
+<input id="vipSearch" placeholder="🔎 بحث بالاسم أو الرقم أو الإيميل" style="margin:8px 0">
 <div id="vipList"></div></section>
 <section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2>
 <details class="how"><summary>📘 شرح مفصّل: كيف أضيف جدارًا؟</summary>
@@ -366,66 +382,74 @@ function applyAdminMode(id){const t=themeById(id),mode=t.id==='classic'?'light':
 function renderThemes(cur){const g=$('themeGrid');if(!g)return;g.replaceChildren();APP_THEMES.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='theme-card'+(t.mode==='light'&&t.id!=='classic'?' lt':'')+(t.id===cur?' on':'');{const L=[],S=[],R=[],Q=[];if(t.deco){L.push(t.deco);S.push('cover');R.push('no-repeat');Q.push('right top')}if(t.pat){L.push(t.pat);S.push('76px 76px');R.push('repeat');Q.push('0 0')}L.push(t.bg);S.push('cover');R.push('no-repeat');Q.push('center');b.style.backgroundImage=L.join(',');b.style.backgroundSize=S.join(',');b.style.backgroundRepeat=R.join(',');b.style.backgroundPosition=Q.join(',')}if(t.id==='classic')b.style.color='#fff';const e=el('span',t.emoji,'te'),n=el('b',t.name),m=el('small',t.id==='classic'?'الشكل الحالي':(t.mode==='dark'?'🌙 ليلية ← تطبيقك نهاري':'☀️ نهارية ← تطبيقك ليلي'));b.append(e,n,m);b.onclick=async()=>{try{$('themeMsg').textContent='جارٍ الحفظ…';await setDoc(doc(db,'settings','appTheme'),{theme:t.id,mode:t.mode,updatedAt:serverTimestamp()});$('themeMsg').textContent='✓ تم تطبيق سمة «'+t.name+'» على تطبيق المستخدم'}catch(err){$('themeMsg').textContent='تعذّر الحفظ: '+err.message}};g.append(b)})}
 function onThemeDoc(snap){const id=snap.exists()&&snap.data().theme?snap.data().theme:'classic';applyAdminMode(id);renderThemes(themeById(id).id)}
 
-let vipAcc=[],vipW=[],vipInv=[],vipTabSel='requests',vipSet={enabled:true,minPoints:10000};
+let vipAcc=[],vipInv=[],vipTabSel='accounts',vipSet={enabled:true},vipNotice={};
 const usdText=p=>'$'+(Math.floor(Math.max(0,Math.floor(Number(p)||0))/10)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const ptsText=p=>(Math.floor(Number(p)||0)).toLocaleString('en-US');
 const tsMillis=v=>v&&v.toMillis?v.toMillis():(v&&v.seconds?v.seconds*1000:(v?Date.parse(v)||0:0));
 const rnd=(n,digits)=>{const a=new Uint32Array(n);crypto.getRandomValues(a);return [...a].map(x=>digits?(x%10):'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[x%32]).join('')};
-function vipAccOf(n){return vipAcc.find(x=>x.id===n)||{}}
-function vipCard(){const c=el('div','','vcard');return c}
+const vipSusp=x=>x.enabled===false?{until:0}:(x.banned===true&&(!(Number(x.bannedUntil)>0)||Date.now()<Number(x.bannedUntil))?{until:Number(x.bannedUntil)||0}:null);
 window.vipTab=(t,b)=>{vipTabSel=t;document.querySelectorAll('#vip .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderVip()};
 function vipRow(label,val){const r=el('div','','row');r.append(el('span',label+':','muted'),typeof val==='string'?el('b',val):val);return r}
 function copyCode(txt){const c=el('code',txt);c.onclick=()=>{try{copyText(txt)}catch(e){}};return c}
 function renderVip(){
  const list=$('vipList');if(!list)return;list.replaceChildren();
- const pend=vipW.filter(w=>(w.status||'pending')==='pending').length;
- const sub=$('vipMenuSub');if(sub)sub.textContent=pend?('🔔 '+pend+' طلب سحب جديد'):'نقاط · حسابات · فواتير';
- if(document.activeElement!==$('vipMin'))$('vipMin').value=vipSet.minPoints;
- $('vipEnabled').checked=vipSet.enabled!==false;$('vipMinUsd').textContent='= '+usdText(vipSet.minPoints);
- if(vipTabSel==='requests'){
-  const rows=[...vipW].sort((a,b)=>((a.status==='pending'?0:1)-(b.status==='pending'?0:1))||tsMillis(b.createdAt)-tsMillis(a.createdAt));
-  if(!rows.length)list.append(el('p','لا توجد طلبات سحب بعد.','muted'));
-  rows.forEach(w=>{const st=w.status||'pending',acc=vipAccOf(w.number),c=vipCard();
-   const h=el('div','','row');h.append(el('h4',w.name||'بدون اسم'),el('span',st==='pending'?'⏳ بانتظار الدفع':st==='paid'?'✅ مدفوع':'❌ مرفوض','pill '+st));c.append(h);
-   c.append(el('div',ptsText(w.points)+' نقطة = '+usdText(w.points),'big'));
-   c.append(vipRow('الرقم الخاص',copyCode(w.number)),vipRow('عدد الحسابات المستخدمة',String(acc.accounts||w.accountsCount||0)),vipRow('تفاصيل الدفع',copyCode(w.details||'')),vipRow('التاريخ',displayDate(w.createdAt)));
-   if(st==='paid'){c.append(vipRow('رقم الفاتورة',w.invoiceNo||''));if(w.reference)c.append(vipRow('مرجع الدفع',w.reference))}
-   if(st==='pending'){const ref=el('input');ref.placeholder='مرجع/رقم عملية الدفع (اختياري)';const ok=el('button','✅ تم الدفع','btn'),no=el('button','❌ رفض وإرجاع النقاط','btn danger');
-    ok.onclick=()=>vipPay(w,ref.value.trim(),ok);no.onclick=()=>vipReject(w,no);const r=el('div','','row');r.append(ok,no);c.append(ref,r)}
-   list.append(c)});
- }else if(vipTabSel==='accounts'){
-  if(!vipAcc.length)list.append(el('p','لا توجد حسابات مميزة. أنشئ حسابًا من الأعلى.','muted'));
-  [...vipAcc].sort((a,b)=>(b.points||0)-(a.points||0)).forEach(x=>{const c=vipCard(),inv=vipInv.filter(i=>i.number===x.id);
-   const h=el('div','','row');h.append(el('h4',x.name||'بدون اسم'),el('span',x.enabled===false?'موقوف':'نشط','pill'+(x.enabled===false?' rejected':' paid')));c.append(h);
-   c.append(el('div',ptsText(x.points)+' نقطة = '+usdText(x.points),'big'));
-   c.append(vipRow('الرقم الخاص (IP)',copyCode(x.id)),vipRow('PIN الدخول',copyCode(x.pin||'')),vipRow('عدد الحسابات',String(x.accounts||0)),vipRow('الفواتير',inv.length+' · '+usdText(inv.reduce((s,i)=>s+(Number(i.points)||0),0))+' مدفوعة'));
-   const r=el('div','','row'),tg=el('button',x.enabled===false?'تفعيل الحساب':'إيقاف الحساب','btn'),np=el('button','PIN جديد','btn'),fv=el('button','عرض الفواتير','btn'),box=el('div','','hidden');
-   tg.onclick=async()=>{await updateDoc(doc(db,'vipAccounts',x.id),{enabled:x.enabled===false})};
-   np.onclick=async()=>{if(confirm('إنشاء PIN جديد؟ سيتوقف PIN القديم.'))await updateDoc(doc(db,'vipAccounts',x.id),{pin:rnd(6,true)})};
-   fv.onclick=()=>{box.replaceChildren();if(!inv.length)box.append(el('p','لا توجد فواتير بعد.','muted'));inv.sort((a,b)=>tsMillis(b.createdAt)-tsMillis(a.createdAt)).forEach(i=>box.append(el('div',i.invoiceNo+' · '+ptsText(i.points)+' نقطة = '+usdText(i.points)+' · '+displayDate(i.createdAt),'muted')));box.classList.toggle('hidden')};
-   r.append(tg,np,fv);c.append(r,box);list.append(c)});
+ const due=vipAcc.reduce((s,x)=>s+(Number(x.points)||0),0),paid=vipInv.reduce((s,i)=>s+(Number(i.points)||0),0),withPts=vipAcc.filter(x=>(Number(x.points)||0)>0).length;
+ $('vipTotAcc').textContent=vipAcc.length;$('vipTotUsd').textContent=usdText(due);$('vipTotPaid').textContent=usdText(paid);
+ const sub=$('vipMenuSub');if(sub)sub.textContent=vipAcc.length?(withPts+' حساب لديه نقاط · '+usdText(due)+' مستحق'):'نقاط · حسابات · فواتير';
+ $('vipEnabled').checked=vipSet.enabled!==false;
+ const q=($('vipSearch').value||'').trim().toLowerCase();
+ if(vipTabSel==='accounts'){
+  const rows=vipAcc.filter(x=>!q||[x.name,x.id,x.googleEmail,x.method,x.walletNumber].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>(b.points||0)-(a.points||0));
+  if(!rows.length)list.append(el('p',vipAcc.length?'لا نتائج.':'لا توجد حسابات بعد. يظهر الحساب هنا عندما يسجّل المميز من التطبيق الثالث.','muted'));
+  rows.forEach(x=>list.append(vipAccountCard(x)));
  }else{
-  if(!vipInv.length)list.append(el('p','لا توجد فواتير بعد. تظهر هنا بعد الدفع.','muted'));
-  [...vipInv].sort((a,b)=>tsMillis(b.createdAt)-tsMillis(a.createdAt)).forEach(i=>{const c=vipCard();c.append(el('h4','🧾 '+i.invoiceNo),el('div',ptsText(i.points)+' نقطة = '+usdText(i.points),'big'),vipRow('الحساب',(i.name||'')+' · '+i.number),vipRow('عدد الحسابات وقت الدفع',String(i.accountsCount||0)),vipRow('التاريخ',displayDate(i.createdAt)));if(i.reference)c.append(vipRow('مرجع الدفع',i.reference));list.append(c)});
+  const rows=[...vipInv].filter(i=>!q||[i.name,i.number,i.invoiceNo,i.method].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>tsMillis(b.createdAt)-tsMillis(a.createdAt));
+  if(!rows.length)list.append(el('p','لا توجد فواتير بعد. تظهر هنا كل عملية دفع (تصفير).','muted'));
+  rows.forEach(i=>{const c=el('div','','vcard gold');c.append(el('h4','🧾 '+i.invoiceNo+' · ✅ مدفوع'),el('div',ptsText(i.points)+' نقطة = '+usdText(i.points),'big'),vipRow('الحساب',(i.name||'')+' · '+i.number),vipRow('المحفظة',(i.method||'—')+(i.walletNumber?' · '+i.walletNumber:'')),vipRow('عدد الحسابات وقت الدفع',String(i.accountsCount||0)),vipRow('التاريخ',displayDate(i.createdAt)));if(i.reference)c.append(vipRow('مرجع الدفع',i.reference));list.append(c)});
  }
 }
-async function vipPay(w,reference,btn){
- try{btn.disabled=true;const cur=await getDoc(doc(db,'vipWithdrawals',w.id));if(!cur.exists()||(cur.data().status||'pending')!=='pending'){alert('تمت معالجة هذا الطلب مسبقًا');return}
-  const acc=vipAccOf(w.number),no='INV-'+rnd(8,false),b=writeBatch(db);
-  b.update(doc(db,'vipWithdrawals',w.id),{status:'paid',paidAt:serverTimestamp(),invoiceNo:no,reference,accountsCount:Number(acc.accounts)||0});
-  b.set(doc(db,'vipInvoices',no),{invoiceNo:no,number:w.number,name:w.name||acc.name||'',points:w.points,accountsCount:Number(acc.accounts)||0,reference,details:w.details||'',withdrawalId:w.id,createdAt:serverTimestamp()});
-  await b.commit()}catch(e){alert('تعذّر الدفع: '+e.message)}finally{btn.disabled=false}}
-async function vipReject(w,btn){
- if(!confirm('رفض الطلب وإرجاع '+ptsText(w.points)+' نقطة إلى الحساب؟'))return;
- try{btn.disabled=true;const cur=await getDoc(doc(db,'vipWithdrawals',w.id));if(!cur.exists()||(cur.data().status||'pending')!=='pending'){alert('تمت معالجة هذا الطلب مسبقًا');return}
-  const b=writeBatch(db);b.update(doc(db,'vipWithdrawals',w.id),{status:'rejected',rejectedAt:serverTimestamp()});b.update(doc(db,'vipAccounts',w.number),{points:increment(Number(w.points)||0)});await b.commit()}catch(e){alert('تعذّر الرفض: '+e.message)}finally{btn.disabled=false}}
+function vipAccountCard(x){
+ const susp=vipSusp(x),inv=vipInv.filter(i=>i.number===x.id),c=el('div','','vcard gold'+(susp?' susp':''));
+ const h=el('div','','ribbon');h.append(el('h4','👑 '+(x.name||'بدون اسم')));
+ if(susp)h.append(el('span','⛔ موقوف'+(susp.until?' حتى '+new Date(susp.until).toLocaleString('ar'):' حتى ترفعه'),'pill susp'));else h.append(el('span','نشط','pill paid'));
+ if(x.recovery)h.append(el('span','🔑 بانتظار الاستعادة','pill recov'));
+ c.append(h,el('div',ptsText(x.points)+' نقطة = '+usdText(x.points),'big'));
+ c.append(vipRow('الرقم الخاص (IP)',copyCode(x.id)),vipRow('المحفظة',x.method||'—'),vipRow('رقم المحفظة / ID',x.walletNumber?copyCode(x.walletNumber):'—'),vipRow('Google',x.googleEmail||'غير مربوط'),vipRow('عدد الحسابات المستخدمة',String(x.accounts||0)),vipRow('الفواتير',inv.length+' · '+usdText(inv.reduce((s,i)=>s+(Number(i.points)||0),0))+' مدفوعة'));
+ if(susp&&x.banReason)c.append(vipRow('سبب الحظر',x.banReason));
+ const note=vipNotice[x.id]||(x.recovery?'رمز الاستعادة الحالي: '+x.recovery:'');
+ if(note){const n=el('div','','sub');n.append(el('div','أعطِ هذا الرمز للمميز (مع رقمه الخاص):','muted'),el('div',(vipNotice[x.id]||('رمز الاستعادة: '+x.recovery)).replace(/^.*?: /,''),'code'));c.append(n)}
+ // pay = reset to zero
+ const pay=el('div','','sub'),ref=el('input');ref.placeholder='مرجع/رقم عملية الدفع (اختياري)';const zb=el('button','💰 تصفير الحساب (تم الدفع)','primary');zb.disabled=!(Number(x.points)>0);zb.onclick=()=>vipZero(x,ref.value.trim(),zb);pay.append(ref,zb);c.append(pay);
+ // ban
+ const bn=el('div','','sub');
+ if(susp){const lift=el('button','✅ رفع الحظر','btn');lift.onclick=async()=>{try{await updateDoc(doc(db,'vipAccounts',x.id),{banned:false,bannedUntil:0,banReason:'',enabled:true})}catch(e){alert(e.message)}};bn.append(lift)}
+ else{const g=el('div','','grid2'),sel=document.createElement('select');[['1','يوم'],['3','3 أيام'],['7','أسبوع'],['14','أسبوعان'],['30','شهر'],['0','حتى أرفعه يدويًا']].forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.append(o)});const rs=el('input');rs.placeholder='سبب المخالفة';g.append(sel,rs);const bb=el('button','⛔ حظر مؤقت','btn danger');bb.onclick=async()=>{if(!confirm('حظر '+(x.name||x.id)+'؟'))return;const d=Number(sel.value);try{await updateDoc(doc(db,'vipAccounts',x.id),{banned:true,bannedUntil:d?Date.now()+d*86400000:0,banReason:rs.value.trim(),bannedAt:serverTimestamp()})}catch(e){alert(e.message)}};bn.append(g,bb)}
+ c.append(bn);
+ // edit
+ const ed=el('details','','sub');ed.append(el('summary','✏️ تعديل الاسم / المحفظة'));
+ const en=el('input'),em=el('input'),ew=el('input');en.value=x.name||'';em.value=x.method||'';ew.value=x.walletNumber||'';en.placeholder='الاسم';em.placeholder='اسم المحفظة (Binance / Payeer / شدات ببجي…)';ew.placeholder='رقم المحفظة أو ID (ببجي…) إن وُجد';
+ const sv=el('button','حفظ التعديل','btn');sv.onclick=async()=>{try{await updateDoc(doc(db,'vipAccounts',x.id),{name:en.value.trim(),method:em.value.trim(),walletNumber:ew.value.trim()});sv.textContent='✓ تم'}catch(e){alert(e.message)}};ed.append(en,em,ew,sv);c.append(ed);
+ // resets
+ const rs2=el('div','','sub'),r1=el('button','🔑 إعادة تعيين PIN','btn'),r2=el('button','🔗 إعادة تعيين Google + PIN','btn');
+ const reset=async(withGoogle)=>{if(!confirm(withGoogle?'فك ربط حساب Google وإعادة تعيين PIN؟ سيحتاج المميز إلى رمز استعادة.':'إعادة تعيين PIN؟ سيحتاج المميز إلى رمز استعادة.'))return;const code=rnd(6,true);try{await updateDoc(doc(db,'vipAccounts',x.id),{recovery:code,pinHash:'',pinSalt:'',pinFails:0,pinLockedUntil:0,...(withGoogle?{googleUid:'',googleEmail:''}:{})});vipNotice[x.id]='رمز الاستعادة: '+code;renderVip()}catch(e){alert(e.message)}};
+ r1.onclick=()=>reset(false);r2.onclick=()=>reset(true);rs2.append(r1,r2);c.append(rs2);
+ // invoices of this account
+ const fv=el('button','🧾 فواتير هذا الحساب','btn'),box=el('div','','hidden');
+ fv.onclick=()=>{box.replaceChildren();if(!inv.length)box.append(el('p','لا توجد فواتير بعد.','muted'));[...inv].sort((a,b)=>tsMillis(b.createdAt)-tsMillis(a.createdAt)).forEach(i=>box.append(el('div',i.invoiceNo+' · '+ptsText(i.points)+' نقطة = '+usdText(i.points)+' · '+displayDate(i.createdAt),'muted')));box.classList.toggle('hidden')};
+ c.append(fv,box);
+ return c;
+}
+async function vipZero(x,reference,btn){
+ try{btn.disabled=true;const cur=await getDoc(doc(db,'vipAccounts',x.id));if(!cur.exists()){alert('الحساب غير موجود');return}
+  const d=cur.data(),p=Math.floor(Number(d.points)||0);if(p<=0){alert('لا توجد نقاط لتصفيرها');return}
+  if(!confirm('دفع '+usdText(p)+' ('+ptsText(p)+' نقطة) إلى '+(d.name||x.id)+' وتصفير الحساب؟\nالمحفظة: '+(d.method||'—')+(d.walletNumber?' · '+d.walletNumber:'')))return;
+  const no='INV-'+rnd(8,false),b=writeBatch(db);
+  b.update(doc(db,'vipAccounts',x.id),{points:increment(-p),lastPaidAt:serverTimestamp()});
+  b.set(doc(db,'vipInvoices',no),{invoiceNo:no,number:x.id,name:d.name||'',method:d.method||'',walletNumber:d.walletNumber||'',points:p,accountsCount:Number(d.accounts)||0,reference,createdAt:serverTimestamp()});
+  await b.commit()}catch(e){alert('تعذّر التصفير: '+e.message)}finally{btn.disabled=false}}
 function bindVip(){
- $('vipSaveSet').onclick=async()=>{const m=Math.max(1,Math.floor(Number($('vipMin').value))||10000);try{await setDoc(doc(db,'settings','vip'),{enabled:$('vipEnabled').checked,minPoints:m,updatedAt:serverTimestamp()},{merge:true});$('vipSetMsg').textContent='✓ تم الحفظ'}catch(e){$('vipSetMsg').textContent='تعذّر الحفظ: '+e.message}};
- $('vipMin').oninput=()=>{$('vipMinUsd').textContent='= '+usdText($('vipMin').value)};
- $('vipCreate').onclick=async()=>{const name=$('vipName').value.trim();if(name.length<2){$('vipCreateMsg').textContent='اكتب اسم المميز';return}
-  try{let num;for(let i=0;i<20;i++){num=String(1+Math.floor(Math.random()*9))+rnd(8,true);if(!vipAcc.some(x=>x.id===num)&&!(await getDoc(doc(db,'vipAccounts',num))).exists())break}
-   const pin=rnd(6,true);await setDoc(doc(db,'vipAccounts',num),{name,pin,points:0,accounts:0,enabled:true,createdAt:serverTimestamp()});
-   $('vipName').value='';$('vipCreateMsg').textContent='✓ تم الإنشاء — الرقم الخاص: '+num+' · PIN: '+pin+' (أعطه للمميز، ويظهر لك دائمًا في «الحسابات»)'}catch(e){$('vipCreateMsg').textContent='تعذّر الإنشاء: '+e.message}};
+ $('vipSaveSet').onclick=async()=>{try{await setDoc(doc(db,'settings','vip'),{enabled:$('vipEnabled').checked,updatedAt:serverTimestamp()},{merge:true});$('vipSetMsg').textContent='✓ تم الحفظ'}catch(e){$('vipSetMsg').textContent='تعذّر الحفظ: '+e.message}};
+ $('vipSearch').oninput=renderVip;
 }
 let users=[],withdrawals=[],methods=[],walls=[],status='pending',unsubs=[],offerTx=[],postLogs=[],pointsErr='',methodImg='',wallImg='';const verifyCache=new Map(),autoBanned=new Set();
 setPersistence(auth,browserLocalPersistence).catch(console.error);
@@ -437,9 +461,8 @@ unsubs.push(onSnapshot(collection(db,'withdrawals'),s=>{withdrawals=s.docs.map(d
 unsubs.push(onSnapshot(collection(db,'withdrawMethods'),s=>{methods=s.docs.map(d=>({id:d.id,...d.data()}));renderMethods();renderWithdrawals();renderStats()}));
 unsubs.push(onSnapshot(doc(db,'settings','appTheme'),onThemeDoc,()=>{}));
 unsubs.push(onSnapshot(collection(db,'vipAccounts'),s=>{vipAcc=s.docs.map(d=>({id:d.id,...d.data()}));renderVip()},e=>console.warn('vipAccounts',e.message)));
-unsubs.push(onSnapshot(collection(db,'vipWithdrawals'),s=>{vipW=s.docs.map(d=>({id:d.id,...d.data()}));renderVip()},e=>console.warn('vipWithdrawals',e.message)));
 unsubs.push(onSnapshot(collection(db,'vipInvoices'),s=>{vipInv=s.docs.map(d=>({id:d.id,...d.data()}));renderVip()},e=>console.warn('vipInvoices',e.message)));
-unsubs.push(onSnapshot(doc(db,'settings','vip'),s=>{const d=s.exists()?s.data():{};vipSet={enabled:d.enabled!==false,minPoints:Math.max(1,Math.floor(Number(d.minPoints))||10000)};renderVip()},()=>{}));
+unsubs.push(onSnapshot(doc(db,'settings','vip'),s=>{const d=s.exists()?s.data():{};vipSet={enabled:d.enabled!==false};renderVip()},()=>{}));
 bindVip();
 unsubs.push(onSnapshot(collection(db,'offerWalls'),s=>{walls=s.docs.map(d=>({id:d.id,...d.data()}));renderWalls();renderStats()}));
 });
