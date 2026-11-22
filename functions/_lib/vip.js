@@ -1,5 +1,5 @@
 // Shared helpers for the VIP (third app) endpoints.
-import { getDoc, HttpError, timingSafeEqual } from './fb.js';
+import { getDoc, getDocMeta, queryEq, commit, write, HttpError, timingSafeEqual, sha256Hex } from './fb.js';
 
 export const NUM_RE = /^\d{6,12}$/;
 // 1 USD = 1000 points, always shown with 2 decimals (truncated to whole cents), e.g. 12500 -> $12.50
@@ -13,19 +13,53 @@ export const cleanNumber = (v) => {
   if (!NUM_RE.test(n)) throw new HttpError(400, 'Invalid number');
   return n;
 };
+export const cleanPin = (v) => {
+  const p = String(v == null ? '' : v).trim();
+  if (!/^\d{4,8}$/.test(p)) throw new HttpError(400, 'PIN must be 4 to 8 digits');
+  return p;
+};
+export const cleanText = (v, min, max, what) => {
+  const t = String(v == null ? '' : v).replace(/[\u0000-\u001f<>]/g, '').replace(/\s+/g, ' ').trim();
+  if (t.length < min) throw new HttpError(400, `Please enter ${what}`);
+  if (t.length > max) throw new HttpError(400, `${what} is too long`);
+  return t;
+};
 export async function vipSettings(env) {
   const s = (await getDoc(env, 'settings/vip')) || {};
-  return { enabled: s.enabled !== false, minPoints: Math.max(1, Math.floor(Number(s.minPoints)) || 10000) };
+  return { enabled: s.enabled !== false };
 }
 export const tsMs = (v) => (v ? Date.parse(v) || 0 : 0);
 export const byNewest = (a, b) => tsMs(b.createdAt) - tsMs(a.createdAt);
 // Firestore commit conflicts (document changed between read and write) are retried by callers.
 export const isConflict = (r) => r.status === 409 || r.status === 404 || (r.body && r.body.error && ['ABORTED', 'FAILED_PRECONDITION', 'NOT_FOUND'].includes(r.body.error.status));
 
-// The third app signs in with the private number + the PIN that the admin gave that account.
-export async function authAccount(env, body) {
-  const number = cleanNumber(body && body.number), pin = String((body && body.pin) == null ? '' : body.pin).trim();
-  const acc = await getDoc(env, `vipAccounts/${number}`);
-  if (!acc || acc.enabled === false || !acc.pin || !timingSafeEqual(acc.pin, pin)) throw new HttpError(401, 'Wrong number or PIN');
-  return { number, acc };
+export const SUSPENDED = 'This account is suspended by the admin';
+/** null when the account is usable, otherwise {reason, until(ms, 0 = until the admin lifts it)} */
+export function suspension(acc, now = Date.now()) {
+  if (acc.enabled === false) return { reason: String(acc.banReason || ''), until: 0 };
+  const until = Number(acc.bannedUntil) || 0;
+  if (acc.banned === true && (!until || now < until)) return { reason: String(acc.banReason || ''), until };
+  return null;
 }
+export const suspendedError = (s) => new HttpError(403, SUSPENDED, { suspended: true, reason: s.reason, until: s.until });
+
+export const hashPin = (salt, pin) => sha256Hex(`${salt}:${pin}`);
+export async function accountByUid(env, uid) {
+  const r = await queryEq(env, 'vipAccounts', 'googleUid', uid, 2);
+  return r.length ? { number: r[0].id, acc: r[0].data } : null;
+}
+const MAX_FAILS = 5, LOCK_MS = 15 * 60 * 1000;
+/** Verifies the PIN of a loaded account (with lock-out after 5 wrong attempts). */
+export async function checkPin(env, number, acc, pin) {
+  const now = Date.now();
+  if (Number(acc.pinLockedUntil) > now) throw new HttpError(429, `Too many wrong PIN attempts. Try again in ${Math.ceil((acc.pinLockedUntil - now) / 60000)} min`);
+  if (!acc.pinHash || !acc.pinSalt) throw new HttpError(409, 'This account needs to be recovered first', { recover: true });
+  if (timingSafeEqual(acc.pinHash, await hashPin(acc.pinSalt, pin))) {
+    if (Number(acc.pinFails) > 0) await commit(env, [write(env, `vipAccounts/${number}`, { set: [[['pinFails'], 0]], exists: true })]);
+    return;
+  }
+  const fails = (Number(acc.pinFails) || 0) + 1;
+  await commit(env, [write(env, `vipAccounts/${number}`, { set: [[['pinFails'], fails >= MAX_FAILS ? 0 : fails], [['pinLockedUntil'], fails >= MAX_FAILS ? now + LOCK_MS : 0]], exists: true })]);
+  throw new HttpError(401, fails >= MAX_FAILS ? 'Too many wrong PIN attempts. Locked for 15 minutes' : 'Wrong PIN');
+}
+export { getDocMeta };
