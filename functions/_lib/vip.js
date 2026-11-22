@@ -1,4 +1,4 @@
-// Shared helpers for the VIP (third app) endpoints.
+// Shared helpers for the VIP (third app) endpoints.٧
 import { getDoc, getDocMeta, queryEq, commit, write, HttpError, timingSafeEqual, sha256Hex } from './fb.js';
 
 export const NUM_RE = /^\d{6,12}$/;
