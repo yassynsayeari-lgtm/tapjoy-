@@ -7,7 +7,7 @@ export const DEFAULT_API_KEY = 'AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI'; // pub
 export const DEFAULT_ADMIN_UID = 'wQgo9HTzP0NWC6JO2D1Di8iIPm62';
 
 export class HttpError extends Error {
-  constructor(status, message) { super(message); this.status = status; }
+  constructor(status, message, extra) { super(message); this.status = status; if (extra) this.extra = extra; }
 }
 
 /* ---------- CORS / responses ---------- */
@@ -28,7 +28,7 @@ export function handler(fn) {
     if (ctx.request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
     try { return await fn(ctx); }
     catch (e) {
-      if (e instanceof HttpError) return json({ ok: false, error: e.message }, e.status);
+      if (e instanceof HttpError) return json({ ok: false, error: e.message, ...(e.extra || {}) }, e.status);
       console.error('Unhandled error', e);
       return json({ ok: false, error: 'Server error' }, 500);
     }
@@ -96,7 +96,7 @@ export async function verifyIdToken(env, request) {
   const u = j.users && j.users[0];
   if (!res.ok || !u || !u.localId) throw new HttpError(401, 'Invalid or expired token');
   if (u.disabled) throw new HttpError(403, 'Account disabled');
-  return { uid: u.localId };
+  return { uid: u.localId, email: u.email || '', name: u.displayName || '' };
 }
 export async function requireAdmin(env, request) {
   const { uid } = await verifyIdToken(env, request);
