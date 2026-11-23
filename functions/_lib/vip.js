@@ -13,9 +13,15 @@ export const cleanNumber = (v) => {
   if (!NUM_RE.test(n)) throw new HttpError(400, 'Invalid number');
   return n;
 };
+// Login: lenient (also accepts the older 4-8 digit PINs). Creation: cleanNewPassword (6-32 characters).
 export const cleanPin = (v) => {
-  const p = String(v == null ? '' : v).trim();
-  if (!/^\d{4,8}$/.test(p)) throw new HttpError(400, 'PIN must be 4 to 8 digits');
+  const p = String(v == null ? '' : v);
+  if (p.length < 4 || p.length > 64) throw new HttpError(400, 'Enter your password');
+  return p;
+};
+export const cleanNewPassword = (v) => {
+  const p = String(v == null ? '' : v);
+  if (p.length < 6 || p.length > 32) throw new HttpError(400, 'Password must be 6 to 32 characters');
   return p;
 };
 export const cleanText = (v, min, max, what) => {
@@ -50,16 +56,35 @@ export async function accountByUid(env, uid) {
 }
 const MAX_FAILS = 5, LOCK_MS = 15 * 60 * 1000;
 /** Verifies the PIN of a loaded account (with lock-out after 5 wrong attempts). */
-export async function checkPin(env, number, acc, pin) {
+export async function checkPin(env, number, acc, pin, numberOk = true) {
   const now = Date.now();
-  if (Number(acc.pinLockedUntil) > now) throw new HttpError(429, `Too many wrong PIN attempts. Try again in ${Math.ceil((acc.pinLockedUntil - now) / 60000)} min`);
+  if (Number(acc.pinLockedUntil) > now) throw new HttpError(429, `Too many wrong attempts. Try again in ${Math.ceil((acc.pinLockedUntil - now) / 60000)} min`);
   if (!acc.pinHash || !acc.pinSalt) throw new HttpError(409, 'This account needs to be recovered first', { recover: true });
-  if (timingSafeEqual(acc.pinHash, await hashPin(acc.pinSalt, pin))) {
+  const pinOk = timingSafeEqual(acc.pinHash, await hashPin(acc.pinSalt, pin));
+  if (pinOk && numberOk) {
     if (Number(acc.pinFails) > 0) await commit(env, [write(env, `vipAccounts/${number}`, { set: [[['pinFails'], 0]], exists: true })]);
     return;
   }
   const fails = (Number(acc.pinFails) || 0) + 1;
   await commit(env, [write(env, `vipAccounts/${number}`, { set: [[['pinFails'], fails >= MAX_FAILS ? 0 : fails], [['pinLockedUntil'], fails >= MAX_FAILS ? now + LOCK_MS : 0]], exists: true })]);
-  throw new HttpError(401, fails >= MAX_FAILS ? 'Too many wrong PIN attempts. Locked for 15 minutes' : 'Wrong PIN');
+  throw new HttpError(401, fails >= MAX_FAILS ? 'Too many wrong attempts. Locked for 15 minutes' : 'Wrong number or password');
 }
 export { getDocMeta };
+
+/* ---- categories (wallet types) managed by the admin in vipMethods; "Personal" is built in and needs no ID ---- */
+export const PERSONAL = { id: 'personal', name: 'Personal', requiresId: false, idLabel: '' };
+export async function listMethods(env) {
+  const rows = await queryEq(env, 'vipMethods', 'kind', 'method', 200);
+  const m = rows.filter((x) => x.data.enabled !== false && x.data.name)
+    .map((x) => ({ id: x.id, name: String(x.data.name), requiresId: x.data.requiresId !== false, idLabel: String(x.data.idLabel || ''), order: Number(x.data.order) || 0 }))
+    .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
+  return [PERSONAL, ...m.map(({ order, ...r }) => r)];
+}
+/** Resolves the chosen category and its ID (wallet number); throws friendly errors. */
+export async function pickMethod(env, methodId, walletNumber) {
+  const id = String(methodId || '');
+  const m = (await listMethods(env)).find((x) => x.id === id);
+  if (!m) throw new HttpError(400, 'Please choose a category');
+  const wn = m.requiresId ? cleanText(walletNumber, 1, 80, 'the ' + (m.idLabel || 'ID number')) : '';
+  return { method: m, walletNumber: wn };
+}
