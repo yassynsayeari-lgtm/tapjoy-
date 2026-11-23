@@ -27,4 +27,3 @@ export const onRequest = handler(async ({ request, env }) => {
   }
   throw new HttpError(503, 'Could not create a number, please try again');
 });
-٨
