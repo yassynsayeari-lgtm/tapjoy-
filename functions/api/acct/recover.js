@@ -1,4 +1,4 @@
-// POST /api/vip/recover   (Authorization: Bearer <Google ID token>)   body: {"number":"...","code":"<recovery code from the admin>","pin":"new PIN"}
+// POST /api/acct/recover   (Authorization: Bearer <Google ID token>)   body: {"number":"...","code":"<recovery code from the admin>","pin":"new PIN"}
 // Used after the admin reset the PIN or the Google link of an account: the owner signs in again and sets a PIN.
 import { handler, json, HttpError, readJson, getDoc, commit, write, mustCommit, timingSafeEqual, verifyIdToken } from '../../_lib/fb.js';
 import { accountByUid, cleanNumber, cleanNewPassword, hashPin, rid, suspension, suspendedError } from '../../_lib/vip.js';

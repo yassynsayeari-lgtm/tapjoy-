@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#101a45">
+<meta name="theme-color" content="#101a45"><meta name="robots" content="noindex,nofollow,noarchive"><link rel="icon" href="data:,">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>YASJOY VIP</title>
+<title>Account</title>
 <style>
 :root{--gold:#ffd24a;--gold2:#ff9f1a;--ink:#f4f6ff;--mut:#a9b4e6;--card:#1d2b66;--card2:#26377d;--line:#3a4b95;--ok:#37d67a;--bad:#ff6b88;--bg:#101a45;--field:#141f52}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -71,6 +71,19 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 @keyframes pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
 @keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
 section.fade{animation:fadein .25s ease both}@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.hero{box-shadow:0 18px 40px #ff8a0044,inset 0 1px 0 #fff8}
+.hero .pts{letter-spacing:.5px;text-shadow:0 2px 0 #fff5}
+.card{backdrop-filter:blur(6px)}
+.card h3{display:flex;align-items:center;gap:8px}
+.numbox{background:linear-gradient(135deg,#141f52,#1a2766);box-shadow:inset 0 0 0 1px #ffd24a22}
+.item{transition:transform .15s}.item:active{transform:scale(.99)}
+.tabbar{border-radius:22px 22px 0 0;box-shadow:0 -10px 30px #0006}
+.tabbar button.on{background:linear-gradient(180deg,#ffd24a22,#ffd24a0a)}
+.gbtn{transition:transform .15s}.gbtn:active{transform:scale(.98)}
+.center .logo{animation:float 3s ease-in-out infinite}@keyframes float{50%{transform:translateY(-6px)}}
+input::placeholder{color:#7f8ccc}
+@media(prefers-reduced-motion:reduce){.center .logo,.spin{animation:none}}
 </style>
 </head>
 <body>
@@ -82,31 +95,32 @@ section.fade{animation:fadein .25s ease both}@keyframes fadein{from{opacity:0;tr
 
 <!-- 1) Google sign-in only -->
 <section id="login" class="hidden center">
- <div class="logo">👑</div><h1>YASJOY VIP</h1><p>Your private account for points &amp; payments</p>
+ <div class="logo">👑</div><h1>YASJOY Account</h1><p>Create your account or sign in</p>
  <div class="card">
   <button class="gbtn" id="gBtn"><svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg><span>Continue with Google</span></button>
-  <p class="msg" id="loginMsg"></p>
-  <p class="note">Each VIP account is linked to one Google account. If you delete the app, sign in again with the same Google account, your private number and your password — nothing is lost.</p>
+  <p class="msg" id="loginMsg"></p><p class="note" id="wvNote" hidden style="color:var(--gold)">If Google does not open here, open this page in Chrome.</p>
+  <p class="note">Each account is linked to one Google account. If you delete the app, sign in again with the same Google account, your Account ID and your password — nothing is lost.</p>
  </div>
 </section>
 
-<!-- 2) Google account has no VIP account yet: create one -->
+<!-- 2) create account -->
 <section id="setup" class="hidden"><div class="wrap">
- <div class="top"><div class="brand">👑 VIP</div><div class="who" style="text-align:right"><span id="setupMail"></span></div><button class="icon" id="setupOut" aria-label="Sign out">⎋</button></div>
+ <div class="top"><div class="brand">👑 Account</div><div class="who" style="text-align:right"><span id="setupMail"></span></div><button class="icon" id="setupOut" aria-label="Sign out">⎋</button></div>
  <div class="card" id="newBox">
   <h3>Create your account</h3>
+  <label for="fNum">Account ID (from the admin)</label><input id="fNum" inputmode="numeric" maxlength="12" autocomplete="off" placeholder="9-digit Account ID">
   <label for="fName">Name</label><input id="fName" maxlength="40" autocomplete="off" placeholder="Your name">
   <label for="fMethod">Category</label><select id="fMethod"></select>
   <div id="fIdBox"><label for="fWallet" id="fWalletLbl">ID number</label><input id="fWallet" maxlength="80" autocomplete="off" placeholder="ID number"></div>
   <label for="fPass">Password</label><input id="fPass" type="password" maxlength="32" autocomplete="new-password" placeholder="At least 6 characters">
   <label for="fPass2">Confirm password</label><input id="fPass2" type="password" maxlength="32" autocomplete="new-password" placeholder="Repeat the password">
-  <p class="note">Your private number is created automatically after you register. Keep your password safe.</p>
+  <p class="note">You need an Account ID from the admin. Without it an account cannot be created. Keep your password safe.</p>
   <button class="btn" id="regBtn">Create account</button><p class="msg" id="regMsg"></p>
  </div>
  <div class="card hidden" id="recBox">
   <h3>Account reset by the admin</h3>
-  <p class="note">The admin reset your account. Enter your private number, the recovery code the admin gave you and a new password.</p>
-  <label for="rNum">Private number</label><input id="rNum" inputmode="numeric" maxlength="12" autocomplete="off">
+  <p class="note">The admin reset your account. Enter your Account ID, the recovery code the admin gave you and a new password.</p>
+  <label for="rNum">Account ID</label><input id="rNum" inputmode="numeric" maxlength="12" autocomplete="off">
   <label for="rCode">Recovery code</label><input id="rCode" inputmode="numeric" maxlength="12" autocomplete="off">
   <label for="rPass">New password</label><input id="rPass" type="password" maxlength="32" autocomplete="new-password">
   <button class="btn" id="recBtn">Continue</button><p class="msg" id="recMsg"></p>
@@ -117,7 +131,7 @@ section.fade{animation:fadein .25s ease both}@keyframes fadein{from{opacity:0;tr
 <section id="pinScr" class="hidden center">
  <div class="logo">🔐</div><h1 id="pinHello">Welcome back</h1><p id="pinMail"></p>
  <div class="card">
-  <label for="lNum">Private number</label><input id="lNum" inputmode="numeric" maxlength="12" autocomplete="off" placeholder="9-digit number from your account">
+  <label for="lNum">Account ID</label><input id="lNum" inputmode="numeric" maxlength="12" autocomplete="off" placeholder="9-digit number from your account">
   <label for="lPass">Password</label><input id="lPass" type="password" maxlength="64" autocomplete="current-password" placeholder="Password">
   <button class="btn" id="pinBtn">Sign in</button><p class="msg" id="pinMsg"></p>
   <button class="linkbtn" id="forgotBtn">Forgot password?</button>
@@ -148,10 +162,7 @@ section.fade{animation:fadein .25s ease both}@keyframes fadein{from{opacity:0;tr
   <section id="tabPoints" class="fade">
    <div class="card hero"><small>YOUR POINTS</small><div class="pts" id="pts">0</div><div class="usd" id="usd">$0.00</div>
     <div class="chips"><span class="chip">👥 <span id="accs">0</span> accounts used</span><span class="chip">1 USD = 1,000 pts</span></div></div>
-   <div class="card"><h3>Your private number</h3><div class="numbox"><b id="myNum">—</b><button id="copyNum">Copy</button></div>
-    <h4>How to add points</h4>
-    <ol class="steps"><li>Open the YASJOY user app → <b>Withdraw your points</b>.</li><li>Tap <b>Enter Private Number</b> and type the number above.</li><li>Press <b>OK</b> — all your coins arrive here as points.</li></ol>
-    <p class="note" style="margin:10px 0 0">The admin pays you manually to your registered wallet, then your account is reset to zero and the payment appears under <b>Payments</b>.</p></div>
+   <div class="card"><h3>Your Account ID</h3><div class="numbox"><b id="myNum">—</b><button id="copyNum">Copy</button></div></div>
    <div class="card"><h3>Points received</h3><div id="transfers"></div></div>
   </section>
 
@@ -161,9 +172,10 @@ section.fade{animation:fadein .25s ease both}@keyframes fadein{from{opacity:0;tr
 
   <section id="tabProfile" class="hidden">
    <div class="card"><h3>Your account</h3>
-    <div class="kv"><span>Name</span><b id="pName"></b></div><div class="kv"><span>Category</span><b id="pMethod"></b></div><div class="kv"><span>ID number</span><b id="pWallet"></b></div><div class="kv"><span>Google</span><b id="pMail"></b></div><div class="kv"><span>Private number</span><b id="pNum"></b></div>
-    <p class="note" style="margin-bottom:0">Name and private number can only be changed by the admin.</p></div>
-   <div class="card"><h3>Change category / ID</h3>
+    <div class="kv"><span>Name</span><b id="pName"></b></div><div class="kv"><span>Category</span><b id="pMethod"></b></div><div class="kv"><span>ID number</span><b id="pWallet"></b></div><div class="kv"><span>Google</span><b id="pMail"></b></div><div class="kv"><span>Account ID</span><b id="pNum"></b></div>
+    <p class="note" style="margin-bottom:0">Your Account ID can only be changed by the admin.</p></div>
+   <div class="card"><h3>Edit my details</h3>
+    <label for="sName">Name</label><input id="sName" maxlength="40" autocomplete="off">
     <label for="sMethod">Category</label><select id="sMethod"></select>
     <div id="sIdBox"><label for="sWallet" id="sWalletLbl">ID number</label><input id="sWallet" maxlength="80" autocomplete="off"></div>
     <label for="sPassA">Your password</label><input id="sPassA" type="password" maxlength="64" autocomplete="current-password" placeholder="Required to save">
@@ -188,7 +200,7 @@ const firebaseConfig={apiKey:"AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI",authDomai
 const app=getApps().length?getApp():initializeApp(firebaseConfig),auth=getAuth(app);
 const $=id=>document.getElementById(id),SS={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}},del(k){try{sessionStorage.removeItem(k)}catch(e){}}};
 const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
-let user=null,num=SS.get('vip_num')||'',pw=SS.get('vip_pw')||'',data=null,timer=null,busy=false,methods=[];
+let user=null,num=SS.get('acct_num')||'',pw=SS.get('acct_pw')||'',data=null,timer=null,busy=false,methods=[];
 const fmt=n=>(Math.floor(Number(n)||0)).toLocaleString('en-US');
 const usd=p=>'$'+(Math.floor(Math.max(0,Math.floor(Number(p)||0))/10)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const when=v=>{if(!v)return '';const d=new Date(v);return isNaN(d)?'':d.toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'})};
@@ -198,12 +210,12 @@ function screen(id){SCREENS.forEach(s=>$(s).classList.toggle('hidden',s!==id));w
 const say=(id,t,cls)=>{const m=$(id);m.textContent=t||'';m.className='msg'+(cls?' '+cls:'')};
 async function api(path,body){
  const token=await user.getIdToken();
- const r=await fetch('/api/vip/'+path,{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify(body||{})});
+ const r=await fetch('/api/acct/'+path,{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify(body||{})});
  const j=await r.json().catch(()=>({}));
  if(!r.ok||j.ok===false){const e=new Error(j.error||('Error '+r.status));e.status=r.status;e.data=j;throw e}
  return j;
 }
-async function loadMethods(){try{const r=await fetch('/api/vip/methods');const j=await r.json();if(j&&j.ok&&Array.isArray(j.methods))methods=j.methods}catch(e){}if(!methods.length)methods=[{id:'personal',name:'Personal',requiresId:false,idLabel:''}]}
+async function loadMethods(){try{const r=await fetch('/api/acct/methods');const j=await r.json();if(j&&j.ok&&Array.isArray(j.methods))methods=j.methods}catch(e){}if(!methods.length)methods=[{id:'personal',name:'Personal',requiresId:false,idLabel:''}]}
 function fillSelect(sel,selected){sel.replaceChildren();methods.forEach(m=>{const o=el('option',m.name);o.value=m.id;sel.append(o)});if(selected&&methods.some(m=>m.id===selected))sel.value=selected}
 function bindIdField(sel,box,lbl,input){const f=()=>{const m=methods.find(x=>x.id===sel.value)||{};box.classList.toggle('hidden',!m.requiresId);lbl.textContent=(m.idLabel||'ID number')+' (required)';input.placeholder=m.idLabel||'ID number'};sel.addEventListener('change',f);f();return f}
 let fReg,fForgot,fSet;
@@ -211,7 +223,7 @@ function seal(){const s=document.createElementNS('http://www.w3.org/2000/svg','s
 function rain(){const box=$('paid');for(let i=0;i<22;i++){const c=el('span',['🪙','💰','💵','✨'][i%4],'coin');c.style.left=(Math.random()*100)+'%';c.style.animationDuration=(2.4+Math.random()*2.6)+'s';c.style.animationDelay=(Math.random()*1.2)+'s';box.append(c);setTimeout(()=>c.remove(),7000)}}
 function showPaid(v){$('paidAmt').textContent=fmt(v.points)+' pts = '+usd(v.points);$('paidInv').textContent=v.invoiceNo?'Invoice '+v.invoiceNo:'';$('paid').classList.remove('hidden');rain()}
 function checkPaid(){
- const key='vip_seen_'+data.account.number,raw=LS.get(key),ids=data.invoices.map(v=>v.invoiceNo);
+ const key='acct_seen_'+data.account.number,raw=LS.get(key),ids=data.invoices.map(v=>v.invoiceNo);
  if(raw===null){LS.set(key,JSON.stringify(ids));return}
  let seen=[];try{seen=JSON.parse(raw)||[]}catch(e){}
  const fresh=data.invoices.filter(v=>!seen.includes(v.invoiceNo));
@@ -219,7 +231,7 @@ function checkPaid(){
 }
 function render(){
  const a=data.account;
- $('who').textContent=a.name||'VIP';$('avatar').textContent=(a.name||'V').trim().charAt(0).toUpperCase();$('whoSub').textContent=(a.method||'')+(a.walletNumber?' · '+a.walletNumber:'');
+ $('who').textContent=a.name||'Account';$('avatar').textContent=(a.name||'V').trim().charAt(0).toUpperCase();$('whoSub').textContent=(a.method||'')+(a.walletNumber?' · '+a.walletNumber:'');
  $('pts').textContent=fmt(a.points);$('usd').textContent=usd(a.points);$('accs').textContent=fmt(a.accounts);$('myNum').textContent=a.number;
  $('pName').textContent=a.name;$('pMethod').textContent=a.method||'—';$('pWallet').textContent=a.walletNumber||'—';$('pMail').textContent=a.email||'—';$('pNum').textContent=a.number;
  const tr=$('transfers');tr.replaceChildren();
@@ -231,7 +243,7 @@ function render(){
  if(data.methods&&data.methods.length)methods=data.methods;
  const keep=$('sMethod').value;fillSelect($('sMethod'),keep&&document.activeElement&&$('tabProfile').contains(document.activeElement)?keep:a.methodId);
  if(!fSet)fSet=bindIdField($('sMethod'),$('sIdBox'),$('sWalletLbl'),$('sWallet'));
- if(!$('tabProfile').contains(document.activeElement)){$('sWallet').value=a.walletNumber||''}
+ if(!$('tabProfile').contains(document.activeElement)){$('sWallet').value=a.walletNumber||'';$('sName').value=a.name||''}
  fSet();
 }
 function suspended(j){
@@ -246,15 +258,16 @@ async function load(silent){
   if(j.state==='register'){$('setupMail').textContent=j.email||'';if(j.methods&&j.methods.length)methods=j.methods;fillSelect($('fMethod'));if(!fReg)fReg=bindIdField($('fMethod'),$('fIdBox'),$('fWalletLbl'),$('fWallet'));fReg();$('newBox').classList.remove('hidden');$('recBox').classList.add('hidden');screen('setup')}
   else if(j.state==='recover'){$('setupMail').textContent=j.email||'';$('newBox').classList.add('hidden');$('recBox').classList.remove('hidden');screen('setup')}
   else if(j.state==='login'){$('pinHello').textContent='Welcome back'+(j.name?', '+j.name:'');$('pinMail').textContent=j.email||'';screen('pinScr');setTimeout(()=>$('lNum').focus(),50)}
-  else if(j.state==='ready'){SS.set('vip_num',num);SS.set('vip_pw',pw);data=j;render();checkPaid();screen('app');startPoll()}
+  else if(j.state==='ready'){SS.set('acct_num',num);SS.set('acct_pw',pw);data=j;render();checkPaid();screen('app');startPoll()}
  }catch(e){
   if(e.data&&e.data.suspended)suspended(e.data);
-  else if((e.status===401||e.status===429)&&pw){pw='';SS.del('vip_pw');screen('pinScr');say('pinMsg',e.message,'bad')}
+  else if((e.status===401||e.status===429)&&pw){pw='';SS.del('acct_pw');screen('pinScr');say('pinMsg',e.message,'bad')}
   else if(!silent){screen('login');say('loginMsg',e.message,'bad')}
  }finally{busy=false}
 }
 function startPoll(){clearInterval(timer);timer=setInterval(()=>{if(!document.hidden)load(true)},15000)}
 
+try{if(/FBAN|FBAV|Instagram|WhatsApp|Line\/|; wv\)/i.test(navigator.userAgent))$('wvNote').hidden=false}catch(e){}
 $('gBtn').onclick=async()=>{
  const b=$('gBtn');b.disabled=true;say('loginMsg','Opening Google…');
  const p=new GoogleAuthProvider();p.setCustomParameters({prompt:'select_account'});
@@ -264,18 +277,19 @@ $('gBtn').onclick=async()=>{
   if(e.code==='auth/popup-closed-by-user'||e.code==='auth/cancelled-popup-request')say('loginMsg','');
   else if(e.code==='auth/operation-not-allowed')say('loginMsg','Google sign-in is not enabled yet (Firebase → Authentication → Sign-in method → Google).','bad');
   else if(e.code==='auth/unauthorized-domain')say('loginMsg','This domain is not authorized in Firebase (Authentication → Settings → Authorized domains).','bad');
-  else say('loginMsg',e.message||'Sign-in failed','bad');
+  else say('loginMsg','Sign-in failed ('+(e.code||'error')+'). '+(e.code==='auth/network-request-failed'?'Check your internet connection.':'Try again, or open this page in Chrome.'),'bad');
  }finally{b.disabled=false}
 };
 $('regBtn').onclick=async()=>{
  const name=$('fName').value.trim(),m=methods.find(x=>x.id===$('fMethod').value)||{},wallet=$('fWallet').value.trim(),p1=$('fPass').value,p2=$('fPass2').value;
+ const rnum=$('fNum').value.trim();if(!/^\d{6,12}$/.test(rnum))return say('regMsg','Enter the Account ID you received from the admin','bad');
  if(name.length<2)return say('regMsg','Enter your name','bad');
  if(!m.id)return say('regMsg','Choose a category','bad');
  if(m.requiresId&&!wallet)return say('regMsg','Enter your '+(m.idLabel||'ID number'),'bad');
  if(p1.length<6)return say('regMsg','Password must be at least 6 characters','bad');
  if(p1!==p2)return say('regMsg','The two passwords do not match','bad');
  $('regBtn').disabled=true;say('regMsg','Creating…');
- try{const j=await api('register',{name,methodId:m.id,walletNumber:m.requiresId?wallet:'',password:p1});num=j.number;pw=p1;say('regMsg','');await load(false)}
+ try{const j=await api('register',{number:rnum,name,methodId:m.id,walletNumber:m.requiresId?wallet:'',password:p1});num=j.number;pw=p1;say('regMsg','');await load(false)}
  catch(e){say('regMsg',e.message,'bad')}finally{$('regBtn').disabled=false}
 };
 $('recBtn').onclick=async()=>{
@@ -286,7 +300,7 @@ $('recBtn').onclick=async()=>{
  try{await api('recover',{number,code,pin:p});num=number;pw=p;say('recMsg','');await load(false)}
  catch(e){say('recMsg',e.message,'bad')}finally{$('recBtn').disabled=false}
 };
-$('pinBtn').onclick=async()=>{const n=$('lNum').value.trim(),p=$('lPass').value;if(!/^\d{6,12}$/.test(n))return say('pinMsg','Enter your private number','bad');if(p.length<4)return say('pinMsg','Enter your password','bad');num=n;pw=p;say('pinMsg','Checking…');busy=false;await load(false);$('lPass').value=''};
+$('pinBtn').onclick=async()=>{const n=$('lNum').value.trim(),p=$('lPass').value;if(!/^\d{6,12}$/.test(n))return say('pinMsg','Enter your Account ID','bad');if(p.length<4)return say('pinMsg','Enter your password','bad');num=n;pw=p;say('pinMsg','Checking…');busy=false;await load(false);$('lPass').value=''};
 $('lPass').addEventListener('keydown',e=>{if(e.key==='Enter')$('pinBtn').click()});
 $('forgotBtn').onclick=async()=>{await loadMethods();fillSelect($('gMethod'));if(!fForgot)fForgot=bindIdField($('gMethod'),$('gIdBox'),$('gWalletLbl'),$('gWallet'));fForgot();say('fgMsg','');screen('forgot')};
 $('fgBack').onclick=()=>screen('pinScr');
@@ -297,15 +311,15 @@ $('fgBtn').onclick=async()=>{
  if(p1.length<6)return say('fgMsg','Password must be at least 6 characters','bad');
  if(p1!==p2)return say('fgMsg','The two passwords do not match','bad');
  $('fgBtn').disabled=true;say('fgMsg','Checking…');
- try{await api('forgot',{methodId:m.id,walletNumber:m.requiresId?wallet:'',password:p1});say('fgMsg','✓ Password changed. Now sign in with your private number and the new password.','ok');setTimeout(()=>{say('pinMsg','Password changed. Sign in with the new password.','ok');screen('pinScr')},1600)}
+ try{await api('forgot',{methodId:m.id,walletNumber:m.requiresId?wallet:'',password:p1});say('fgMsg','✓ Password changed. Now sign in with your Account ID and the new password.','ok');setTimeout(()=>{say('pinMsg','Password changed. Sign in with the new password.','ok');screen('pinScr')},1600)}
  catch(e){say('fgMsg',e.data&&e.data.contactAdmin?e.message:e.message,'bad')}finally{$('fgBtn').disabled=false}
 };
 $('sSave').onclick=async()=>{
  const m=methods.find(x=>x.id===$('sMethod').value)||{},wallet=$('sWallet').value.trim(),cur=$('sPassA').value;
- if(m.requiresId&&!wallet)return say('sMsg','Enter your '+(m.idLabel||'ID number'),'bad');
+ const sname=$('sName').value.trim();if(sname.length<2)return say('sMsg','Enter your name','bad');if(m.requiresId&&!wallet)return say('sMsg','Enter your '+(m.idLabel||'ID number'),'bad');
  if(!cur)return say('sMsg','Enter your password to save','bad');
  $('sSave').disabled=true;say('sMsg','Saving…');
- try{await api('update',{number:data.account.number,password:cur,methodId:m.id,walletNumber:m.requiresId?wallet:''});pw=cur;say('sMsg','✓ Saved','ok');$('sPassA').value='';busy=false;await load(true)}
+ try{await api('update',{number:data.account.number,password:cur,name:sname,methodId:m.id,walletNumber:m.requiresId?wallet:''});pw=cur;say('sMsg','✓ Saved','ok');$('sPassA').value='';busy=false;await load(true)}
  catch(e){say('sMsg',e.message,'bad')}finally{$('sSave').disabled=false}
 };
 $('cSave').onclick=async()=>{
@@ -314,10 +328,10 @@ $('cSave').onclick=async()=>{
  if(n.length<6)return say('cMsg','New password must be at least 6 characters','bad');
  if(n!==n2)return say('cMsg','The two passwords do not match','bad');
  $('cSave').disabled=true;say('cMsg','Saving…');
- try{await api('update',{number:data.account.number,password:o,newPassword:n});pw=n;SS.set('vip_pw',pw);say('cMsg','✓ Password changed','ok');$('cOld').value=$('cNew').value=$('cNew2').value=''}
+ try{await api('update',{number:data.account.number,password:o,newPassword:n});pw=n;SS.set('acct_pw',pw);say('cMsg','✓ Password changed','ok');$('cOld').value=$('cNew').value=$('cNew2').value=''}
  catch(e){say('cMsg',e.message,'bad')}finally{$('cSave').disabled=false}
 };
-const out=async()=>{num='';pw='';SS.del('vip_num');SS.del('vip_pw');data=null;clearInterval(timer);try{await signOut(auth)}catch(e){}};
+const out=async()=>{num='';pw='';SS.del('acct_num');SS.del('acct_pw');data=null;clearInterval(timer);try{await signOut(auth)}catch(e){}};
 $('pinOut').onclick=out;$('setupOut').onclick=out;$('suspOut').onclick=out;$('bOut2').onclick=out;
 $('refresh').onclick=()=>{busy=false;load(false)};
 $('copyNum').onclick=async()=>{try{await navigator.clipboard.writeText($('myNum').textContent);$('copyNum').textContent='Copied ✓'}catch(e){$('copyNum').textContent='Select & copy'}setTimeout(()=>$('copyNum').textContent='Copy',1600)};

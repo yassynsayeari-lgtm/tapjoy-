@@ -1,4 +1,4 @@
-// POST /api/vip/me   (Authorization: Bearer <Google-signed-in Firebase ID token>)   body: {"number":"...","password":"..."} (both optional on the first call)
+// POST /api/acct/me   (Authorization: Bearer <Google-signed-in Firebase ID token>)   body: {"number":"...","password":"..."} (both optional on the first call)
 // states: register (no account for this Google user) | recover (admin reset it) | login (number + password needed) | ready (full data)
 import { handler, json, HttpError, readJson, queryEq, verifyIdToken } from '../../_lib/fb.js';
 import { accountByUid, checkPin, cleanPin, suspension, suspendedError, usd, byNewest, listMethods } from '../../_lib/vip.js';

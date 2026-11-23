@@ -374,7 +374,7 @@ html[data-mode="dark"] .ai-sum.ok{background:#1f5f4a;color:#c9f5df}html[data-mod
 html[data-mode="dark"] .risk-hero{background:linear-gradient(135deg,#2a0614,#6b0f26 55%,#a8203f)}
 </style><script>try{var __m=localStorage.getItem("yj_admin_mode");if(__m)document.documentElement.setAttribute("data-mode",__m)}catch(e){}</script></head><body>
 <header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header><main>
-<section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><p id="loginMsg" class="muted"></p></section>
+<section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><button id="forgotPw" type="button" class="btn" style="margin-top:8px;width:100%">نسيت كلمة المرور؟</button><p id="loginMsg" class="muted"></p></section>
 <section id="app" class="hidden"><p class="muted">تم التحقق من حساب المسؤول</p><div id="serverStatus" class="srv">جارٍ فحص خادم Cloudflare…</div>
 <div id="home" class="dashboard-grid" aria-label="الأقسام الرئيسية">
 <button type="button" class="menu menu-withdraw" data-panel="withdraw" aria-label="طلبات السحب" aria-expanded="false" onclick="openPanel('withdraw')"><span class="menu-icon">💳</span><span class="menu-copy"><strong>طلبات السحب</strong><small>معلّقة · مدفوعة · مرفوضة</small></span><span class="menu-arrow">←</span></button>
@@ -404,7 +404,7 @@ html[data-mode="dark"] .risk-hero{background:linear-gradient(135deg,#2a0614,#6b0
 <p class="muted">الحظر التلقائي يعمل أثناء فتح تطبيق المسؤول. راجع التنبيهات أولًا ثم فعّله.</p></div>
 <div class="step"><div class="step-h" id="riskAlertsHead">🚨 تنبيهات الاحتيال</div><div id="riskAlerts"></div></div>
 <div class="step"><div class="step-h">🤖 سجل الحظر التلقائي</div><div id="riskLog"></div></div>
-<div class="step danger-zone"><div class="step-h">☢️ إعادة ضبط المصنع</div><p class="muted">تحذف كل المستخدمين (العاديين والمميزين) وكل طلبات السحب وحسابات المميزين وفواتيرهم. تبقى جدران العروض وطرق السحب وإعدادات التطبيق.</p>
+<div class="step danger-zone"><div class="step-h">☢️ إعادة ضبط المصنع</div><p class="muted">تحذف كل المستخدمين (العاديين والمميزين) وكل طلبات السحب ومعاملات الجدران وحسابات المميزين وفواتيرهم. تُنظَّف أيضًا معاملاتهم وسجلات الجدران. تبقى جدران العروض ومفاتيحها وطرق السحب وإعدادات التطبيق.</p>
 <input id="resetConfirm" placeholder="اكتب RESET للتأكيد" dir="ltr"><button id="resetBtn" class="btn danger">🗑 تنفيذ إعادة الضبط</button><p id="resetMsg" class="muted"></p></div></section>
 <section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2>
 <details class="how"><summary>📘 شرح مفصّل: كيف أضيف جدارًا؟</summary>
@@ -424,7 +424,7 @@ html[data-mode="dark"] .risk-hero{background:linear-gradient(135deg,#2a0614,#6b0
 </section></main><footer class="muted" style="text-align:center;padding:20px">YASJOY Admin • Firebase</footer>
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';
-import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
+import{getAuth,signInWithEmailAndPassword,sendPasswordResetEmail,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
 import{getFirestore,collection,onSnapshot,doc,updateDoc,addDoc,deleteDoc,getDoc,setDoc,serverTimestamp,increment,writeBatch,query,where,getDocs,orderBy,limit}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js';
 const config={apiKey:'AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI',authDomain:'yasjoy.firebaseapp.com',projectId:'yasjoy',storageBucket:'yasjoy.firebasestorage.app',messagingSenderId:'967065409063',appId:'1:967065409063:web:4f7b882cc38f17ec8a2002'};
 const ADMIN_UID='wQgo9HTzP0NWC6JO2D1Di8iIPm62',app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
@@ -449,22 +449,49 @@ function vipRow(label,val){const r=el('div','','vrow');r.append(el('span',label)
 function copyCode(txt){const c=el('code',txt);c.title='اضغط للنسخ';c.onclick=()=>{try{copyText(txt)}catch(e){}};return c}
 function vipField(label,node){const w=el('label','','vfield');w.append(el('span',label),node);return w}
 function vipSel(selected){const s=document.createElement('select');vipCats().forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name+(m.requiresId?'':' (بدون رقم)');s.append(o)});if(selected&&!vipCats().some(m=>m.id===selected)){const o=document.createElement('option');o.value=selected;o.textContent=selected+' (محذوفة)';s.append(o)}if(selected)s.value=selected;return s}
+const vipClaimed=()=>vipAcc.filter(x=>x.unclaimed!==true);
 function renderVip(){
  const list=$('vipList');if(!list)return;list.replaceChildren();
- const due=vipAcc.reduce((s,x)=>s+(Number(x.points)||0),0),paid=vipInv.reduce((s,i)=>s+(Number(i.points)||0),0),withPts=vipAcc.filter(x=>(Number(x.points)||0)>0).length;
- $('vipTotAcc').textContent=vipAcc.length;$('vipTotUsd').textContent=usdText(due);$('vipTotPaid').textContent=usdText(paid);
- const sub=$('vipMenuSub');if(sub)sub.textContent=vipAcc.length?(withPts+' حساب لديه نقاط · '+usdText(due)+' مستحق'):'حسابات · فواتير · فئات';
+ const due=vipClaimed().reduce((s,x)=>s+(Number(x.points)||0),0),paid=vipInv.reduce((s,i)=>s+(Number(i.points)||0),0),withPts=vipClaimed().filter(x=>(Number(x.points)||0)>0).length;
+ $('vipTotAcc').textContent=vipClaimed().length;$('vipTotUsd').textContent=usdText(due);$('vipTotPaid').textContent=usdText(paid);
+ const sub=$('vipMenuSub');if(sub)sub.textContent=vipClaimed().length?(withPts+' حساب لديه نقاط · '+usdText(due)+' مستحق'):'حسابات · فواتير · فئات';
  if($('vipEnabled'))$('vipEnabled').checked=vipSet.enabled!==false;
  const q=($('vipSearch').value||'').trim().toLowerCase();
  if(vipTabSel==='accounts'){
-  const rows=vipAcc.filter(x=>!q||[x.name,x.id,x.googleEmail,x.method,x.walletNumber].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>(b.points||0)-(a.points||0));
-  if(!rows.length)list.append(el('div',vipAcc.length?'لا نتائج.':'لا توجد حسابات بعد. يظهر الحساب هنا عندما يسجّل المميز من التطبيق الثالث (/vip).','empty'));
+  list.append(vipIssueBox());
+  const pend=vipAcc.filter(x=>x.unclaimed===true).sort((a,b)=>tsMillis(b.createdAt)-tsMillis(a.createdAt));
+  pend.forEach(x=>list.append(vipPendingCard(x)));
+  const rows=vipClaimed().filter(x=>!q||[x.name,x.id,x.googleEmail,x.method,x.walletNumber].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>(b.points||0)-(a.points||0));
+  if(!rows.length&&!pend.length)list.append(el('div','لا توجد حسابات بعد. أنشئ رقم حساب بالزر أعلاه وأعطه للمميز ليسجّل به.','empty'));
+  else if(!rows.length)list.append(el('div',vipClaimed().length?'لا نتائج.':'لا حسابات مسجّلة بعد — أعطِ الأرقام أعلاه للمميزين.','empty'));
   rows.forEach(x=>list.append(vipAccountCard(x)));
  }else if(vipTabSel==='invoices'){
   const rows=[...vipInv].filter(i=>!q||[i.name,i.number,i.invoiceNo,i.method].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>tsMillis(b.createdAt)-tsMillis(a.createdAt));
   if(!rows.length)list.append(el('div','لا توجد فواتير بعد. تظهر هنا كل عملية دفع (تصفير).','empty'));
   rows.forEach(i=>{const c=el('div','','vcard gold invoice');const h=el('div','','vhead');h.append(el('div','🧾','vavatar'),(()=>{const d=el('div','','vtitle');d.append(el('h4',i.invoiceNo),el('small',displayDate(i.createdAt)));return d})(),el('span','✅ مدفوع','pill paid'));c.append(h,el('div',ptsText(i.points)+' نقطة = '+usdText(i.points),'big'),vipRow('الحساب',(i.name||'')+' · '+i.number),vipRow('المحفظة',(i.method||'—')+(i.walletNumber?' · '+i.walletNumber:'')),vipRow('عدد الحسابات وقت الدفع',String(i.accountsCount||0)));if(i.reference)c.append(vipRow('مرجع الدفع',i.reference));list.append(c)});
  }else renderVipCats(list);
+}
+
+function vipIssueBox(){
+ const c=el('div','','vcard vissue'),lab=el('input'),b=el('button','➕ إنشاء رقم حساب جديد','primary');
+ lab.placeholder='ملاحظة للتمييز (اختياري) — مثل اسم الشخص';
+ c.append(el('h4','🆔 أرقام الحسابات'),el('div','لا يمكن لأحد إنشاء حساب إلا برقم تصدره من هنا. أنشئ الرقم وأعطه للمميز ليسجّل به في التطبيق الثالث.','muted'),lab,b);
+ b.onclick=()=>vipNewId(lab.value.trim(),b);return c;
+}
+async function vipNewId(label,btn){
+ try{btn.disabled=true;let n='';
+  for(let i=0;i<10;i++){const t=String(1+Math.floor(Math.random()*9))+rnd(8,true);if(!(await getDoc(doc(db,'vipAccounts',t))).exists()){n=t;break}}
+  if(!n)throw new Error('تعذّر توليد رقم جديد');
+  await setDoc(doc(db,'vipAccounts',n),{unclaimed:true,label:label.slice(0,60),points:0,accounts:0,enabled:true,banned:false,createdAt:serverTimestamp()});
+ }catch(e){alert('تعذّر الإنشاء: '+e.message)}finally{btn.disabled=false}
+}
+function vipPendingCard(x){
+ const c=el('div','','vcard gold'),h=el('div','','vhead'),t=el('div','','vtitle');
+ t.append(el('h4','بانتظار التسجيل'),el('small',(x.label?x.label+' · ':'')+displayDate(x.createdAt)));
+ h.append(el('div','🆔','vavatar'),t,el('span','⏳ غير مستخدم','pill'));
+ const g=el('div','','vgrid');g.append(vipRow('رقم الحساب',copyCode(x.id)));
+ const del=el('button','🗑 حذف الرقم','btn danger');del.onclick=async()=>{if(!confirm('حذف الرقم '+x.id+'؟'))return;try{await deleteDoc(doc(db,'vipAccounts',x.id))}catch(e){alert(e.message)}};
+ c.append(h,g,el('div','أعطِ هذا الرقم للمميز ليدخله عند إنشاء الحساب.','muted'),del);return c;
 }
 function vipAccountCard(x){
  const susp=vipSusp(x),inv=vipInv.filter(i=>i.number===x.id),c=el('div','','vcard gold'+(susp?' susp':''));
@@ -483,18 +510,13 @@ function vipAccountCard(x){
  if(vipNotice[x.id]){const n=el('div','','vnotice');n.append(el('div','أعطِ هذا الرمز للمميز مع رقمه الخاص — يدخله في التطبيق بعد تسجيل الدخول بـ Google:','muted'),el('div',vipNotice[x.id],'code'));c.append(n)}
  else if(x.recovery){const n=el('div','','vnotice');n.append(el('div','رمز الاستعادة الحالي (لم يُستخدم بعد):','muted'),el('div',x.recovery,'code'));c.append(n)}
  // pay = reset to zero
- const pay=el('div','','vsec'),ref=el('input');ref.placeholder='مرجع / رقم عملية الدفع (اختياري)';const zb=el('button','💰 تصفير الحساب (تم الدفع)','primary');zb.disabled=!(Number(x.points)>0);zb.onclick=()=>vipZero(x,ref.value.trim(),zb);pay.append(ref,zb);c.append(pay);
+ const pay=el('div','','vsec'),ref=el('input');ref.placeholder='مرجع / رقم عملية الدفع (اختياري)';const zb=el('button','💰 تصفير الحساب (تم الدفع)','primary');zb.disabled=!(Number(x.points)>0);zb.onclick=()=>vipZero(x,ref.value.trim(),zb);pay.append(ref,zb);if(Number(x.points)>0)c.append(pay);
  // ban
  const bn=el('div','','vsec');
  if(susp){const lift=el('button','✅ رفع الحظر','btn');lift.onclick=async()=>{try{await updateDoc(doc(db,'vipAccounts',x.id),{banned:false,bannedUntil:0,banReason:'',enabled:true})}catch(e){alert(e.message)}};bn.append(lift)}
  else{const gg=el('div','','grid2'),sel=document.createElement('select');[['1','يوم'],['3','3 أيام'],['7','أسبوع'],['14','أسبوعان'],['30','شهر'],['0','حتى أرفعه يدويًا']].forEach(([v,tx])=>{const o=document.createElement('option');o.value=v;o.textContent=tx;sel.append(o)});const rs=el('input');rs.placeholder='سبب المخالفة';gg.append(sel,rs);const bb=el('button','⛔ حظر مؤقت','btn danger');bb.onclick=async()=>{if(!confirm('حظر '+(x.name||x.id)+'؟'))return;const d=Number(sel.value);try{await updateDoc(doc(db,'vipAccounts',x.id),{banned:true,bannedUntil:d?Date.now()+d*86400000:0,banReason:rs.value.trim(),bannedAt:serverTimestamp()})}catch(e){alert(e.message)}};bn.append(gg,bb)}
  c.append(bn);
- // edit
- const ed=el('details','','vsec');ed.append(el('summary','✏️ تعديل الاسم / الفئة / رقم الفئة'));
- const en=el('input'),ew=el('input'),es=vipSel(x.methodId||(vipCats().find(m=>m.name===x.method)||{}).id||'');
- en.value=x.name||'';ew.value=x.walletNumber||'';en.placeholder='الاسم';ew.placeholder='رقم الفئة / ID (يُترك فارغًا للشخصي)';
- const sv=el('button','حفظ التعديل','btn');sv.onclick=async()=>{const cat=vipCats().find(m=>m.id===es.value);if(!cat)return alert('اختر فئة صحيحة');if(cat.requiresId&&!ew.value.trim())return alert('هذه الفئة تتطلب رقمًا (ID)');try{await updateDoc(doc(db,'vipAccounts',x.id),{name:en.value.trim()||x.name,method:cat.name,methodId:cat.id,walletNumber:cat.requiresId?ew.value.trim():''});sv.textContent='✓ تم'}catch(e){alert(e.message)}};
- ed.append(vipField('الاسم',en),vipField('الفئة',es),vipField('رقم الفئة / ID',ew),sv);c.append(ed);
+
  // reset password + delete
  const rs2=el('div','','vsec vtools'),r1=el('button','🔑 إعادة تعيين كلمة المرور','btn'),r2=el('button','🗑 حذف الحساب','btn danger');
  r1.onclick=async()=>{if(!confirm('إعادة تعيين كلمة المرور؟ ستُمسح كلمة المرور الحالية ويحصل المميز على رمز استعادة ليضع كلمة جديدة.'))return;const code=rnd(6,true);try{await updateDoc(doc(db,'vipAccounts',x.id),{recovery:code,pinHash:'',pinSalt:'',pinFails:0,pinLockedUntil:0});vipNotice[x.id]=code;renderVip()}catch(e){alert(e.message)}};
@@ -537,7 +559,7 @@ function renderVipCats(list){
  const rows=[...vipMeth].sort((a,b)=>(a.order||0)-(b.order||0));
  if(!rows.length)list.append(el('div','لم تُضف فئات بعد. أضف Binance مثلًا لتظهر للمميزين.','empty'));
  rows.forEach(m=>{
-  const used=vipAcc.filter(a=>a.methodId===m.id||a.method===m.name).length,c=el('div','','vcard'+(m.enabled===false?' off':''));
+  const used=vipClaimed().filter(a=>a.methodId===m.id||a.method===m.name).length,c=el('div','','vcard'+(m.enabled===false?' off':''));
   const h=el('div','','vhead'),t=el('div','','vtitle');t.append(el('h4',m.name),el('small',(m.requiresId!==false?'يتطلب: '+(m.idLabel||'رقم / ID'):'بدون رقم')+' · '+used+' حساب'));
   h.append(el('div',(m.name||'?').charAt(0).toUpperCase(),'vavatar'),t,el('span',m.enabled===false?'مخفية':'ظاهرة','pill '+(m.enabled===false?'susp':'paid')));c.append(h);
   const ed=el('details','','vsec');ed.append(el('summary','✏️ تعديل'));
@@ -552,11 +574,12 @@ function renderVipCats(list){
  });
 }
 function bindVip(){
- if($('vipEnabled'))$('vipEnabled').onchange=async()=>{try{await setDoc(doc(db,'settings','vip'),{enabled:$('vipEnabled').checked,updatedAt:serverTimestamp()},{merge:true});$('vipSetMsg').textContent='✓ تم الحفظ'}catch(e){$('vipSetMsg').textContent='تعذّر الحفظ: '+e.message}};
+ if($('vipEnabled'))$('vipEnabled').onchange=async()=>{try{await setDoc(doc(db,'settings','acct'),{enabled:$('vipEnabled').checked,updatedAt:serverTimestamp()},{merge:true});$('vipSetMsg').textContent='✓ تم الحفظ'}catch(e){$('vipSetMsg').textContent='تعذّر الحفظ: '+e.message}};
  $('vipSearch').oninput=renderVip;
 }
 
 /* ===== خطاء: إحصائيات + مراقب الاحتيال + المساعد الذكي + إعادة ضبط المصنع ===== */
+const unbackedBal=u=>{const bal=Math.floor(Number(u.balance)||0);if(bal<=0)return 0;const wd=withdrawals.filter(w=>withdrawalUid(w)===String(u.id)&&w.status!=='rejected').reduce((t,w)=>t+(Math.floor(Number(w.coins))||0),0);const backed=Math.max(0,Math.floor(Number(u.offerPoints)||0)-wd-Math.floor(Number(u.acctSent)||0));return Math.max(0,bal-backed)};
 const fraudRank=(u)=>{
  const items=[];let score=0;const add=(p,t,d)=>{score+=p;items.push({p,t,d:d||''})};
  const dev=u.device&&typeof u.device==='object'?u.device:{},others=users.filter(x=>x.id!==u.id),nm=x=>x.publicId||String(x.id).slice(0,8);
@@ -573,6 +596,7 @@ const fraudRank=(u)=>{
  if(nlog>=2)add(2,'تغيّر الدولة '+nlog+' مرات','');
  const myWallets=new Set(withdrawals.filter(w=>withdrawalUid(w)===String(u.id)).map(withdrawalWallet).filter(Boolean));
  if(myWallets.size){const shared=new Set();withdrawals.forEach(w=>{const a=withdrawalWallet(w);if(a&&myWallets.has(a)&&withdrawalUid(w)!==String(u.id))shared.add(withdrawalUid(w))});if(shared.size)add(4,'نفس محفظة السحب مستخدمة في '+(shared.size+1)+' حسابات','')}
+ const unb=unbackedBal(u);if(unb>0)add(4,'رصيد غير مدعوم بنقاط الجدران: '+unb.toLocaleString('en-US')+' نقطة','أُضيف بغير جدار — لن يُحوَّل إلى حساب مميز، راجع سحبه يدويًا');
  return {score,items};
 };
 const fraudMax=()=>Math.max(3,Math.min(100,Number(fraudSet.maxScore)||10));
@@ -615,8 +639,9 @@ function aiFindings(){
  if(!methods.some(m=>m.enabled===true))add('bad','لا توجد أي طريقة سحب مفعّلة','المستخدمون لا يستطيعون السحب الآن.');
  const offW=walls.filter(w=>w.enabled===false);
  add(walls.length&&offW.length===walls.length?'bad':'info','جدران العروض: '+walls.length,(offW.length?offW.length+' معطّلة. ':'كلها مفعّلة. ')+(walls.length?'':'لم تُضف جدران بعد.'));
- const due=vipAcc.reduce((s,x)=>s+(Number(x.points)||0),0),vSusp=vipAcc.filter(vipSusp).length,vRec=vipAcc.filter(x=>x.recovery).length;
- add(due>0?'info':'ok','المميزون: '+vipAcc.length+' حساب','مستحق الدفع '+usdText(due)+(vSusp?' · '+vSusp+' موقوف':'')+(vRec?' · '+vRec+' بانتظار استعادة':'')+'.');
+ const due=vipClaimed().reduce((s,x)=>s+(Number(x.points)||0),0),vSusp=vipClaimed().filter(vipSusp).length,vRec=vipClaimed().filter(x=>x.recovery).length;
+ {const ub=users.filter(u=>unbackedBal(u)>0);if(ub.length)add('warn','رصيد غير مدعوم بنقاط الجدران: '+ub.length+' مستخدم','لديهم '+ub.reduce((t,u)=>t+unbackedBal(u),0).toLocaleString('en-US')+' نقطة لم تأتِ من الجدران. النظام لا يحوّلها لحسابات المميزين، وراجع طلبات سحبهم يدويًا قبل الدفع.')}
+ add(due>0?'info':'ok','المميزون: '+vipClaimed().length+' حساب','مستحق الدفع '+usdText(due)+(vSusp?' · '+vSusp+' موقوف':'')+(vRec?' · '+vRec+' بانتظار استعادة':'')+'.');
  return F;
 }
 function renderRisk(){
@@ -666,7 +691,7 @@ async function factoryReset(btn){
   }catch(e){failed.push(label+' ('+e.message+')')}
  };
  try{
-  await wipe('withdrawals','طلبات السحب');
+  await wipe('withdrawals','طلبات السحب');await wipe('transactions','معاملات الجدران والنقاط');await wipe('offerEvents','أحداث العروض');await wipe('postbackLogs','سجلات الجدران (postback)');
   await wipe('vipTransfers','تحويلات المميزين');await wipe('vipInvoices','فواتير المميزين');await wipe('vipWithdrawals','طلبات المميزين القديمة');
   await wipe('vipAccounts','حسابات المميزين','members');await wipe('users','المستخدمون');
  }finally{btn.disabled=false}
@@ -682,7 +707,8 @@ function bindRisk(){
 
 let wdZoom=false;let users=[],withdrawals=[],methods=[],walls=[],status='pending',unsubs=[],offerTx=[],postLogs=[],pointsErr='',methodImg='',wallImg='';const verifyCache=new Map(),autoBanned=new Set();
 setPersistence(auth,browserLocalPersistence).catch(console.error);
-$('loginBtn').onclick=async()=>{$('loginMsg').textContent='جارٍ التحقق…';try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value)}catch(e){$('loginMsg').textContent='تعذّر تسجيل الدخول. تحقق من البيانات.';$('loginMsg').className='error'}};
+$('loginBtn').onclick=async()=>{$('loginMsg').textContent='جارٍ التحقق…';try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value)}catch(e){const c=e&&e.code||'',m={'auth/invalid-credential':'البريد أو كلمة المرور غير صحيحة.','auth/wrong-password':'كلمة المرور غير صحيحة.','auth/user-not-found':'لا يوجد حساب بهذا البريد.','auth/invalid-email':'صيغة البريد غير صحيحة.','auth/too-many-requests':'محاولات كثيرة. انتظر دقائق ثم أعد المحاولة، أو اضغط «نسيت كلمة المرور».','auth/network-request-failed':'لا يوجد اتصال بالإنترنت.','auth/operation-not-allowed':'تسجيل البريد وكلمة المرور غير مفعّل في Firebase (Authentication ← Sign-in method).','auth/user-disabled':'هذا الحساب معطّل.','auth/unauthorized-domain':'هذا النطاق غير مضاف في Firebase (Authentication ← Settings ← Authorized domains).'};$('loginMsg').textContent=(m[c]||'تعذّر تسجيل الدخول')+(c&&!m[c]?' ('+c+')':'');$('loginMsg').className='error'}};
+$('forgotPw').onclick=async()=>{const em=$('email').value.trim();if(!em){$('loginMsg').textContent='اكتب بريدك أولًا ثم اضغط «نسيت كلمة المرور».';$('loginMsg').className='error';return}try{await sendPasswordResetEmail(auth,em);$('loginMsg').textContent='✓ أُرسل رابط تعيين كلمة المرور إلى بريدك.';$('loginMsg').className=''}catch(e){$('loginMsg').textContent='تعذّر الإرسال ('+(e.code||'error')+')';$('loginMsg').className='error'}};
 $('password').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};
 onAuthStateChanged(auth,async u=>{unsubs.forEach(f=>f());unsubs=[];if(!u){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}if(u.uid!==ADMIN_UID){await signOut(auth);$('loginMsg').textContent='هذا الحساب غير مخوّل.';return}$('login').classList.add('hidden');$('app').classList.remove('hidden');checkServer();
 unsubs.push(onSnapshot(collection(db,'users'),s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));renderUsers();renderWalls();renderStats();fraudTick()}));
@@ -691,7 +717,7 @@ unsubs.push(onSnapshot(collection(db,'withdrawMethods'),s=>{methods=s.docs.map(d
 unsubs.push(onSnapshot(doc(db,'settings','appTheme'),onThemeDoc,()=>{}));
 unsubs.push(onSnapshot(collection(db,'vipAccounts'),s=>{vipAcc=s.docs.map(d=>({id:d.id,...d.data()}));renderVip()},e=>console.warn('vipAccounts',e.message)));
 unsubs.push(onSnapshot(collection(db,'vipInvoices'),s=>{vipInv=s.docs.map(d=>({id:d.id,...d.data()}));renderVip()},e=>console.warn('vipInvoices',e.message)));
-unsubs.push(onSnapshot(doc(db,'settings','vip'),s=>{const d=s.exists()?s.data():{};vipSet={enabled:d.enabled!==false};renderVip()},()=>{}));
+unsubs.push(onSnapshot(doc(db,'settings','acct'),s=>{const d=s.exists()?s.data():{};vipSet={enabled:d.enabled!==false};renderVip()},()=>{}));
 unsubs.push(onSnapshot(collection(db,'vipMethods'),s=>{vipMeth=s.docs.map(d=>({id:d.id,...d.data()}));renderVip()},e=>console.warn('vipMethods',e.message)));
 unsubs.push(onSnapshot(doc(db,'adminSettings','fraud'),s=>{const d=s.exists()?s.data():{};fraudSet={autoBan:d.autoBan===true,maxScore:Number(d.maxScore)||10};if(current==='risk')renderRisk();fraudTick()},()=>{}));
 bindVip();bindRisk();

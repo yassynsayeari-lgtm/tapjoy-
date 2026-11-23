@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="format-detection" content="telephone=no">
-<meta name="theme-color" content="#dff4ff">
+<meta name="theme-color" content="#dff4ff"><link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/icons/icon-192.png"><link rel="apple-touch-icon" href="/icons/icon-192.png">
 <title>YASJOY - Earn Rewards</title>
 <style>
 *{box-sizing:border-box}
@@ -206,8 +206,8 @@ html[data-theme]:not([data-theme="classic"]) .banned-card p{color:var(--mut)}
 html[data-theme]:not([data-theme="classic"]) .wall-bar strong,html[data-theme]:not([data-theme="classic"]) .wall-bar button{color:#fff}
 .no-nav .bottom{display:none!important}.no-nav{padding-bottom:24px!important}
 html[data-theme]:not([data-theme="classic"]) .offer,html[data-theme]:not([data-theme="classic"]) .panel{box-shadow:0 8px 24px #0002}
-html[data-theme]:not([data-theme="classic"]) .primary[onclick*="showPage("]:not(#vipBtn){background:var(--chip)!important;color:var(--txt)!important;border:1.5px solid var(--cardb)}
-html[data-theme]:not([data-theme="classic"]) #vipBtn{background:linear-gradient(110deg,#ffd24a,#ff9f1a)!important;color:#3a2400!important;border:0}
+html[data-theme]:not([data-theme="classic"]) .primary[onclick*="showPage("]:not(#acctBtn){background:var(--chip)!important;color:var(--txt)!important;border:1.5px solid var(--cardb)}
+html[data-theme]:not([data-theme="classic"]) #acctBtn{background:linear-gradient(110deg,#5b6cff,#9b4dff)!important;color:#fff!important;border:0}
 </style>
 <script>try{var __t=localStorage.getItem("yj_theme");__t=__t;if(__t)document.documentElement.setAttribute("data-theme",__t)}catch(e){}</script></head>
 <body>
@@ -231,8 +231,8 @@ html[data-theme]:not([data-theme="classic"]) #vipBtn{background:linear-gradient(
 <header><div class="brand"><span class="star">⭐</span><span>YASJOY👑</span></div><div class="balance"><span class="coin">🪙</span><span id="balance">0</span><button onclick="refreshBalance()" style="border:0;background:none;color:#078af5;font-size:24px" aria-label="Refresh">⟳</button></div></header>
 <main>
 <section id="home" class="page active"><div class="banner"><div class="wallet">💰</div><div style="flex:1"><div class="banner-text">Withdraw your points</div><button class="go" onclick="showPage('withdraw')" aria-label="Withdraw">➜</button></div></div><div class="section-title">🔥 Offer Walls</div><p class="subtitle">Complete offers · Earn coins</p><div class="offers" id="offersList"><div class="empty-offers">Loading offer walls…</div></div><div class="offer-dots" id="offerDots"></div></section>
-<section id="withdraw" class="page"><div class="panel"><h2>Withdraw your points</h2><p class="small">Available Balance</p><div id="coinsCard" class="coins-card"><strong id="withdrawBalance">0</strong><div class="cc-label">Coins</div></div><div id="coinsAnchor"></div><h3>Choose withdrawal method</h3><div class="withdraw-methods" id="withdrawMethodsList"><div class="empty-offers withdraw-status">Loading withdrawal methods…</div></div><button type="button" id="showMethodsBtn" class="primary" style="background:linear-gradient(110deg,#16bdf2,#dc143c)" onclick="showWithdrawalMethods()">← Show Methods</button><div id="withdrawFlow" hidden><h3 id="amountHeading">Select a points package</h3><div class="amounts" id="withdrawalTiers"></div><label class="field-label" for="account" id="accountLabel">Payout account details</label><input id="account" autocomplete="off" placeholder="Enter your payout account details"><button class="primary" id="submitWithdrawal" onclick="submitRequest()">Submit withdrawal request</button></div><button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('home')">Back to Home</button><button type="button" id="vipBtn" class="primary" hidden style="background:linear-gradient(110deg,#ffcf4a,#ff8a00);color:#3a2400" onclick="showPage('vipwd')">🔑 Enter Private Number</button></div></section>
-<section id="vipwd" class="page"><div class="panel"><h2>Enter Private Number</h2><p class="small">Enter your private number from the VIP app. All of your coins are sent to your VIP account as points.</p><div class="coins-card"><strong id="vipCoins">0</strong><div class="cc-label">Coins · <span id="vipUsd">$0.00</span></div></div><p class="small" style="margin-top:14px">1 USD = 1,000 coins</p><label class="field-label" for="vipIp">Private number</label><input id="vipIp" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Enter your private number"><button class="primary" id="vipSend" onclick="submitVipTransfer()">OK</button><p id="vipMsg" class="small" style="min-height:22px"></p><button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('withdraw')">Back</button></div></section>
+<section id="withdraw" class="page"><div class="panel"><h2>Withdraw your points</h2><p class="small">Available Balance</p><div id="coinsCard" class="coins-card"><strong id="withdrawBalance">0</strong><div class="cc-label">Coins</div></div><div id="coinsAnchor"></div><h3>Choose withdrawal method</h3><div class="withdraw-methods" id="withdrawMethodsList"><div class="empty-offers withdraw-status">Loading withdrawal methods…</div></div><button type="button" id="showMethodsBtn" class="primary" style="background:linear-gradient(110deg,#16bdf2,#dc143c)" onclick="showWithdrawalMethods()">← Show Methods</button><div id="withdrawFlow" hidden><h3 id="amountHeading">Select a points package</h3><div class="amounts" id="withdrawalTiers"></div><label class="field-label" for="account" id="accountLabel">Payout account details</label><input id="account" autocomplete="off" placeholder="Enter your payout account details"><button class="primary" id="submitWithdrawal" onclick="submitRequest()">Submit withdrawal request</button></div><button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('home')">Back to Home</button><button type="button" id="acctBtn" class="primary" hidden style="background:linear-gradient(110deg,#5b6cff,#9b4dff);color:#fff" onclick="showPage('acctwd')">🆔 Enter Account ID</button></div></section>
+<section id="acctwd" class="page"><div class="panel"><h2>Enter Account ID</h2><p class="small">Enter your Account ID. Coins you earned from the offer walls are added to that account.</p><div class="coins-card"><strong id="acctCoins">0</strong><div class="cc-label">Coins · <span id="acctUsd">$0.00</span></div></div><p class="small" style="margin-top:14px">1 USD = 1,000 coins</p><label class="field-label" for="acctId">Account ID</label><input id="acctId" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Enter your Account ID"><button class="primary" id="acctSend" onclick="submitAcct()">OK</button><p id="acctMsg" class="small" style="min-height:22px"></p><button class="primary" style="background:#d9efff;color:#0758a8" onclick="showPage('withdraw')">Back</button></div></section>
 <section id="profile" class="page"><div class="panel"><h2>Profile</h2><p>Your YASJOY demo profile</p><label class="field-label">Your User ID</label><div class="id-box"><strong id="userId">Connecting...</strong><button onclick="copyId()" style="border:0;background:none;color:#078af5;font-size:20px" aria-label="Copy User ID">📋</button></div><p class="small" id="userIdNote">Your User ID will be linked to your Firebase account.</p><hr style="border:0;border-top:1px solid #d9efff;margin:24px 0"><h2 style="font-size:24px">🔗 My Social Links</h2><p class="small">Official YASJOY social links</p><a class="social" id="telegramLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">✈️</span>Telegram</a><a class="social" id="youtubeLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">▶️</span>YouTube</a><a class="social" id="tiktokLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">🎵</span>TikTok</a><a class="social" id="instagramLink" href="#" target="_blank" rel="noopener noreferrer"><span class="social-icon">📸</span>Instagram</a><p id="socialStatus" class="small">Loading social links from Firebase…</p><button class="primary" onclick="showPage('home')">Back to Home</button></div></section>
 </main>
 <nav class="bottom"><button class="nav active" id="navHome" onclick="showPage('home')"><span class="ico">⌂</span>Home</button><button class="nav" id="navProfile" onclick="showPage('profile')"><span class="ico">👤</span>Profile</button></nav>
@@ -250,7 +250,7 @@ document.getElementById('termsAccept').addEventListener('click',async()=>{
 });
 document.getElementById('termsDecline').addEventListener('click',()=>{alert('You cannot use YASJOY without accepting the terms.');});
 checkTerms();
-function showPage(id){if(document.getElementById("termsGate")?.hidden===false)return;if(document.getElementById("bannedScreen")?.hidden===false)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id);if(page)page.classList.add('active');document.getElementById('navHome').classList.toggle('active',id==='home');document.getElementById('navProfile').classList.toggle('active',id==='profile');document.body.classList.toggle('no-nav',id==='withdraw'||id==='vipwd');if(id==='vipwd'&&window.vipRefresh)window.vipRefresh();window.scrollTo(0,0);refreshBalance()}
+function showPage(id){if(document.getElementById("termsGate")?.hidden===false)return;if(document.getElementById("bannedScreen")?.hidden===false)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id);if(page)page.classList.add('active');document.getElementById('navHome').classList.toggle('active',id==='home');document.getElementById('navProfile').classList.toggle('active',id==='profile');document.body.classList.toggle('no-nav',id==='withdraw'||id==='acctwd');if(id==='acctwd'&&window.acctRefresh)window.acctRefresh();window.scrollTo(0,0);refreshBalance()}
 function refreshBalance(){const t=balance.toLocaleString('en-US');document.getElementById('balance').textContent=t;document.getElementById('withdrawBalance').textContent=t;document.querySelectorAll('.amount[data-coins]').forEach(b=>b.classList.toggle('low',Number(b.dataset.coins)>balance))}
 function yjToast(msg,kind){let t=document.getElementById('yjToast');if(!t){t=document.createElement('div');t.id='yjToast';t.setAttribute('role','status');document.body.append(t)}t.textContent=msg;t.className='show '+(kind||'');clearTimeout(t._h);t._h=setTimeout(()=>{t.className=''},4200)}
 function selectAmount(button,coins){document.querySelectorAll('.amount').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');selectedCoins=coins}
@@ -336,20 +336,20 @@ let currentYasjoyUser=null;
 const IMG_OK=/^(?:https:\/\/\S+|data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+\/=]+)$/i;
 const isImg=v=>typeof v==='string'&&IMG_OK.test(v);
 
-window.__vip={allowed:false,on:true};
-window.updateVipBtn=()=>{const b=document.getElementById('vipBtn');if(b)b.hidden=!window.__vip.on};
-try{onSnapshot(doc(db,"settings","vip"),snap=>{window.__vip.on=!snap.exists()||snap.data().enabled!==false;window.updateVipBtn()},()=>{})}catch(e){}
+window.__acct={allowed:false,on:true};
+window.updateAcctBtn=()=>{const b=document.getElementById('acctBtn');if(b)b.hidden=!window.__acct.on};
+try{onSnapshot(doc(db,"settings","acct"),snap=>{window.__acct.on=!snap.exists()||snap.data().enabled!==false;window.updateAcctBtn()},()=>{})}catch(e){}
 const usdText=n=>'$'+(Math.floor(Math.max(0,Number(n)||0))/1000).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-window.vipRefresh=()=>{const n=Number(document.getElementById('withdrawBalance')?.textContent.replace(/,/g,''))||0;document.getElementById('vipCoins').textContent=n.toLocaleString('en-US');document.getElementById('vipUsd').textContent=usdText(n);document.getElementById('vipMsg').textContent='';try{const v=localStorage.getItem('yj_vip_num');const i=document.getElementById('vipIp');if(v&&!i.value)i.value=v}catch(e){}};
-window.submitVipTransfer=async function(){
- const msg=document.getElementById('vipMsg'),btn=document.getElementById('vipSend'),num=document.getElementById('vipIp').value.trim();
+window.acctRefresh=()=>{const n=Number(document.getElementById('withdrawBalance')?.textContent.replace(/,/g,''))||0;document.getElementById('acctCoins').textContent=n.toLocaleString('en-US');document.getElementById('acctUsd').textContent=usdText(n);document.getElementById('acctMsg').textContent='';try{const v=localStorage.getItem('yj_acct_id');const i=document.getElementById('acctId');if(v&&!i.value)i.value=v}catch(e){}};
+window.submitAcct=async function(){
+ const msg=document.getElementById('acctMsg'),btn=document.getElementById('acctSend'),num=document.getElementById('acctId').value.trim();
  const say=(t,ok)=>{msg.textContent=t;msg.style.color=ok?'#12935a':'#c01e3c'};
  if(!currentYasjoyUser){say('Please wait, connecting…');return}
- if(!/^\d{6,12}$/.test(num)){say('Enter a valid private number.');return}
+ if(!/^\d{6,12}$/.test(num)){say('Enter a valid Account ID.');return}
  btn.disabled=true;say('Transferring…',true);
- try{const token=await currentYasjoyUser.getIdToken(),r=await fetch('/api/vip/transfer',{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify({number:num})}),j=await r.json().catch(()=>({}));
+ try{const token=await currentYasjoyUser.getIdToken(),r=await fetch('/api/acct/transfer',{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify({number:num})}),j=await r.json().catch(()=>({}));
   if(!r.ok||!j.ok)throw new Error(j.error||('Error '+r.status));
-  say('✓ '+Number(j.transferred).toLocaleString('en-US')+' coins ('+j.usd+') sent to your VIP account.',true);try{localStorage.setItem('yj_vip_num',num)}catch(e){}}
+  say('✓ '+Number(j.transferred).toLocaleString('en-US')+' coins ('+j.usd+') added to your account.'+(j.held>0?' '+Number(j.held).toLocaleString('en-US')+' coins not earned from offers were kept.':''),true);try{localStorage.setItem('yj_acct_id',num)}catch(e){}}
  catch(e){say(e.message||'Transfer failed')}
  finally{btn.disabled=false}};
 window.getYasjoyUid=()=>currentYasjoyUser?currentYasjoyUser.uid:'';
@@ -513,7 +513,7 @@ async function setupUser(user){
  userId=publicId;document.getElementById("userId").textContent=publicId;document.getElementById("userIdNote").textContent="Your User ID is linked to your Firebase account.";
  const profileText=document.querySelector("#profile .panel > p");if(profileText)profileText.textContent="Your YASJOY account";
  if(stopUserListener)stopUserListener();
- stopUserListener=onSnapshot(userRef,userSnap=>{const data=userSnap.data()||{};setBannedView(data.banned===true);balance=Number.isFinite(data.balance)?data.balance:0;window.__vip.allowed=data.vipAllowed===true;window.updateVipBtn();refreshBalance();window.splashDone&&window.splashDone('user')},error=>{console.error("User data error:",error);window.splashDone&&window.splashDone('user')});
+ stopUserListener=onSnapshot(userRef,userSnap=>{const data=userSnap.data()||{};setBannedView(data.banned===true);balance=Number.isFinite(data.balance)?data.balance:0;window.updateAcctBtn();refreshBalance();window.splashDone&&window.splashDone('user')},error=>{console.error("User data error:",error);window.splashDone&&window.splashDone('user')});
  clearInterval(window.__presence);const ping=()=>{if(document.visibilityState==='visible')updateDoc(userRef,{lastActiveAt:serverTimestamp()}).catch(()=>{})};window.__presence=setInterval(ping,120000);document.addEventListener('visibilitychange',ping);
 }
 loadSocialLinks();
@@ -521,5 +521,6 @@ onSnapshot(collection(db,"withdrawMethods"),renderWithdrawalMethods,error=>{cons
 onSnapshot(collection(db,"offerWalls"),renderOfferWalls,error=>{console.error("Offer walls listener error:",error);window.splashDone&&window.splashDone("walls");const host=document.getElementById("offersList");host.replaceChildren();const msg=document.createElement("div");msg.className="empty-offers";msg.textContent="Could not load offer walls. Please check your connection or Firebase rules.";host.appendChild(msg)});
 onAuthStateChanged(auth,async user=>{try{if(!user){currentYasjoyUser=null;await signInAnonymously(auth);return}currentYasjoyUser=user;await setupUser(user)}catch(error){console.error("Firebase account setup error:",error);document.getElementById("userId").textContent="Connection error — reload the page";document.getElementById("userIdNote").textContent="Could not connect. Check Anonymous Authentication and Firestore rules."}});
 </script>
+<script>try{if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))}catch(e){}</script>
 </body>
 </html>

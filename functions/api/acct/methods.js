@@ -1,4 +1,4 @@
-// GET /api/vip/methods   (public)   -> the categories the admin created (+ the built-in "Personal", which needs no ID)
+// GET /api/acct/methods   (public)   -> the categories the admin created (+ the built-in "Personal", which needs no ID)
 import { handler, json, HttpError } from '../../_lib/fb.js';
 import { listMethods } from '../../_lib/vip.js';
 

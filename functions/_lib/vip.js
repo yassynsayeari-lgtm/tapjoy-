@@ -31,7 +31,7 @@ export const cleanText = (v, min, max, what) => {
   return t;
 };
 export async function vipSettings(env) {
-  const s = (await getDoc(env, 'settings/vip')) || {};
+  const s = (await getDoc(env, 'settings/acct')) || {};
   return { enabled: s.enabled !== false };
 }
 export const tsMs = (v) => (v ? Date.parse(v) || 0 : 0);

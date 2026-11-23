@@ -1,4 +1,4 @@
-// POST /api/vip/forgot   (Authorization: Bearer <Google ID token>)   body: {"methodId":"...","walletNumber":"the ID registered","password":"new password"}
+// POST /api/acct/forgot   (Authorization: Bearer <Google ID token>)   body: {"methodId":"...","walletNumber":"the ID registered","password":"new password"}
 // "Forgot password": the owner (signed in with the linked Google account) proves the category + ID that are on file, then sets a new password.
 // The ID can NOT be changed here - only the admin can change it. Accounts without an ID (Personal) must contact the admin.
 import { handler, json, HttpError, readJson, commit, write, mustCommit, timingSafeEqual, verifyIdToken } from '../../_lib/fb.js';
