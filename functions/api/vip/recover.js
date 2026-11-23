@@ -20,3 +20,4 @@ export const onRequest = handler(async ({ request, env }) => {
   })]), 'Recover');
   return json({ ok: true, number });
 });
+٧
