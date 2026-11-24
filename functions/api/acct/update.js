@@ -21,3 +21,4 @@ export const onRequest = handler(async ({ request, env }) => {
   mustCommit(await commit(env, [write(env, `vipAccounts/${number}`, { set, ts: [['updatedAt']], exists: true })]), 'Update');
   return json({ ok: true });
 });
+0
