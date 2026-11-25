@@ -22,3 +22,4 @@ export const onRequest = handler(async ({ request, env }) => {
   return json({ ok: true });
 });
 
+0
