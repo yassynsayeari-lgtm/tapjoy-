@@ -6,3 +6,4 @@ export const onRequest = handler(async ({ request, env }) => {
   if (request.method !== 'GET') throw new HttpError(405, 'Use GET');
   return json({ ok: true, methods: await listMethods(env) });
 });
+0
