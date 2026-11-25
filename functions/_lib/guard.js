@@ -38,4 +38,3 @@ export async function runGuard(env, uid) {
   })]);
   return { banned: res2.ok, score: r.score };
 }
-0
