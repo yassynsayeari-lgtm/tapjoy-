@@ -96,3 +96,4 @@ export async function pickMethod(env, methodId, walletNumber) {
   const wn = m.requiresId ? cleanText(walletNumber, 1, 80, 'the ' + (m.idLabel || 'ID number')) : '';
   return { method: m, walletNumber: wn };
 }
+0
