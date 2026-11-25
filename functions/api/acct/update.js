@@ -1,4 +1,4 @@
-l// POST /api/acct/update   (Authorization: Bearer <Google ID token>)
+// POST /api/acct/update   (Authorization: Bearer <Google ID token>)
 // body: {"name"?, "methodId"?, "walletNumber"?}   - the signed-in Google owner changes name / category / ID number.
 import { handler, json, HttpError, readJson, commit, write, mustCommit, verifyIdToken } from '../../_lib/fb.js';
 import { accountByUid, cleanText, suspension, suspendedError, pickMethod } from '../../_lib/vip.js';

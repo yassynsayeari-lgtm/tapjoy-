@@ -51,6 +51,12 @@ export const onRequest = handler(async ({ request, env, params: routeParams, wai
     txid = pick(['txid', 'id', 'trans_id', 'transaction_id', 'transactionId', 'txn_id', 'tid', 'oid', 'tx', 'transactionID']),
     sig = pick(['sig', 'verifier', 'hash', 'signature', 'secure_hash', 'mac']),
     amountRaw = pick(['amount', 'currency', 'reward', 'points', 'virtual_currency', 'amount_local', 'value', 'val', 'currencyReward', 'currency_amount']);
+  // optional offer details (shown in the admin «النقاط» panel when the network sends them)
+  const offerId = pick(['offer_id', 'offerId', 'campaign_id', 'campaignId', 'offer_uuid', 'task_id', 'taskId', 'app_id']).slice(0, 80),
+    offerName = pick(['offer_name', 'offerName', 'offer_title', 'campaign_name', 'task_name', 'app_name', 'offer', 'title', 'name']).slice(0, 120),
+    offerImageRaw = pick(['offer_image', 'image_url', 'image', 'icon_url', 'icon', 'offer_icon', 'thumbnail', 'picture']),
+    offerImage = /^https:\/\/[^\s]{4,300}$/i.test(offerImageRaw) ? offerImageRaw : '',
+    offerTotalRaw = Number(pick(['offer_total', 'total_points', 'total_reward', 'total', 'goal', 'max_reward', 'offer_value']));
   const ipP = pick(['ip', 'user_ip']), revenue = pick(['revenue', 'payout', 'payout_usd']), status = pick(['status']);
   const logP = { uid, txid, amount: amountRaw };
 
@@ -93,7 +99,9 @@ export const onRequest = handler(async ({ request, env, params: routeParams, wai
   const r = await commit(env, [
     write(env, `transactions/${txDoc}`, {
       set: [[['uid'], uid], [['type'], 'offer'], [['coins'], coins], [['wallId'], wallId], [['wallName'], clean(wall.name)],
-        [['provider'], clean(wall.provider)], [['txid'], txid], [['amount'], amount], [['rate'], rate]],
+        [['provider'], clean(wall.provider)], [['txid'], txid], [['amount'], amount], [['rate'], rate],
+        ...(offerId ? [[['offerId'], offerId]] : []), ...(offerName ? [[['offerName'], offerName]] : []), ...(offerImage ? [[['offerImage'], offerImage]] : []),
+        ...(Number.isFinite(offerTotalRaw) && offerTotalRaw > 0 ? [[['offerTotal'], Math.min(MAX_POINTS, Math.round(offerTotalRaw * rate))]] : [])],
       ts: [['createdAt']], exists: false,
     }),
     write(env, `users/${uid}`, { inc: [[['balance'], coins], [['offerPoints'], coins], [['offerCount'], 1], [['wallPoints', wallId], coins]], ts: [['lastOfferAt']], exists: true }),

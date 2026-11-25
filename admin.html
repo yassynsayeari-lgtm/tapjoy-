@@ -424,17 +424,54 @@ html[data-mode="dark"] :is(.srow-v){color:#ffe9a8}html[data-mode="dark"] :is(.sr
 html[data-mode="dark"] .vcard,html[data-mode="dark"] .vcard.gold{background:var(--surf2);border-color:#6b5a22}
 html[data-mode="dark"] .vip-totals>div{background:var(--surf2);border-color:#6b5a22}html[data-mode="dark"] .vip-totals b{color:#ffe9a8}
 html[data-mode="dark"] :is(.rb-ok){background:#1f5f4a;color:#c9f5df}html[data-mode="dark"] :is(.rb-lo,.rb-mid){background:#6b5a22;color:#ffe9a8}html[data-mode="dark"] .rb-hi{background:#7d2540;color:#ffd5df}
+
+/* ===== v21: غرف الخطر + النقاط + تحسين شامل ===== */
+.menu-points{--card-accent:#00a6c8;--card-tint:#e6fbff}
+.menu-risk{--card-accent:#d12b52;--card-tint:#fff0f3}
+.subtabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;margin:4px 0 8px;scrollbar-width:none}.subtabs::-webkit-scrollbar{display:none}
+.subtab{flex:1 0 auto;white-space:nowrap;border:1px solid #e6b8c6;background:#fff;color:#85102f;border-radius:99px;padding:10px 16px;font-weight:900;font-size:14px;cursor:pointer;box-shadow:0 3px 10px #850d2b10}
+.subtab.active{background:linear-gradient(135deg,#d12b52,#a30d32);color:#fff;border-color:transparent;box-shadow:0 8px 18px #a30d3255}
+.rview.hidden{display:none}
+.pts-hero{display:flex;gap:14px;align-items:center;border-radius:26px;padding:20px;color:#fff;margin:6px 0 12px;background:linear-gradient(135deg,#006d8f,#00a6c8 60%,#4fd6ee);box-shadow:0 12px 28px #006d8f55;position:relative;overflow:hidden}
+.pts-hero h2{margin:0;color:#fff!important;font-size:26px}.pts-hero p{margin:2px 0 0;opacity:.9;font-size:14px}.pts-hero .vip-crown{font-size:46px;filter:drop-shadow(0 4px 10px #0005)}
+.pcard{background:#fff;border:1px solid #bfeaf4;border-radius:20px;padding:14px;margin:10px 0;box-shadow:0 8px 20px #006d8f12;display:grid;gap:10px}
+.phead{display:flex;align-items:center;gap:10px}.ptxt{display:grid;gap:2px;min-width:0;flex:1}.ptxt small{color:#5d7b86;overflow-wrap:anywhere}
+.pnum{display:grid;gap:2px;text-align:left}.pnum b{color:#006d8f;font-size:16px}.pnum small{color:#5d7b86;font-size:12px}
+.prank{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#e8f4f8;font-weight:900;color:#006d8f;flex:none}.prank.top{background:linear-gradient(135deg,#ffd24a,#ff9f1a);color:#3a1d00}
+.pbadges{display:flex;flex-wrap:wrap;gap:6px}
+.pdet{display:grid;gap:10px}.pdet.hidden{display:none}
+.pinfo{background:#f1fbfe;border:1px solid #cdeef6;border-radius:14px;padding:10px;display:grid;gap:4px;font-size:14px}
+.pwall{border:1px solid #cdeef6;border-radius:16px;padding:10px;background:#fbfeff;display:grid;gap:8px}
+.pwhead{display:flex;align-items:center;gap:10px}.pwlogo{width:44px;height:44px;border-radius:12px;object-fit:contain;background:#fff;border:1px solid #d5eaf5;flex:none;display:grid;place-items:center;font-size:22px}
+.pwpts{color:#006d8f}
+.poffer{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #e1f1f6;border-radius:14px;padding:8px}
+.poimg{width:48px;height:48px;border-radius:12px;object-fit:cover;flex:none;background:#eef7fa;display:grid;place-items:center;font-size:24px}
+.perm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px}
+.chk.perm{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #efc4d0;border-radius:12px;padding:8px 10px;font-size:13px}
+#statusReport .ai-item{margin:8px 0}
+/* تحسين عام */
+header{background:linear-gradient(135deg,#a30d32,#d12b52 55%,#e8527a)!important;border-radius:0 0 28px 28px;box-shadow:0 10px 28px #a30d3244}
+header h1{letter-spacing:.3px}
+.menu{transition:transform .15s,box-shadow .15s}.menu:active{transform:scale(.985)}
+.menu-icon{box-shadow:0 6px 14px #0002,inset 0 1px 0 #fff8}
+.panel.show{animation:pIn .25s ease}@keyframes pIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+input,select,textarea{border-radius:14px!important}
+button.primary{box-shadow:0 8px 18px #a30d3240}
+html[data-mode="dark"] :is(.pcard,.pwall,.poffer,.pinfo,.chk.perm,.subtab){background:var(--surf2)!important;border-color:var(--line)!important;color:var(--txt)}
+html[data-mode="dark"] .subtab.active{background:linear-gradient(135deg,#d12b52,#a30d32)!important;color:#fff!important}
+html[data-mode="dark"] :is(.ptxt small,.pnum small){color:var(--mut)}html[data-mode="dark"] .pnum b,html[data-mode="dark"] .pwpts{color:#7fe3f7}
 </style><script>try{var __m=localStorage.getItem("yj_admin_mode");if(__m)document.documentElement.setAttribute("data-mode",__m)}catch(e){}</script></head><body>
 <header><h1>🛡️ YASJOY Admin</h1><p>لوحة إدارة المستخدمين والسحوبات</p></header><main>
 <section id="login" class="login"><h2>تسجيل دخول المسؤول</h2><label>البريد الإلكتروني</label><input id="email" type="email"><label>كلمة المرور</label><input id="password" type="password"><button id="loginBtn" class="primary">تسجيل الدخول</button><button id="forgotPw" type="button" class="btn" style="margin-top:8px;width:100%">نسيت كلمة المرور؟</button><p id="loginMsg" class="muted"></p></section>
 <section id="app" class="hidden"><p class="muted">تم التحقق من حساب المسؤول</p><div id="serverStatus" class="srv">جارٍ فحص خادم Cloudflare…</div>
 <div id="home" class="dashboard-grid" aria-label="الأقسام الرئيسية">
-<button type="button" class="menu menu-withdraw" data-panel="withdraw" aria-label="طلبات السحب" aria-expanded="false" onclick="openPanel('withdraw')"><span class="menu-icon">💳</span><span class="menu-copy"><strong>طلبات السحب</strong><small>معلّقة · مدفوعة · مرفوضة</small></span><span class="menu-arrow">←</span></button>
+<button type="button" class="menu menu-withdraw" data-panel="withdraw" aria-label="طلبات السحب" aria-expanded="false" onclick="openPanel('withdraw')"><span class="menu-icon">💸</span><span class="menu-copy"><strong>طلبات السحب</strong><small>معلّقة · مدفوعة · مرفوضة</small></span><span class="menu-arrow">←</span></button>
 <button type="button" class="menu menu-users" data-panel="users" aria-label="المستخدمون" aria-expanded="false" onclick="openPanel('users')"><span class="menu-icon">👥</span><span class="menu-copy"><strong>المستخدمون</strong><small>بحث · رصيد · آخر نشاط · حظر</small></span><span class="menu-arrow">←</span></button>
-<button type="button" class="menu menu-methods" data-panel="methods" aria-label="إعدادات تطبيق المستخدم" aria-expanded="false" onclick="openPanel('methods')"><span class="menu-icon">🎨</span><span class="menu-copy"><strong>إعدادات تطبيق المستخدم</strong><small>السمات · طرق السحب</small></span><span class="menu-arrow">←</span></button>
-<button type="button" class="menu menu-vip" data-panel="vip" aria-label="المميزون" aria-expanded="false" onclick="openPanel('vip')"><span class="menu-icon">⭐</span><span class="menu-copy"><strong>المميزون</strong><small id="vipMenuSub">نقاط · حسابات · فواتير</small></span><span class="menu-arrow">←</span></button>
+<button type="button" class="menu menu-points" data-panel="points" aria-label="النقاط" aria-expanded="false" onclick="openPanel('points')"><span class="menu-icon">💎</span><span class="menu-copy"><strong>النقاط</strong><small>نقاط · دول · جدران · عروض</small></span><span class="menu-arrow">←</span></button>
+<button type="button" class="menu menu-methods" data-panel="methods" aria-label="إعدادات تطبيق المستخدم" aria-expanded="false" onclick="openPanel('methods')"><span class="menu-icon">🎨</span><span class="menu-copy"><strong>تصميم تطبيق المستخدم</strong><small>السمات · طرق السحب</small></span><span class="menu-arrow">←</span></button>
+<button type="button" class="menu menu-vip" data-panel="vip" aria-label="المميزون" aria-expanded="false" onclick="openPanel('vip')"><span class="menu-icon">👑</span><span class="menu-copy"><strong>المميزون</strong><small id="vipMenuSub">نقاط · حسابات · فواتير</small></span><span class="menu-arrow">←</span></button>
 <button type="button" class="menu menu-walls" data-panel="walls" aria-label="جدران العروض" aria-expanded="false" onclick="openPanel('walls')"><span class="menu-icon">🎁</span><span class="menu-copy"><strong>جدران العروض</strong><small>المزوّدون · الروابط · الشعارات · الإعدادات</small></span><span class="menu-arrow">←</span></button>
-<button type="button" class="menu menu-risk" data-panel="risk" aria-label="الخطر" aria-expanded="false" onclick="openPanel('risk')"><span class="menu-icon">🛡️</span><span class="menu-copy"><strong>الخطر</strong><small>إحصائيات · احتيال · مساعد · إعادة ضبط</small></span><span class="menu-arrow">←</span></button>
+<button type="button" class="menu menu-risk" data-panel="risk" aria-label="الخطر" aria-expanded="false" onclick="openPanel('risk')"><span class="menu-icon">🛡️</span><span class="menu-copy"><strong>الخطر</strong><small>غرفة المراقبة · غرفة التحكم · الإعدادات</small></span><span class="menu-arrow">←</span></button>
 </div>
 <section id="withdraw" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>طلبات السحب</h2><div class="tabs"><button class="tab active" onclick="withdrawTab('pending',this)">معلّقة</button><button class="tab" onclick="withdrawTab('paid',this)">مدفوعة</button><button class="tab" onclick="withdrawTab('rejected',this)">مرفوضة</button></div><div id="withdrawList"></div><p class="muted">لا تؤكد الدفع إلا بعد إرساله فعليًا. الرفض لا يعيد النقاط تلقائيًا.</p></section>
 <section id="users" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>المستخدمون</h2><label>البحث بـ publicId أو Firebase UID</label><input id="search" placeholder="معرّف المستخدم"><p id="userMsg" class="muted"></p><div id="userFilters" class="chips"></div><div id="userList"></div></section>
@@ -447,10 +484,20 @@ html[data-mode="dark"] :is(.rb-ok){background:#1f5f4a;color:#c9f5df}html[data-mo
 <input id="vipSearch" placeholder="🔎 بحث بالاسم أو الرقم أو الإيميل" style="margin:8px 0">
 <div id="vipList"></div></section>
 <section id="risk" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button>
-<div class="risk-hero"><div class="vip-crown">🛡️</div><div><h2>الخطر</h2><p>إحصائيات · حماية تلقائية · مساعد ذكي · منع التكرار</p></div></div>
-<div id="statsBox" class="stats-grid"></div>
-<div class="step"><div class="step-h">⚙️ الحماية التلقائية والمساعد الذكي — تقرير شامل</div><div id="aiReport"></div><button id="aiRefresh" class="btn">🔄 تحديث التقرير</button><p class="muted">التقرير يُبنى من بياناتك الحالية بقواعد ثابتة (ليس نموذج ذكاء اصطناعي خارجي). اضغط على أي بند به مستخدمون لترى من فعل ذلك.</p></div>
-<div class="step"><div class="step-h">🎛 التحكم الكامل بالحماية التلقائية</div>
+<div class="risk-hero"><div class="vip-crown">🛡️</div><div><h2>الخطر</h2><p>مراقبة · تحكم · إعدادات التطبيق</p></div></div>
+<div class="subtabs" id="riskTabs"><button type="button" class="subtab active" data-v="monitor" onclick="riskView('monitor')">🛰️ غرفة المراقبة</button><button type="button" class="subtab" data-v="control" onclick="riskView('control')">🎛️ غرفة التحكم</button><button type="button" class="subtab" data-v="settings" onclick="riskView('settings')">⚙️ إعدادات التطبيق</button></div>
+
+<div id="rv-monitor" class="rview">
+<div class="step"><div class="step-h">🤖 الحماية التلقائية والمساعد الذكي — تقرير شامل</div><div id="aiReport"></div><button id="aiRefresh" class="btn" type="button">🔄 تحديث التقرير</button><p class="muted">التقرير يُبنى من بياناتك بقواعد ثابتة. اضغط على أي بند به مستخدمون لترى من فعل ذلك.</p></div>
+<div class="step"><div class="step-h" id="riskAlertsHead">🚨 تنبيهات الاحتيال</div><div id="riskAlerts"></div></div>
+<div class="step"><div class="step-h">🧬 منع التكرار وفحص VPN</div>
+<input id="dupSearch" placeholder="🔎 معرّف المستخدم (YJ-… أو UID) لفحصه بالكامل"><div id="dupOut"></div>
+<div class="step-sub">أجهزة وعناوين مكررة</div><div id="dupGroups"></div></div>
+<div class="step"><div class="step-h">📜 سجل الحظر التلقائي</div><div id="riskLog"></div></div>
+</div>
+
+<div id="rv-control" class="rview hidden">
+<div class="step"><div class="step-h">🎛️ التحكم الكامل بالحماية التلقائية</div>
 <label class="chk"><input type="checkbox" id="fraudAuto"><span>حظر تلقائي عند بلوغ الحد الأقصى للاحتيال (يعمل من الخادم حتى لو تطبيق المسؤول مغلق)</span></label>
 <label>الحد الأقصى للدرجة</label><input id="fraudMax" type="number" min="1" max="1000">
 <div class="step-sub">📋 القواعد — عدّل الأرقام أو أوقفها أو احذفها</div><div id="ruleList"></div>
@@ -458,13 +505,32 @@ html[data-mode="dark"] :is(.rb-ok){background:#1f5f4a;color:#c9f5df}html[data-mo
 <div class="rule-add"><select id="ruleKind"></select><div id="ruleParams" class="rule-params"></div><button id="ruleAdd" class="btn" type="button">＋ إضافة القاعدة</button></div>
 <div class="grid2"><button id="fraudSave" class="primary" type="button">💾 حفظ الإعدادات</button><button id="ruleDefaults" class="btn" type="button">↺ استعادة الافتراضي</button></div><p id="fraudMsg" class="muted"></p>
 <p class="muted">عند الحظر التلقائي تظهر للمستخدم شاشة تشرح له ما فعله. راجع التنبيهات أولًا ثم فعّل الحظر.</p></div>
-<div class="step"><div class="step-h" id="riskAlertsHead">🚨 تنبيهات الاحتيال</div><div id="riskAlerts"></div></div>
-<div class="step"><div class="step-h">🧬 منع التكرار وفحص VPN</div>
-<input id="dupSearch" placeholder="🔎 معرّف المستخدم (YJ-… أو UID) لفحصه بالكامل"><div id="dupOut"></div>
-<div class="step-sub">أجهزة وعناوين مكررة</div><div id="dupGroups"></div></div>
-<div class="step"><div class="step-h">🤖 سجل الحظر التلقائي</div><div id="riskLog"></div></div>
+<div class="step"><div class="step-h">🛡 كل الحمايات</div><div id="protList"></div></div>
+</div>
+
+<div id="rv-settings" class="rview hidden">
+<div class="step"><div class="step-h">📊 إحصائيات التطبيق</div><div id="statsBox" class="stats-grid"></div></div>
+<div class="step"><div class="step-h">🩺 حالة التطبيق</div><div id="statusReport"></div></div>
+<div class="step"><div class="step-h">🧑‍💼 مساعدو المسؤول</div>
+<div id="asstList"></div>
+<div class="step-sub">➕ إضافة مساعد</div>
+<div class="rule-add" id="asstForm">
+<input id="asstName" placeholder="اسم المساعد (للتمييز)" maxlength="40">
+<input id="asstEmail" type="email" placeholder="بريد المساعد الإلكتروني" autocomplete="off" dir="ltr">
+<input id="asstPass" type="password" placeholder="كلمة مرور المساعد (6 أحرف على الأقل)" autocomplete="new-password">
+<div class="muted" style="margin:2px 0">القوائم التي تظهر له:</div><div id="asstPerms" class="perm-grid"></div>
+<input id="asstAdminPass" type="password" placeholder="كلمة مرورك أنت (المسؤول الحقيقي) للتأكيد" autocomplete="current-password">
+<button id="asstAdd" class="primary" type="button">➕ إضافة المساعد</button><p id="asstMsg" class="muted"></p></div></div>
 <div class="step danger-zone"><div class="step-h">☢️ إعادة ضبط المصنع</div>
-<input id="resetConfirm" placeholder="اكتب RESET للتأكيد" dir="ltr"><button id="resetBtn" class="btn danger">🗑 تنفيذ إعادة الضبط</button><p id="resetMsg" class="muted"></p></div></section>
+<input id="resetConfirm" type="password" autocomplete="off" placeholder="كلمة التأكيد" dir="ltr"><div class="grid2"><button id="resetShow" class="btn" type="button">👁 إظهار كلمة التأكيد</button><button id="resetBtn" class="btn danger" type="button">🗑 تنفيذ إعادة الضبط</button></div><p id="resetHint" class="muted"></p><p id="resetMsg" class="muted"></p></div>
+</div>
+</section>
+<section id="points" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button>
+<div class="pts-hero"><div class="vip-crown">💎</div><div><h2>النقاط</h2><p>من ربح نقاطًا، من أين، وبأي عروض</p></div></div>
+<div id="ptsTotals" class="vip-totals"></div>
+<div class="subtabs" id="ptsTabs"><button type="button" class="subtab active" data-v="all" onclick="ptsTab('all',this)">📋 الكل</button><button type="button" class="subtab" data-v="points" onclick="ptsTab('points',this)">🏆 الأكثر نقاطًا</button><button type="button" class="subtab" data-v="offers" onclick="ptsTab('offers',this)">🎯 الأكثر عروضًا</button><button type="button" class="subtab" data-v="walls" onclick="ptsTab('walls',this)">🧩 الأكثر جدرانًا</button></div>
+<input id="ptsSearch" placeholder="🔎 معرّف المستخدم" style="margin:8px 0"><div id="ptsList"></div>
+<p class="muted">يظهر هنا فقط من أنجز عرضًا واحدًا على الأقل. تفاصيل العروض (الاسم والصورة والمتبقي) تظهر إذا أرسلها الجدار في الـ Postback.</p></section>
 <section id="walls" class="panel"><button class="back" onclick="goHome()">← القائمة الرئيسية</button><h2>إدارة جدران العروض</h2>
 <details class="how"><summary>📘 شرح مفصّل: كيف أضيف جدارًا؟</summary>
 <div><b>1) في موقع المزوّد</b> (CPX أو Tapjoy أو غيرهما): أنشئ حسابًا كناشر (Publisher) ثم أضف تطبيقًا جديدًا. سيعطيك المزوّد مفاتيح مثل App ID وأحيانًا Secret Key.</div>
@@ -483,7 +549,7 @@ html[data-mode="dark"] :is(.rb-ok){background:#1f5f4a;color:#c9f5df}html[data-mo
 </section></main><footer class="muted" style="text-align:center;padding:20px">YASJOY Admin • Firebase</footer>
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';
-import{getAuth,signInWithEmailAndPassword,sendPasswordResetEmail,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
+import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,reauthenticateWithCredential,EmailAuthProvider,sendPasswordResetEmail,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
 import{scoreUser,vpnCheck,normRules,defaultRules,RULE_KINDS,banNoticeFor}from'./guard-core.js';
 import{getFirestore,collection,onSnapshot,doc,updateDoc,addDoc,deleteDoc,getDoc,setDoc,serverTimestamp,increment,writeBatch,query,where,getDocs,orderBy,limit}from'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js';
 const config={apiKey:'AIzaSyB45rvl6iTjsdiW3-Ka6jyqiFaJmrsUUwI',authDomain:'yasjoy.firebaseapp.com',projectId:'yasjoy',storageBucket:'yasjoy.firebasestorage.app',messagingSenderId:'967065409063',appId:'1:967065409063:web:4f7b882cc38f17ec8a2002'};
@@ -641,7 +707,7 @@ function bindVip(){
 /* ===== خطاء: إحصائيات + مراقب الاحتيال + المساعد الذكي + إعادة ضبط المصنع ===== */
 const unbackedBal=u=>{const bal=Math.floor(Number(u.balance)||0);if(bal<=0)return 0;const wd=withdrawals.filter(w=>withdrawalUid(w)===String(u.id)&&w.status!=='rejected').reduce((t,w)=>t+(Math.floor(Number(w.coins))||0),0);const backed=Math.max(0,Math.floor(Number(u.offerPoints)||0)-wd-Math.floor(Number(u.acctSent)||0));return Math.max(0,bal-backed)};
 const fraudRules=()=>normRules(fraudSet.rules);
-let offerMap={};
+let offerMap={},offerTx={},isStaff=false,staffPerms={},assistants=[];
 const fraudRank=(u)=>scoreUser(u,{others:users,wds:withdrawals,offerTimes:offerMap[u.id]||[],now:Date.now()},fraudRules());
 const fraudMax=()=>Math.max(1,Math.min(1000,Number(fraudSet.maxScore)||10));
 function fraudList(){return users.filter(u=>!u.banned).map(u=>({u,...fraudRank(u)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score)}
@@ -731,6 +797,108 @@ function protectionList(){
  [['🔐','التحقق من توقيع الجدران','أي إشعار نقاط بتوقيع خاطئ يُرفض ويُسجَّل.'],['🔁','منع تكرار نفس العملية','كل Transaction ID يُحتسب مرة واحدة فقط، وإعادة الإرسال تُتجاهل.'],['🌍','قفل الدولة','أول دولة تُثبَّت للحساب، وتغيّرها (بتأكيد من الخادم) يحظره.'],['🧾','كشف تزوير طلبات السحب','طلب سحب لا يطابق سجل معاملته يحظر صاحبه تلقائيًا.'],['🆔','حماية التحويل للمميز','يُحوَّل فقط ما اكتُسب من الجدران، وأي رصيد مُضاف يدويًا يُحجز.'],['⏱','قفل محاولات الرقم السري','5 محاولات خاطئة للـ PIN = قفل 15 دقيقة.'],['🔒','قفل قواعد Firebase','سجلات الجدران والأحداث لا يستطيع المستخدم تعديلها أو إنشاءها.']].forEach(([ic,t,x])=>add('ok',ic+' '+t,x));
  return P;
 }
+
+const STAFF_PERMS=[['withdraw','💸 طلبات السحب'],['users','👥 المستخدمون'],['points','💎 النقاط'],['vip','👑 المميزون'],['risk','🛰️ غرفة المراقبة']];
+const canOpen=id=>!isStaff||(staffPerms[id]===true);
+function applyStaffUi(){
+ document.querySelectorAll('#home .menu').forEach(m=>{m.dataset.locked=(isStaff&&staffPerms[m.dataset.panel]!==true)?'1':'';m.style.display=m.dataset.locked?'none':''});
+ document.querySelectorAll('#riskTabs .subtab').forEach(b=>{if(isStaff&&b.dataset.v!=='monitor')b.style.display='none'});
+ const t=document.querySelector('#app>p.muted');if(t)t.textContent=isStaff?'حساب مساعد — تظهر لك القوائم التي حدّدها المسؤول فقط':'تم التحقق من حساب المسؤول';
+}
+window.riskView=v=>{if(isStaff&&v!=='monitor')return;document.querySelectorAll('#riskTabs .subtab').forEach(b=>b.classList.toggle('active',b.dataset.v===v));['monitor','control','settings'].forEach(x=>$('rv-'+x).classList.toggle('hidden',x!==v));if(v==='settings'){renderStats();renderRisk();renderAssistants()}};
+function renderAssistants(){
+ const L=$('asstList');if(!L||isStaff)return;L.replaceChildren();
+ if(!assistants.length)L.append(el('div','لا يوجد مساعدون بعد.','empty'));
+ assistants.forEach(a=>{
+  const c=el('div','','rule-row'+(a.enabled===false?' off':'')),h=el('div','','rule-top');
+  h.append(el('b',(a.name||'مساعد')+' — '+(a.email||''),'rule-name'),el('span',a.enabled===false?'⏸ موقوف':'● نشط','pill'+(a.enabled===false?' susp':' paid')));c.append(h);
+  const pg=el('div','','perm-grid');
+  STAFF_PERMS.forEach(([k,lab])=>{const w=el('label','','chk perm');const ck=document.createElement('input');ck.type='checkbox';ck.checked=!!(a.perms&&a.perms[k]);ck.onchange=async()=>{try{await updateDoc(doc(db,'adminAssistants',a.id),{['perms.'+k]:ck.checked})}catch(e){alert(e.message);ck.checked=!ck.checked}};w.append(ck,el('span',lab));pg.append(w)});
+  c.append(pg);
+  const ac=el('div','','grid2'),sp=el('button',a.enabled===false?'▶ تفعيل':'⏸ إيقاف','btn'),dl=el('button','🗑 حذف الحساب','btn danger');
+  sp.type='button';dl.type='button';
+  sp.onclick=async()=>{try{await updateDoc(doc(db,'adminAssistants',a.id),{enabled:a.enabled===false})}catch(e){alert(e.message)}};
+  dl.onclick=async()=>{if(!confirm('حذف حساب المساعد '+(a.email||'')+' نهائيًا؟'))return;dl.disabled=true;try{const t=await auth.currentUser.getIdToken(),r=await fetch('/api/admin/assistant-delete',{method:'POST',headers:{authorization:'Bearer '+t,'content-type':'application/json'},body:JSON.stringify({uid:a.id})}),j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||('HTTP '+r.status))}catch(e){try{await deleteDoc(doc(db,'adminAssistants',a.id))}catch(x){}alert('حُذف وصول المساعد، لكن تعذّر حذف تسجيل دخوله من Firebase: '+e.message)}finally{dl.disabled=false}};
+  ac.append(sp,dl);c.append(ac);L.append(c);
+ });
+}
+function bindAssistants(){
+ const g=$('asstPerms');if(!g||isStaff)return;g.replaceChildren();
+ STAFF_PERMS.forEach(([k,lab])=>{const w=el('label','','chk perm');const ck=document.createElement('input');ck.type='checkbox';ck.dataset.k=k;ck.checked=k!=='vip';w.append(ck,el('span',lab));g.append(w)});
+ $('asstAdd').onclick=async()=>{
+  const msg=$('asstMsg'),name=$('asstName').value.trim(),email=$('asstEmail').value.trim(),pw=$('asstPass').value,ap=$('asstAdminPass').value;
+  if(!/^\S+@\S+\.\S+$/.test(email))return msg.textContent='اكتب بريدًا صحيحًا للمساعد.';
+  if(pw.length<6)return msg.textContent='كلمة مرور المساعد 6 أحرف على الأقل.';
+  if(!ap)return msg.textContent='اكتب كلمة مرورك أنت للتأكيد.';
+  const perms={};g.querySelectorAll('input').forEach(i=>{perms[i.dataset.k]=i.checked});
+  $('asstAdd').disabled=true;msg.textContent='جارٍ التحقق…';
+  try{
+   await reauthenticateWithCredential(auth.currentUser,EmailAuthProvider.credential(auth.currentUser.email,ap));
+   msg.textContent='جارٍ إنشاء الحساب…';
+   const app2=(await import('https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js')),a2=app2.getApps().find(x=>x.name==='assist')||app2.initializeApp(config,'assist'),auth2=getAuth(a2);
+   const cred=await createUserWithEmailAndPassword(auth2,email,pw);const uid=cred.user.uid;await signOut(auth2);
+   await setDoc(doc(db,'adminAssistants',uid),{email,name:name.slice(0,40),perms,enabled:true,createdAt:serverTimestamp()});
+   ['asstName','asstEmail','asstPass','asstAdminPass'].forEach(i=>$(i).value='');msg.textContent='✓ أُضيف المساعد. يسجّل دخوله من نفس صفحة المسؤول بالبريد وكلمة المرور.';
+  }catch(e){const c=e&&e.code;msg.textContent=c==='auth/invalid-credential'||c==='auth/wrong-password'?'كلمة مرورك (المسؤول) غير صحيحة.':c==='auth/email-already-in-use'?'هذا البريد مستخدم من قبل.':c==='auth/weak-password'?'كلمة مرور المساعد ضعيفة.':'تعذّر الإنشاء: '+(e.message||c)}
+  finally{$('asstAdd').disabled=false}
+ };
+ $('resetShow').onclick=()=>{$('resetHint').textContent='كلمة التأكيد: RESET';setTimeout(()=>{$('resetHint').textContent=''},4000)};
+}
+/* ===== قائمة النقاط ===== */
+let ptsView='all';
+function bindPoints(){$('ptsSearch').oninput=renderPoints}
+window.ptsTab=(v,b)=>{ptsView=v;document.querySelectorAll('#ptsTabs .subtab').forEach(x=>x.classList.toggle('active',x===b));renderPoints()};
+const proxyText=u=>{const vc=vpnCheck(u),st=vc.state==='yes'?'🚨 VPN / مركز بيانات (مرجّح)':vc.state==='maybe'?'⚠ بروكسي محتمل':vc.state==='no'?'✅ اتصال عادي (بدون بروكسي)':'❔ غير معروف';return {st,vc,org:(u.net4&&u.net4.org)||(u.net&&u.net.org)||(u.net6&&u.net6.org)||''}};
+function userWallData(u){
+ const tx=(offerTx[u.id]||[]).slice().sort((a,b)=>b.t-a.t),byWall=new Map();
+ tx.forEach(x=>{const wid=x.wallId||'?';if(!byWall.has(wid))byWall.set(wid,{id:wid,name:x.wallName||wid,pts:0,offers:new Map()});const w=byWall.get(wid);w.pts+=Number(x.coins)||0;
+  const key=String(x.offerId||x.offerName||x.txid||x.id);let o=w.offers.get(key);if(!o){o={key,name:x.offerName||'',image:x.offerImage||'',total:Number(x.offerTotal)||0,pts:0,n:0,last:x.t};w.offers.set(key,o)}
+  o.pts+=Number(x.coins)||0;o.n++;if(!o.name&&x.offerName)o.name=x.offerName;if(!o.image&&x.offerImage)o.image=x.offerImage;if(Number(x.offerTotal)>o.total)o.total=Number(x.offerTotal)});
+ return {tx,walls:[...byWall.values()]};
+}
+function renderPoints(){
+ const L=$('ptsList');if(!L)return;L.replaceChildren();
+ const q=($('ptsSearch').value||'').trim().toLowerCase();
+ let rows=users.map(u=>({u,d:userWallData(u)})).filter(r=>r.d.tx.length>0||Number(r.u.offerCount)>0);
+ const totalPts=rows.reduce((t,r)=>t+(Number(r.u.offerPoints)||0),0),totalOffers=rows.reduce((t,r)=>t+(Number(r.u.offerCount)||r.d.tx.length),0);
+ const T=$('ptsTotals');T.replaceChildren();[['مستخدمون نشطون',rows.length],['نقاط من الجدران',ptsText(totalPts)],['عروض منجزة',totalOffers]].forEach(([l,v])=>{const d=el('div');d.append(el('small',l),el('b',String(v)));T.append(d)});
+ if(q)rows=rows.filter(r=>[r.u.id,r.u.publicId].some(v=>String(v||'').toLowerCase().includes(q)));
+ const pts=r=>Number(r.u.offerPoints)||r.d.tx.reduce((t,x)=>t+(Number(x.coins)||0),0),cnt=r=>Number(r.u.offerCount)||r.d.tx.length;
+ if(ptsView==='points')rows.sort((a,b)=>pts(b)-pts(a));else if(ptsView==='offers')rows.sort((a,b)=>cnt(b)-cnt(a));else if(ptsView==='walls')rows.sort((a,b)=>b.d.walls.length-a.d.walls.length||pts(b)-pts(a));else rows.sort((a,b)=>tsMillis(b.u.lastOfferAt)-tsMillis(a.u.lastOfferAt));
+ if(!rows.length){L.append(el('div','لا يوجد مستخدمون أنجزوا عروضًا بعد.','empty'));return}
+ rows.slice(0,100).forEach((r,i)=>{
+  const u=r.u,ci=countryInfo(u),c=el('div','','pcard'),h=el('div','','phead');
+  const rk=el('div',ptsView==='all'?'':String(i+1),'prank'+(i<3&&ptsView!=='all'?' top':''));if(ptsView!=='all')h.append(rk);
+  const t=el('div','','ptxt');t.append(el('b',u.publicId||u.id.slice(0,10)),el('small',((ci.flag?ci.flag+' ':'')+(ci.name||ci.code||'دولة غير معروفة'))+(u.banned?' · 🚫 محظور':'')));
+  const n=el('div','','pnum');n.append(el('b',ptsText(pts(r))+' نقطة'),el('small','رصيد '+ptsText(balance(u))));
+  h.append(t,n);c.append(h);
+  const bd=el('div','','pbadges');bd.append(el('span','🧩 '+r.d.walls.length+' جدار','pill'),el('span','🎯 '+cnt(r)+' عرض','pill'),el('span',proxyText(u).st,'pill'));c.append(bd);
+  const det=el('div','','pdet hidden'),btn=el('button','🔎 عرض التفاصيل ▾','btn');btn.type='button';
+  btn.onclick=()=>{if(det.dataset.f!=='1'){det.dataset.f='1';fillPointsDetail(det,u,r.d)}det.classList.toggle('hidden')};
+  c.append(btn,det);L.append(c);
+ });
+}
+function fillPointsDetail(box,u,d){
+ const px=proxyText(u),ci=countryInfo(u);
+ const info=el('div','','pinfo');[['الدولة',(ci.flag?ci.flag+' ':'')+(ci.name||ci.code||'غير معروفة')],['نوع الاتصال',px.st],['الشبكة',px.org||'غير معروفة'],['IP',u.ipv4||u.ip||u.ipv6||'غير معروف']].forEach(([a,b])=>info.append(detailLine(a,b)));
+ px.vc.reasons.forEach(x=>info.append(el('small','• '+x,'muted')));box.append(info);
+ if(!d.walls.length)box.append(el('p','لا توجد تفاصيل عروض محفوظة لهذا المستخدم (قد تكون أقدم من آخر 3000 معاملة).','muted'));
+ d.walls.sort((a,b)=>b.pts-a.pts).forEach(w=>{
+  const wc=el('div','','pwall'),wm=walls.find(x=>x.id===w.id),hd=el('div','','pwhead');
+  if(wm&&wm.logo){const im=document.createElement('img');im.src=wm.logo;im.alt='';im.className='pwlogo';hd.append(im)}else hd.append(el('span','🎁','pwlogo ph'));
+  const tt=el('div','','ptxt');tt.append(el('b',w.name),el('small',w.offers.size+' عرض'));hd.append(tt,el('b',ptsText(w.pts)+' نقطة','pwpts'));wc.append(hd);
+  [...w.offers.values()].sort((a,b)=>b.last-a.last).forEach(o=>{
+   const oc=el('div','','poffer');
+   if(o.image&&/^https:\/\//i.test(o.image)){const im=document.createElement('img');im.src=o.image;im.alt='';im.referrerPolicy='no-referrer';im.loading='lazy';im.className='poimg';im.onerror=()=>{im.replaceWith(el('span','🎮','poimg ph'))};oc.append(im)}else oc.append(el('span','🎮','poimg ph'));
+   const ot=el('div','','ptxt');ot.append(el('b',o.name||'عرض بدون اسم'),el('small',(o.n>1?o.n+' مراحل · ':'')+displayDate(new Date(o.last))));
+   const rem=o.total>0?Math.max(0,o.total-o.pts):null;
+   const on=el('div','','pnum');on.append(el('b','+'+ptsText(o.pts)),el('small',rem===null?'المتبقي: غير معروف':rem===0?'✅ مكتمل':'المتبقي: '+ptsText(rem)));
+   oc.append(ot,on);wc.append(oc);
+  });
+  box.append(wc);
+ });
+}
+
 function renderRisk(){
  if(!$('riskAlerts'))return;
  renderStats();
@@ -756,19 +924,21 @@ function renderRisk(){
  if(!auto.length)lg.append(el('div','لا حظر تلقائي حتى الآن.','muted'));
  auto.forEach(u=>{const r=el('div','','rrow');r.append(el('b','🤖 '+(u.publicId||u.id)+' · درجة '+(u.fraudScore||'?')),el('small',(u.fraudReasons||'')+' — '+displayDate(u.bannedAt)));const ob=el('button','👤 فتح','btn');ob.onclick=()=>goUser(u.id);r.append(ob);lg.append(r)});
  // assistant (protections + findings)
- const A=$('aiReport');A.replaceChildren();
+ const A=$('aiReport');A.replaceChildren();const S=$('statusReport');S.replaceChildren();
  const F=aiFindings(),bad=F.filter(f=>f.lvl==='bad').length,warn=F.filter(f=>f.lvl==='warn').length;
  const sum=el('div','','ai-sum '+(bad?'bad':warn?'warn':'ok'));sum.append(el('b',bad?'🔴 يحتاج تدخّلك الآن':warn?'🟠 يحتاج انتباهًا':'🟢 كل شيء مستقر'),el('span',bad+' مشكلة حرجة · '+warn+' تنبيه · '+new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'})));A.append(sum);
+ F.forEach(f=>{if((f.lvl==='ok'||f.lvl==='info')&&/^(المستخدمون:|جدران العروض|الخادم|لا توجد طلبات سحب|طلبات السحب المعلّقة|لا يوجد نشاط احتيالي|المميزون:)/.test(f.title))f.cat='status'});
  F.sort((a,b)=>['bad','warn','info','ok'].indexOf(a.lvl)-['bad','warn','info','ok'].indexOf(b.lvl)).forEach(f=>{
   const c=el('div','','ai-item ai-'+f.lvl),has=f.users&&f.users.length;
   const hd=el(has?'button':'div','','ai-head');hd.append(el('b',({bad:'🔴 ',warn:'🟠 ',info:'🔵 ',ok:'🟢 '})[f.lvl]+f.title));if(has){hd.type='button';hd.append(el('span','👥 '+f.users.length+' ▾','ai-more'))}
   c.append(hd,el('p',f.text));
   if(has){const box=el('div','','ai-users hidden');const seen=new Set();f.users.forEach(x=>{if(seen.has(x.id+x.note))return;seen.add(x.id+x.note);const r=el('div','','ai-urow'),t=el('div','','ai-utxt');t.append(el('b',uLabel(x.id)),el('small',x.note));const ob=el('button','فتح','btn');ob.type='button';ob.onclick=()=>goUser(x.id);r.append(t,ob);box.append(r)});c.append(box);hd.onclick=()=>box.classList.toggle('hidden')}
-  A.append(c);
+  (f.cat==='status'?S:A).append(c);
  });
+ if(!S.children.length)S.append(el('div','لا بيانات بعد.','empty'));
  const pl=el('details','','prot-box');pl.open=true;pl.append(el('summary','🛡 كل الحمايات ('+protectionList().filter(x=>x.st==='ok').length+' مفعّلة)'));
  protectionList().forEach(x=>{const r=el('div','','prot-row p-'+x.st),t=el('div');t.append(el('b',x.title),el('small',x.text));r.append(t);if(x.fix){const ab=el('button','إضافة','btn');ab.type='button';ab.onclick=()=>{const def=defaultRules().find(d=>d.kind===x.fix)||{kind:x.fix,points:5};const k=RULE_KINDS[x.fix],rr={id:'r'+Date.now().toString(36),kind:x.fix,enabled:true,points:def.points};k.params.forEach(([key,,d])=>rr[key]=def[key]||d);ruleDraft.push(rr);ruleDirty=true;renderRuleEditor();$('fraudMsg').textContent='أُضيفت «'+k.label+'» — اضغط «حفظ الإعدادات» لتفعيلها.'};r.append(ab)}pl.append(r)});
- A.append(pl);
+ $('protList').replaceChildren(pl);
  renderDup();
 }
 const cn=code=>{const c=countryInfo({countryCode:code});return((c.flag?c.flag+' ':'')+(c.name||c.code||'؟')).trim()};
@@ -802,7 +972,7 @@ function renderDup(){
 }
 async function factoryReset(btn){
  const msg=$('resetMsg');
- if($('resetConfirm').value.trim()!=='RESET'){msg.textContent='اكتب RESET بالإنجليزية للتأكيد.';return}
+ if($('resetConfirm').value.trim()!=='RESET'){msg.textContent='اكتب كلمة التأكيد الصحيحة (اضغط «إظهار كلمة التأكيد» إن نسيتها).';return}
  if(!confirm('⚠️ آخر تحذير!\nسيُحذف كل المستخدمين (العاديين والمميزين) وكل طلبات السحب وحسابات المميزين وفواتيرهم.\nتبقى جدران العروض وطرق السحب وإعدادات التطبيق.\nلا يمكن التراجع. متابعة؟'))return;
  btn.disabled=true;const done=[],failed=[];
  const wipe=async(name,label,sub)=>{
@@ -834,23 +1004,32 @@ function bindRisk(){
  $('dupSearch').oninput=renderDup;
  $('resetBtn').onclick=()=>factoryReset($('resetBtn'));
 }
-let wdZoom=false;let users=[],withdrawals=[],methods=[],walls=[],status='pending',unsubs=[],offerTx=[],postLogs=[],pointsErr='',methodImg='',wallImg='';const verifyCache=new Map(),autoBanned=new Set();
+let wdZoom=false;let users=[],withdrawals=[],methods=[],walls=[],status='pending',unsubs=[],postLogs=[],pointsErr='',methodImg='',wallImg='';const verifyCache=new Map(),autoBanned=new Set();
 setPersistence(auth,browserLocalPersistence).catch(console.error);
 $('loginBtn').onclick=async()=>{$('loginMsg').textContent='جارٍ التحقق…';try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value)}catch(e){const c=e&&e.code||'',m={'auth/invalid-credential':'البريد أو كلمة المرور غير صحيحة.','auth/wrong-password':'كلمة المرور غير صحيحة.','auth/user-not-found':'لا يوجد حساب بهذا البريد.','auth/invalid-email':'صيغة البريد غير صحيحة.','auth/too-many-requests':'محاولات كثيرة. انتظر دقائق ثم أعد المحاولة، أو اضغط «نسيت كلمة المرور».','auth/network-request-failed':'لا يوجد اتصال بالإنترنت.','auth/operation-not-allowed':'تسجيل البريد وكلمة المرور غير مفعّل في Firebase (Authentication ← Sign-in method).','auth/user-disabled':'هذا الحساب معطّل.','auth/unauthorized-domain':'هذا النطاق غير مضاف في Firebase (Authentication ← Settings ← Authorized domains).'};$('loginMsg').textContent=(m[c]||'تعذّر تسجيل الدخول')+(c&&!m[c]?' ('+c+')':'');$('loginMsg').className='error'}};
 $('forgotPw').onclick=async()=>{const em=$('email').value.trim();if(!em){$('loginMsg').textContent='اكتب بريدك أولًا ثم اضغط «نسيت كلمة المرور».';$('loginMsg').className='error';return}try{await sendPasswordResetEmail(auth,em);$('loginMsg').textContent='✓ أُرسل رابط تعيين كلمة المرور إلى بريدك.';$('loginMsg').className=''}catch(e){$('loginMsg').textContent='تعذّر الإرسال ('+(e.code||'error')+')';$('loginMsg').className='error'}};
 $('password').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};
-onAuthStateChanged(auth,async u=>{unsubs.forEach(f=>f());unsubs=[];if(!u){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}if(u.uid!==ADMIN_UID){await signOut(auth);$('loginMsg').textContent='هذا الحساب غير مخوّل.';return}$('login').classList.add('hidden');$('app').classList.remove('hidden');checkServer();
+onAuthStateChanged(auth,async u=>{unsubs.forEach(f=>f());unsubs=[];if(!u){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}
+ isStaff=false;staffPerms={};
+ if(u.uid!==ADMIN_UID){
+  let a=null;try{const sn=await getDoc(doc(db,'adminAssistants',u.uid));a=sn.exists()?sn.data():null}catch(e){}
+  if(!a||a.enabled!==true){await signOut(auth);$('loginMsg').textContent=a&&a.enabled===false?'تم إيقاف هذا الحساب من المسؤول.':'هذا الحساب غير مخوّل.';return}
+  isStaff=true;staffPerms=a.perms&&typeof a.perms==='object'?a.perms:{};
+ }
+ applyStaffUi();
+ $('login').classList.add('hidden');$('app').classList.remove('hidden');checkServer();
 unsubs.push(onSnapshot(collection(db,'users'),s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));renderUsers();renderWalls();renderStats();fraudTick()}));
 unsubs.push(onSnapshot(collection(db,'withdrawals'),s=>{withdrawals=s.docs.map(d=>({id:d.id,...d.data()}));renderWithdrawals();renderUsers();renderStats();fraudTick()},e=>{$('withdrawList').replaceChildren(el('div','تعذّر تحميل طلبات السحب: '+e.message,'error'));console.error('withdrawals listener error:',e)}));
 unsubs.push(onSnapshot(collection(db,'withdrawMethods'),s=>{methods=s.docs.map(d=>({id:d.id,...d.data()}));renderMethods();renderWithdrawals();renderStats()}));
 unsubs.push(onSnapshot(doc(db,'settings','appTheme'),onThemeDoc,()=>{}));
 unsubs.push(onSnapshot(collection(db,'vipAccounts'),s=>{vipAcc=s.docs.map(d=>({id:d.id,...d.data()}));renderVip()},e=>console.warn('vipAccounts',e.message)));
 unsubs.push(onSnapshot(collection(db,'vipInvoices'),s=>{vipInv=s.docs.map(d=>({id:d.id,...d.data()}));renderVip()},e=>console.warn('vipInvoices',e.message)));
-unsubs.push(onSnapshot(query(collection(db,'transactions'),orderBy('createdAt','desc'),limit(2000)),s=>{const m={};s.docs.forEach(d=>{const x=d.data();if(x.type==='offer'&&x.uid){const t=tsMillis(x.createdAt);if(t)(m[x.uid]=m[x.uid]||[]).push(t)}});offerMap=m;fraudTick()},()=>{}));
+unsubs.push(onSnapshot(query(collection(db,'transactions'),orderBy('createdAt','desc'),limit(3000)),s=>{const m={},full={};s.docs.forEach(d=>{const x=d.data();if(x.type==='offer'&&x.uid){const t=tsMillis(x.createdAt);if(t)(m[x.uid]=m[x.uid]||[]).push(t);(full[x.uid]=full[x.uid]||[]).push({id:d.id,...x,t})}});offerMap=m;offerTx=full;fraudTick();if(current==='points')renderPoints()},()=>{}));
 unsubs.push(onSnapshot(doc(db,'settings','acct'),s=>{const d=s.exists()?s.data():{};vipSet={enabled:d.enabled!==false};renderVip()},()=>{}));
 unsubs.push(onSnapshot(collection(db,'vipMethods'),s=>{vipMeth=s.docs.map(d=>({id:d.id,...d.data()}));renderVip()},e=>console.warn('vipMethods',e.message)));
 unsubs.push(onSnapshot(doc(db,'adminSettings','fraud'),s=>{const d=s.exists()?s.data():{};fraudSet={autoBan:d.autoBan===true,maxScore:Number(d.maxScore)||10,rules:Array.isArray(d.rules)?d.rules:null};if(!ruleDirty){ruleDraft=normRules(fraudSet.rules);}if(current==='risk'){renderRisk();renderRuleEditor()}fraudTick()},()=>{}));
-bindVip();bindRisk();
+bindVip();bindRisk();bindAssistants();bindPoints();
+if(!isStaff)unsubs.push(onSnapshot(collection(db,'adminAssistants'),sn=>{assistants=sn.docs.map(d=>({id:d.id,...d.data()}));renderAssistants()},()=>{}));
 unsubs.push(onSnapshot(collection(db,'offerWalls'),s=>{walls=s.docs.map(d=>({id:d.id,...d.data()}));renderWalls();renderStats()}));
 });
 async function checkServer(){
@@ -868,8 +1047,8 @@ async function checkServer(){
 }
 let current='home';function show(id){
  const home=$('home');
- const valid=id==='home'||['withdraw','users','methods','walls','vip','risk'].includes(id);
- if(!valid)return;
+ const valid=id==='home'||['withdraw','users','points','methods','walls','vip','risk'].includes(id);
+ if(!valid||(id!=='home'&&!canOpen(id)))return;
  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));
  home.style.display='grid';
  home.classList.toggle('has-selection',id!=='home');
@@ -880,7 +1059,7 @@ let current='home';function show(id){
   card.setAttribute('aria-expanded',String(id!=='home'&&selected));
  });
  if(id!=='home')$(id).classList.add('show');
- current=id;if(id==='risk'){renderRisk();renderRuleEditor()}if(id!=='withdraw'){wdZoom=false;$('withdraw').classList.remove('zoomed')}
+ current=id;if(id==='risk'){renderRisk();renderRuleEditor();renderAssistants()}if(id==='points')renderPoints();if(id!=='withdraw'){wdZoom=false;$('withdraw').classList.remove('zoomed')}
  if(id!=='home')requestAnimationFrame(()=>home.scrollIntoView({behavior:'smooth',block:'start'}));
  else window.scrollTo({top:0,behavior:'smooth'});
 }window.openPanel=show;window.goHome=()=>show('home');window.withdrawTab=(s,b)=>{status=s;document.querySelectorAll('#withdraw .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderWithdrawals()};

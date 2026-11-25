@@ -1,3 +1,4 @@
+
 rules_version = '2';
 
 service cloud.firestore {
@@ -10,6 +11,15 @@ service cloud.firestore {
     function isAdmin() {
       return signedIn()
         && request.auth.uid == 'wQgo9HTzP0NWC6JO2D1Di8iIPm62';
+    }
+
+    function isStaff() {
+      return isAdmin()
+        || (
+          signedIn()
+          && exists(/databases/$(database)/documents/adminAssistants/$(request.auth.uid))
+          && get(/databases/$(database)/documents/adminAssistants/$(request.auth.uid)).data.enabled == true
+        );
     }
 
     function userPath(uid) {
@@ -100,8 +110,8 @@ service cloud.firestore {
     }
 
     match /users/{uid} {
-      allow read: if isAdmin()
-        || (signedIn() && request.auth.uid == uid);
+      allow read: if (signedIn() && request.auth.uid == uid)
+        || isStaff();
 
       allow create: if signedIn()
         && request.auth.uid == uid
@@ -115,8 +125,7 @@ service cloud.firestore {
           'lastActiveAt'
         ]);
 
-      allow update: if isAdmin()
-        || (
+      allow update: if (
           signedIn()
           && request.auth.uid == uid
           && request.resource.data.diff(resource.data)
@@ -169,31 +178,33 @@ service cloud.firestore {
             uid,
             request.resource.data.lastWithdrawalId
           )
-        );
+        )
+        || isStaff();
 
       allow delete: if isAdmin();
     }
 
     match /withdrawals/{id} {
-      allow read: if isAdmin()
-        || (
+      allow read: if (
           signedIn()
           && resource.data.uid == request.auth.uid
-        );
+        )
+        || isStaff();
 
       allow create: if signedIn()
         && request.resource.data.uid == request.auth.uid
         && validWithdrawal(request.auth.uid, id);
 
-      allow update, delete: if isAdmin();
+      allow update: if isStaff();
+      allow delete: if isAdmin();
     }
 
     match /transactions/{id} {
-      allow read: if isAdmin()
-        || (
+      allow read: if (
           signedIn()
           && resource.data.uid == request.auth.uid
-        );
+        )
+        || isStaff();
 
       allow create: if signedIn()
         && request.resource.data.uid == request.auth.uid
@@ -212,17 +223,17 @@ service cloud.firestore {
     }
 
     match /postbackLogs/{id} {
-      allow read: if isAdmin();
+      allow read: if isStaff();
       allow create, update: if false;
       allow delete: if isAdmin();
     }
 
     match /offerEvents/{id} {
-      allow read: if isAdmin()
-        || (
+      allow read: if (
           signedIn()
           && resource.data.uid == request.auth.uid
-        );
+        )
+        || isStaff();
 
       allow create, update: if false;
       allow delete: if isAdmin();
@@ -230,30 +241,36 @@ service cloud.firestore {
 
     // ---- VIP (third app): written only by the Cloudflare Functions (service account) and the admin ----
     match /vipAccounts/{id} {
-      allow read, write: if isAdmin();
+      allow read, write: if isStaff();
       match /members/{m} {
-        allow read, write: if isAdmin();
+        allow read, write: if isStaff();
       }
     }
 
     match /vipWithdrawals/{id} {
-      allow read, write: if isAdmin();
+      allow read, write: if isStaff();
     }
 
     match /vipTransfers/{id} {
-      allow read, write: if isAdmin();
+      allow read, write: if isStaff();
     }
 
     match /vipMethods/{id} {
-      allow read, write: if isAdmin();
+      allow read, write: if isStaff();
     }
 
     match /adminSettings/{id} {
-      allow read, write: if isAdmin();
+      allow read: if isStaff();
+      allow write: if isAdmin();
+    }
+
+    match /adminAssistants/{uid} {
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow write: if isAdmin();
     }
 
     match /vipInvoices/{id} {
-      allow read, write: if isAdmin();
+      allow read, write: if isStaff();
     }
 
     match /{document=**} {
