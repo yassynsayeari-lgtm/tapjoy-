@@ -131,3 +131,4 @@ export function scoreUser(u, ctx, rules) {
 
 /** رسالة تُعرض للمستخدم بعد الحظر التلقائي */
 export const banNoticeFor = (items) => [...new Set(items.map((x) => x.en))].join(' | ').slice(0, 400);
+٠
