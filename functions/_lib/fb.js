@@ -246,3 +246,4 @@ export function clientGeo(request) {
   const ip = String(request.headers.get('cf-connecting-ip') || '').trim().slice(0, 45);
   return { ip, country };
 }
+0
