@@ -21,4 +21,3 @@ export const onRequest = handler(async ({ request, env }) => {
     invoices: inv.map((x) => x.data).sort(byNewest).slice(0, 100).map((x) => ({ invoiceNo: x.invoiceNo || '', points: x.points, usd: usd(x.points), reference: x.reference || '', method: x.method || '', walletNumber: x.walletNumber || '', createdAt: x.createdAt || '' })),
   });
 });
-0
