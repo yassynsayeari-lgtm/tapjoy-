@@ -36,3 +36,4 @@ export const onRequest = handler(async ({ request, env }) => {
   mustCommit(r, 'Register');
 });
 
+0
