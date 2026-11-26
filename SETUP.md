@@ -15,3 +15,6 @@
 - «الخطر» صار فيه: 🛰️ غرفة المراقبة · 🎛️ غرفة التحكم · ⚙️ إعدادات التطبيق (إحصائيات، حالة، مساعدو المسؤول، إعادة الضبط).
 - قائمة «💎 النقاط»: من أنجز عروضًا، دولته، جدرانه وعروضه. تفاصيل العرض (الاسم/الصورة/المتبقي) تظهر إذا أرسلها الجدار في الـPostback بالأسماء: `offer_name` `offer_id` `image` (https) `offer_total`.
 - مساعد المسؤول: يُنشأ من إعدادات التطبيق (يتطلب كلمة مرورك). انشر `firestore.rules` من جديد، وملف `functions/api/admin/assistant-delete.js` يحذف حساب المساعد نهائيًا.
+
+## VIP registration (automatic)
+The Account ID is generated automatically when a VIP signs in with Google and creates the account; the VIP only chooses a 6-digit PIN. The admin "المميزون" list shows name, category, category ID, Account ID and PIN in one card (copy buttons + copy all). Redeploy Cloudflare Pages after pushing.

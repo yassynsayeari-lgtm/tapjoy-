@@ -584,12 +584,8 @@ function renderVip(){
  if($('vipEnabled'))$('vipEnabled').checked=vipSet.enabled!==false;if($('vipEnabled2'))$('vipEnabled2').checked=vipSet.enabled!==false;
  const q=($('vipSearch').value||'').trim().toLowerCase();
  if(vipTabSel==='accounts'){
-  list.append(vipIssueBox());
-  const pend=vipAcc.filter(x=>x.unclaimed===true).sort((a,b)=>tsMillis(b.createdAt)-tsMillis(a.createdAt));
-  pend.forEach(x=>list.append(vipPendingCard(x)));
   const rows=vipClaimed().filter(x=>!q||[x.name,x.id,x.googleEmail,x.method,x.walletNumber].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>(b.points||0)-(a.points||0));
-  if(!rows.length&&!pend.length)list.append(el('div','لا توجد حسابات بعد. أنشئ رقم حساب بالزر أعلاه وأعطه للمميز ليسجّل به.','empty'));
-  else if(!rows.length)list.append(el('div',vipClaimed().length?'لا نتائج.':'لا حسابات مسجّلة بعد — أعطِ الأرقام أعلاه للمميزين.','empty'));
+  if(!rows.length)list.append(el('div',vipClaimed().length?'لا نتائج.':'تظهر الحسابات هنا تلقائيًا عندما يسجّل المميز من تطبيقه.','empty'));
   rows.forEach(x=>list.append(vipAccountCard(x)));
  }else if(vipTabSel==='invoices'){
   const rows=[...vipInv].filter(i=>!q||[i.name,i.number,i.invoiceNo,i.method].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>tsMillis(b.createdAt)-tsMillis(a.createdAt));
@@ -636,6 +632,7 @@ function vipAccountCard(x){
  const g=el('div','','secrets');
  g.append(secretRow('الرقم الخاص (Account ID)',x.id),secretRow('الرقم السري (PIN)',x.pin,pinFix(x)),secretRow('الفئة',x.method||''),secretRow('رقم الفئة (ID) كامل',x.walletNumber||''));
  c.append(g);
+ c.append(copyBtn('الاسم: '+(x.name||'')+'\nالفئة: '+(x.method||'')+'\nرقم الفئة (ID): '+(x.walletNumber||'')+'\nAccount ID: '+x.id+'\nPIN: '+(x.pin||''),'نسخ كل البيانات'));
  c.append(vipRow('الحسابات المستخدمة',String(x.accounts||0)),vipRow('الفواتير',inv.length+' · '+usdText(inv.reduce((s,i)=>s+(Number(i.points)||0),0))));
  if(susp&&x.banReason)c.append(vipRow('سبب الحظر',x.banReason));
  // pay = reset to zero

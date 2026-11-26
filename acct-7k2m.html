@@ -127,7 +127,6 @@ input,select{background:#0f1a4a}
  <div class="steps2"><i class="on"></i><i></i></div>
  <div class="card" id="newBox">
   <h3>Create your account</h3><p class="note" style="margin-top:0">Step 1 of 2 — your details</p>
-  <label for="fNum">Account ID (from the admin)</label><input id="fNum" inputmode="numeric" maxlength="12" autocomplete="off" placeholder="Your private Account ID">
   <label for="fName">Name</label><input id="fName" maxlength="40" autocomplete="off" placeholder="Your name">
   <label for="fMethod">Category</label><select id="fMethod"></select>
   <div id="fIdBox"><label for="fWallet" id="fWalletLbl">ID number</label><input id="fWallet" maxlength="80" autocomplete="off" placeholder="ID number"></div>
@@ -135,15 +134,16 @@ input,select{background:#0f1a4a}
  </div>
 </div></section>
 
-<!-- 3) create account: step 2 (the fixed 6-digit PIN from the admin) -->
+<!-- 3) create account: step 2 (choose a 6-digit PIN) -->
 <section id="pinScr" class="hidden"><div class="wrap">
- <div class="top"><button class="icon" id="pinBack" aria-label="Back">←</button><div class="brand">Enter your PIN</div></div>
+ <div class="top"><button class="icon" id="pinBack" aria-label="Back">←</button><div class="brand">Choose your PIN</div></div>
  <div class="steps2"><i class="on"></i><i class="on"></i></div>
  <div class="card" style="text-align:center">
   <div style="font-size:54px">🔐</div>
   <h3 style="justify-content:center">6-digit PIN</h3>
-  <p class="note" style="margin-top:0">Enter the 6-digit PIN the admin gave you with your Account ID. It is fixed and never changes.</p>
+  <p class="note" style="margin-top:0">Choose a 6-digit PIN. Your Account ID is created automatically.</p>
   <input id="pinIn" class="pinin" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" placeholder="••••••">
+  <input id="pinIn2" class="pinin" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="Repeat PIN" style="margin-top:10px">
   <button class="btn" id="pinBtn">Create account</button><p class="msg" id="pinMsg"></p>
  </div>
 </div></section>
@@ -277,20 +277,21 @@ $('gBtn').onclick=async()=>{
 };
 getRedirectResult(auth).catch(e=>{const m=gErr(e);if(m)say('loginMsg',m,'bad')});
 $('nextBtn').onclick=()=>{
- const name=$('fName').value.trim(),m=methods.find(x=>x.id===$('fMethod').value)||{},wallet=$('fWallet').value.trim(),rnum=$('fNum').value.trim();
- if(!/^\d{6,12}$/.test(rnum))return say('regMsg','Enter the Account ID you received from the admin','bad');
+ const name=$('fName').value.trim(),m=methods.find(x=>x.id===$('fMethod').value)||{},wallet=$('fWallet').value.trim();
  if(name.length<2)return say('regMsg','Enter your name','bad');
  if(!m.id)return say('regMsg','Choose a category','bad');
  if(m.requiresId&&!wallet)return say('regMsg','Enter your '+(m.idLabel||'ID number'),'bad');
- draft={number:rnum,name,methodId:m.id,walletNumber:m.requiresId?wallet:''};say('regMsg','');say('pinMsg','');$('pinIn').value='';screen('pinScr');setTimeout(()=>$('pinIn').focus(),60);
+ draft={name,methodId:m.id,walletNumber:m.requiresId?wallet:''};say('regMsg','');say('pinMsg','');$('pinIn').value='';$('pinIn2').value='';screen('pinScr');setTimeout(()=>$('pinIn').focus(),60);
 };
 $('pinBack').onclick=()=>screen('setup');
-$('pinIn').addEventListener('input',()=>{$('pinIn').value=$('pinIn').value.replace(/\D/g,'').slice(0,6);if($('pinIn').value.length===6)$('pinBtn').click()});
+$('pinIn').addEventListener('input',()=>{$('pinIn').value=$('pinIn').value.replace(/\D/g,'').slice(0,6);if($('pinIn').value.length===6)$('pinIn2').focus()});
+$('pinIn2').addEventListener('input',()=>{$('pinIn2').value=$('pinIn2').value.replace(/\D/g,'').slice(0,6);if($('pinIn2').value.length===6)$('pinBtn').click()});
 $('pinBtn').onclick=async()=>{
  const pin=$('pinIn').value.trim();if(!draft)return screen('setup');if(!/^\d{6}$/.test(pin))return say('pinMsg','Enter the 6-digit PIN','bad');
+ if($('pinIn2').value.trim()!==pin)return say('pinMsg','The two PINs do not match','bad');
  $('pinBtn').disabled=true;say('pinMsg','Creating…');
  try{await api('register',{...draft,pin});say('pinMsg','');draft=null;busy=false;await load(false)}
- catch(e){say('pinMsg',e.message,'bad');if(e.status===400&&/ID/.test(e.message)){screen('setup');say('regMsg',e.message,'bad')}$('pinIn').value=''}finally{$('pinBtn').disabled=false}
+ catch(e){say('pinMsg',e.message,'bad');if(e.status===400&&/ID/.test(e.message)){screen('setup');say('regMsg',e.message,'bad')}$('pinIn').value='';$('pinIn2').value=''}finally{$('pinBtn').disabled=false}
 };
 $('sSave').onclick=async()=>{
  const m=methods.find(x=>x.id===$('sMethod').value)||{},wallet=$('sWallet').value.trim();
